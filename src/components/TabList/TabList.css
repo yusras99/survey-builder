@@ -1,0 +1,22 @@
+.list {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10%;
+}
+
+form {
+    border: 2px solid black;
+    border-radius: 5px;
+    margin: 5%;
+}
+
+.extraPad {
+    border: 2px solid black;
+    border-radius: 5px;
+    margin: 5%;
+    padding: 5%;
+}
+
+.btn {
+    padding: 10px;
+}
