@@ -27,7 +27,6 @@ class TabList extends Component {
         this.getCount = this.getCount.bind(this);
         this.outputCreate = this.outputCreate.bind(this);
         this.checkOutput = this.checkOutput.bind(this);
-        this.getTest = this.getTest.bind(this);
     }
 
     builderFunction = (tabDefine) => {
@@ -45,7 +44,7 @@ class TabList extends Component {
         curOutput[this.state.count.toString()] = {"Type" : tabDefine};
         var newCount = this.state.count + 1;
         this.setState({children : arr, count : newCount, output : curOutput, complete : false});
-        console.log(this.state.output);
+        // console.log(this.state.output);
     }
 
     // handleSubmit() {
@@ -54,12 +53,12 @@ class TabList extends Component {
     // }
 
     handleChange(pos, newVal, count) {
-        console.log(count);
+        // console.log(count);
         var curOutput = this.state.output;
         curOutput[count.toString()][pos] = newVal;
         this.setState({output : curOutput});
 
-        console.log(this.state.output);
+        // console.log(this.state.output);
     }
 
     delete(id){
@@ -70,8 +69,8 @@ class TabList extends Component {
         var newDelete = this.state.deleted;
         newDelete.push(id);
         this.setState({ deleted: newDelete });
-        console.log(this.state.deleted);
-        console.log(this.state.deleted.indexOf(id));
+        // console.log(this.state.deleted);
+        // console.log(this.state.deleted.indexOf(id));
     }
 
     getCount(count) {
@@ -112,7 +111,7 @@ class TabList extends Component {
 
             int++;
         }
-        console.log(complete);
+        // console.log(complete);
         return complete;
     }
 
@@ -121,14 +120,14 @@ class TabList extends Component {
         this.state.children
         .filter(item => this.state.deleted.indexOf(item.id) === -1)
         .map((item) => {obj[item.id.toString()] = this.state.output[item.id.toString()]});
-        console.log(typeof(obj));
+        // console.log(typeof(obj));
         var validName = this.nameRef.current.value.length > 0;
         if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
-            console.log(!(0 in obj), !this.checkOutput(obj));
+            // console.log(!(0 in obj), !this.checkOutput(obj));
             alert("You have not filled out all fields, or have entered an invalid value!");
         }
         else {
-            var finalObj = {"userID" : new Date().toString()};
+            var finalObj = {userID : new Date().toString()};
             finalObj["name"] = this.nameRef.current.value;
             var int = 0;
             while ((int.toString()) in obj) {
@@ -136,25 +135,19 @@ class TabList extends Component {
                 int++;
             }
             finalObj["count"] = int;
-            axios({
-                type: "POST",
-                url: 'https://test-api-615.herokuapp.com/api/feedback/surveys/',
-                data:finalObj,
-                async:true,
-                crossDomain:true,
-                dataType : 'json',
-                contentType: 'application/json'
-            }).then(response => {console.log(response)});
+            axios.post(
+                'https://test-api-615.herokuapp.com/api/feedback/surveys/',
+                finalObj
+            )
+            .then(function (response) {
+                alert("Your survey has been successfully created");
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
             console.log(finalObj);
         }
-    }
-
-    getTest() {
-        
-        axios.get('https://test-api-615.herokuapp.com/api/feedback/surveys').then(resp => {
-
-            console.log(resp.data);
-        });
     }
 
     render() {
@@ -174,7 +167,6 @@ class TabList extends Component {
                 <TabBuilder build={this.builderFunction} />
                 <div className="extraPad">
                     <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
-                    <button onClick={this.getTest}>GET Test</button>
                 </div>
             </div>
         )
