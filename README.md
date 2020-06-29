@@ -4,10 +4,24 @@ Adding signup / login authentication:
 
 Install the following dependencies:
 ```
-npm i classnames jwt-decode react-redux react-router-dom redux redux-thunk --save
+npm i classnames jwt-decode react-redux react-router-dom redux redux-thunk is-empty --save
 ```
+(Use npm install to install all dependencies in package.json)
 
 Experiment with materialize later. For now, j use boxes.  
+
+###Explanation for src/actions, src/reducers, src/store.js:###
+
+A form submission in the app will trigger an action. 
+
+Reducers have functions that determine how state reacts to actions. 
+
+Store holds the complete state tree of app. It sends state to React components that will react to states. 
+
+
+
+
+###############################################################
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

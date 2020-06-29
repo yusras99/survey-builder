@@ -42,6 +42,8 @@ class Register extends Component {
                         error={errors.username} 
                         id="username" 
                         type="text"/>
+                    <br/>
+                    <br/>
                     Password: 
                     <input 
                         onChange={this.onChange} 
@@ -49,6 +51,8 @@ class Register extends Component {
                         error={errors.password} 
                         id="password" 
                         type="password"/>
+                    <br/>
+                    <br/>
                     Confirm Password: 
                     <input 
                         onChange={this.onChange} 
@@ -56,10 +60,11 @@ class Register extends Component {
                         error={errors.password2} 
                         id="password2" 
                         type="password"/>
-                    <input 
-                        type="submit" 
-                        value="Sign up" 
-                        class="btn"/>
+                    <br/>
+                    <br/>
+                    <button type="submit" className="btn">
+                        Register
+                    </button>
                 </form>
             </div>
         );
