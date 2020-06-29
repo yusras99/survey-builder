@@ -120,7 +120,6 @@ class TabList extends Component {
         this.state.children
         .filter(item => this.state.deleted.indexOf(item.id) === -1)
         .map((item) => {obj[item.id.toString()] = this.state.output[item.id.toString()]});
-        // console.log(typeof(obj));
         var validName = this.nameRef.current.value.length > 0;
         if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
             // console.log(!(0 in obj), !this.checkOutput(obj));
@@ -130,8 +129,10 @@ class TabList extends Component {
             var finalObj = {userID : new Date().toString()};
             finalObj["name"] = this.nameRef.current.value;
             var int = 0;
-            while ((int.toString()) in obj) {
-                finalObj["q" + int.toString()] = obj[int.toString()];
+            while (int < this.state.count) {
+                if ((int.toString()) in obj) {
+                    finalObj["q" + int.toString()] = obj[int.toString()];
+                }
                 int++;
             }
             finalObj["count"] = int;
@@ -146,7 +147,7 @@ class TabList extends Component {
             .catch(function (error) {
                 console.log(error);
             });
-            console.log(finalObj);
+            // console.log(finalObj);
         }
     }
 
