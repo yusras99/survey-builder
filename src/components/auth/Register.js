@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { registerUser } from "../../actions/authActions";
+import classnames from "classnames";
 
 class Register extends Component {
     constructor() {
@@ -11,6 +15,23 @@ class Register extends Component {
             errors: {}
         };
     };
+
+    componentDidMount() {
+        // If logged in and user navigates to Register page,
+        // should redirect them to dashboard
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push("/dashboard");
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        };
+    };
+
     // <form> element will have a corresponding onChange event that sends value
     // to this.state. Works similarly to html form and flask request. 
     onChange = e => {
@@ -24,6 +45,7 @@ class Register extends Component {
             password2: this.state.password2
         };
         console.log(newUser);
+        this.props.registerUser(newUser, this.props.history); 
     };
     render() {
         const errors = this.state.errors;
@@ -41,7 +63,11 @@ class Register extends Component {
                         value={this.state.username} 
                         error={errors.username} 
                         id="username" 
-                        type="text"/>
+                        type="text"
+                        className={classnames("", {
+                            invalid: errors.name
+                        })}/>
+                    <span className="red-text">{errors.name}</span>
                     <br/>
                     <br/>
                     Password: 
@@ -50,7 +76,11 @@ class Register extends Component {
                         value={this.state.password} 
                         error={errors.password} 
                         id="password" 
-                        type="password"/>
+                        type="password"
+                        className={classnames("", {
+                            invalid: errors.password
+                        })}/>
+                    <span className="red-text">{errors.password}</span>
                     <br/>
                     <br/>
                     Confirm Password: 
@@ -59,7 +89,11 @@ class Register extends Component {
                         value={this.state.password2} 
                         error={errors.password2} 
                         id="password2" 
-                        type="password"/>
+                        type="password"
+                        className={classnames("", {
+                            invalid: errors.password2
+                        })}/>
+                    <span className="red-text">{errors.password2}</span>
                     <br/>
                     <br/>
                     <button type="submit" className="btn">
@@ -71,4 +105,23 @@ class Register extends Component {
     };
 };
 
-export default Register;
+// export default Register;
+
+Register.propTypes = {
+    registerUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+// map state from redux props to use inside components
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors
+});
+
+// linking redux to Register component
+// withRouter makes it easy to redirect within a component
+export default connect(
+    mapStateToProps,
+    { registerUser }
+)(withRouter(Register));
