@@ -1,3 +1,14 @@
+Sean Dev Log:
+
+Adding signup / login authentication:
+
+Install the following dependencies:
+```
+npm i classnames jwt-decode react-redux react-router-dom redux redux-thunk --save
+```
+
+Experiment with materialize later. For now, j use boxes.  
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
