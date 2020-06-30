@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
@@ -36,7 +35,7 @@ class Login extends Component {
     }
 
     // <form> element will have a corresponding onChange event that sends value
-    // to this.state. Works similarly to html form and flask request. 
+    // to this.state. Works similarly to html form post and request. 
     onChange = e => {
         this.setState({ [e.target.id]: e.target.value });
     };
@@ -65,10 +64,10 @@ class Login extends Component {
                         id="username" 
                         type="text"
                         className={classnames("", {
-                            invalid: errors.username
+                            invalid: errors.userNotFound
                             // || USERNAME NOT FOUND
                         })}/>
-                    <span className="red-text">{errors.email}</span>
+                    <span className="red-text">{errors.userNotFound}</span>
                     <br/>
                     <br/>
                     Password: 
@@ -79,18 +78,15 @@ class Login extends Component {
                         id="password" 
                         type="password"
                         className={classnames("", {
-                            invalid: errors.password || errors.passwordincorrect
+                            invalid: errors.pwdIncorrect
                         })}/>
+                    <span className="red-text">{errors.pwdIncorrect}</span>
                     <br/>
                     <br/>
                     <input 
                         type="submit" 
                         value="Log in" 
                         class="btn"/>
-                    <span className="red-text">
-                        {errors.password}
-                        {errors.passwordincorrect}
-                    </span>
                 </form>
             </div>
         );

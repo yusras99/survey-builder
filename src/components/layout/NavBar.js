@@ -10,6 +10,14 @@ class Navbar extends Component {
             <Link to="/">
               Home
             </Link>
+            <br/>
+            <Link to="/register">
+              Register
+            </Link>
+            <br/>
+            <Link to="/login">
+              Login
+            </Link>
           </div>
         </nav>
       </div>

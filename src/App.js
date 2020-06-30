@@ -12,6 +12,7 @@ import store from "./store";
 
 import TabList from './components/TabList/TabList';
 import NavBar from './components/layout/NavBar';
+import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import PrivateRoute from "./components/private-route/PrivateRoute";
@@ -44,11 +45,14 @@ function App() {
           {/* Route to TabList later */}
           {/* <TabList /> */}
           {/* <h1>Hello world</h1> */}
-          <NavBar />
+          < NavBar />
+          < Landing />
           < Route exact path="/register" component={Register} />
           < Route exact path="/login" component={Login} />
           <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/researcher/survey-builder" 
+                component={TabList} />
           </Switch>
         </div>
       </Router>

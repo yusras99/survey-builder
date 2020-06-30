@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
+import { Link } from "react-router-dom";
 
 class Dashboard extends Component {
     onLogoutClick = e => {
@@ -14,6 +15,13 @@ class Dashboard extends Component {
         return (
             <div className="container">
                 <h1>You are logged in.</h1> <br/><br/>
+                <br/>
+                <Link to="/researcher/survey-builder">
+                    Build your own survey
+                </Link>
+                <br/><br/><br/>
+                {/* Collection management */}
+                
                 {/* Change button later */}
                 <button
                     onClick={this.onLogoutClick}

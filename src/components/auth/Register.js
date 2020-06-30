@@ -65,9 +65,10 @@ class Register extends Component {
                         id="username" 
                         type="text"
                         className={classnames("", {
-                            invalid: errors.name
+                            // userExists comes from res json message in API
+                            invalid: errors.userExists
                         })}/>
-                    <span className="red-text">{errors.name}</span>
+                    <span className="red-text">{errors.userExists}</span>
                     <br/>
                     <br/>
                     Password: 
