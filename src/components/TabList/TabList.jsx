@@ -147,7 +147,6 @@ class TabList extends Component {
             .catch(function (error) {
                 console.log(error);
             });
-            // console.log(finalObj);
         }
     }
 

@@ -46,6 +46,7 @@ function App() {
           {/* <TabList /> */}
           {/* <h1>Hello world</h1> */}
           < NavBar />
+          <br/>
           < Landing />
           < Route exact path="/register" component={Register} />
           < Route exact path="/login" component={Login} />
