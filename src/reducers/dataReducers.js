@@ -1,10 +1,17 @@
 import { GET_EXPT_NAMES } from "../actions/types";
 
-const initialState = {};
+const initialState = {
+    items: []
+};
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        case GET_EXPT_NAMES: return action.payload;
-        default: return state;
+        case GET_EXPT_NAMES: 
+            return {
+                ...state,
+                items: action.payload
+            };
+        default: 
+            return state;
     }
 }

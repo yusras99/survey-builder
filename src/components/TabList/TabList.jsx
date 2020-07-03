@@ -17,7 +17,7 @@ class TabList extends Component {
             output : {},
             deleted : [],
             complete : false,
-            surveyName : ''
+            exptName : ''
         }
         this.myRef = React.createRef();
         this.submitRef = React.createRef();
@@ -115,7 +115,7 @@ class TabList extends Component {
         }
         else {
             var finalObj = {userID : new Date().toString()};
-            finalObj["name"] = this.nameRef.current.value;
+            finalObj["exptName"] = this.nameRef.current.value;
             var int = 0;
             while (int < this.state.count) {
                 if ((int.toString()) in obj) {
@@ -127,10 +127,10 @@ class TabList extends Component {
             finalObj["type"] = "experiment";
 
             const username = this.props.auth.user.username;
-            const survey_name = this.state.surveyName;
+            const expt_name = this.state.surveyName;
 
             axios.post(
-                'http://localhost:5000/api/feedback/' + username + '/' + survey_name,
+                'http://localhost:5000/api/feedback/' + username + '/info',
                 finalObj
             )
             .then(res => {
@@ -152,9 +152,9 @@ class TabList extends Component {
                 <form action="/submit" method="POST" className="unit">
                     <p>Enter a name for this survey</p>
                     <input ref={this.nameRef} 
-                        value={this.state.surveyName} 
+                        value={this.state.exptName} 
                         onChange={this.onChange}
-                        type="text" id="userid" name="surveyName" /><br /><br />
+                        type="text" id="userid" name="exptName" /><br /><br />
                 </form>
                 {
                     this.state.children

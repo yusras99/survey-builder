@@ -21,7 +21,9 @@ class Dashboard extends Component {
     }
 
     componentWillMount() {
-        this.props.fetchExptNames();
+        const username = this.props.auth.user.username;
+        console.log(this.props.auth)
+        this.props.fetchExptNames(username);
     }
 
     // need to fetch data and put it in componentWillMount
@@ -30,21 +32,29 @@ class Dashboard extends Component {
     }
 
     getNames() {
-        return this.state.surveys.map(item => {
-            const username = this.props.auth.user.username;
-            const nameLink = "/" + username + "/" + item.name;
-            const dataLink = nameLink + "/" + "data";
+        // return this.state.surveys.map(item => {
+        //     const username = this.props.auth.user.username;
+        //     const nameLink = "/" + username + "/" + item.name;
+        //     const dataLink = nameLink + "/" + "data";
+        //     return (
+        //     <div className="text-center">
+        //         <p>
+        //             <Link to={nameLink}>
+        //                 <p>{item.name}</p>
+        //             </Link> <p> </p>
+        //             <Link to={dataLink} onClick={this.fetchUserData}>
+        //                 <p>Data</p>
+        //             </Link>
+        //         </p>
+        //     </div>)
+        // });
+        return this.props.dataFlow.map(item => {
+            const name = item.exptName;
             return (
-            <div className="text-center">
-                <p>
-                    <Link to={nameLink}>
-                        <p>{item.name}</p>
-                    </Link> <p> </p>
-                    <Link to={dataLink} onClick={this.fetchUserData}>
-                        <p>Data</p>
-                    </Link>
-                </p>
-            </div>)
+                <div className="text-center">
+                    <p>{name}</p>
+                </div>
+            )
         });
     }
 
@@ -87,13 +97,13 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
     logoutUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    dataFlow: PropTypes.object.isRequired,
+    dataFlow: PropTypes.array.isRequired,
     fetchExptNames: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    dataFlow: state.dataFlow
+    dataFlow: state.dataFlow.items
 });
 
 export default connect(
