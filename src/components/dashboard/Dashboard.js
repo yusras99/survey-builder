@@ -5,6 +5,8 @@ import { logoutUser } from "../../actions/authActions";
 import { Link } from "react-router-dom";
 import TabList from "../TabList/TabList";
 
+import { fetchExptNames } from "../../actions/dataActions";
+
 import './Dashboard.css';
 
 class Dashboard extends Component {
@@ -18,7 +20,14 @@ class Dashboard extends Component {
         };
     }
 
+    componentWillMount() {
+        this.props.fetchExptNames();
+    }
+
     // need to fetch data and put it in componentWillMount
+    fetchUserData () {
+        return null;
+    }
 
     getNames() {
         return this.state.surveys.map(item => {
@@ -31,7 +40,7 @@ class Dashboard extends Component {
                     <Link to={nameLink}>
                         <p>{item.name}</p>
                     </Link> <p> </p>
-                    <Link to={dataLink}>
+                    <Link to={dataLink} onClick={this.fetchUserData}>
                         <p>Data</p>
                     </Link>
                 </p>
@@ -62,18 +71,12 @@ class Dashboard extends Component {
                 <Link to="/researcher/survey-builder">
                     Build your own survey
                 </Link>
-                <br />
-                Survey Name
-                <Link to="/researcher/survey-builder/data">
-                    Data
-                </Link>
                 <br /><br />
                 {/* Collection management */}
                 {/* Change button later */}
                 <button
                     onClick={this.onLogoutClick}
-                    className="btn"
-                >
+                    className="btn">
                     Logout
                 </button>
             </div>
@@ -83,14 +86,17 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
     logoutUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    dataFlow: PropTypes.object.isRequired,
+    fetchExptNames: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    dataFlow: state.dataFlow
 });
 
 export default connect(
     mapStateToProps,
-    { logoutUser }
+    { logoutUser, fetchExptNames }
 )(Dashboard);

@@ -3,6 +3,8 @@ import './TabList.css';
 import '../TabBuilder/TabBuilder'
 import TabBuilder from '../TabBuilder/TabBuilder';
 import SliderTab from '../SliderTab/SliderTab';
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 const axios = require('axios');
 
@@ -14,19 +16,25 @@ class TabList extends Component {
             count : 0,
             output : {},
             deleted : [],
-            complete : false
+            complete : false,
+            surveyName : ''
         }
         this.myRef = React.createRef();
         this.submitRef = React.createRef();
         this.nameRef = React.createRef();
 
         this.builderFunction = this.builderFunction.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.delete = this.delete.bind(this);
         this.getCount = this.getCount.bind(this);
         this.outputCreate = this.outputCreate.bind(this);
         this.checkOutput = this.checkOutput.bind(this);
+
+        this.onChange = this.onChange.bind(this);
+    }
+
+    onChange(e) {
+        this.setState({[e.target.name]: e.target.value})
     }
 
     builderFunction = (tabDefine) => {
@@ -44,33 +52,18 @@ class TabList extends Component {
         curOutput[this.state.count.toString()] = {"Type" : tabDefine};
         var newCount = this.state.count + 1;
         this.setState({children : arr, count : newCount, output : curOutput, complete : false});
-        // console.log(this.state.output);
     }
 
-    // handleSubmit() {
-    //     var listElem = this.props.children;
-    //     console.log(listElem);
-    // }
-
     handleChange(pos, newVal, count) {
-        // console.log(count);
         var curOutput = this.state.output;
         curOutput[count.toString()][pos] = newVal;
         this.setState({output : curOutput});
-
-        // console.log(this.state.output);
     }
 
     delete(id){
-        // this.state.children.map(el => console.log(el.count));
-        // this.setState(prevState => ({
-        //     output: prevState.children.filter(el => el.count !== id )
-        // }));
         var newDelete = this.state.deleted;
         newDelete.push(id);
         this.setState({ deleted: newDelete });
-        // console.log(this.state.deleted);
-        // console.log(this.state.deleted.indexOf(id));
     }
 
     getCount(count) {
@@ -97,9 +90,6 @@ class TabList extends Component {
                         else {
                             complete = false;
                         }
-                        // console.log("Within", complete);
-                        // console.log(int);
-                        // console.log(lowIs, highIs, qIs, lowNum, highNum, highLow);
                     }
                     else {
                         complete = false;
@@ -111,7 +101,6 @@ class TabList extends Component {
 
             int++;
         }
-        // console.log(complete);
         return complete;
     }
 
@@ -122,7 +111,6 @@ class TabList extends Component {
         .map((item) => {obj[item.id.toString()] = this.state.output[item.id.toString()]});
         var validName = this.nameRef.current.value.length > 0;
         if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
-            // console.log(!(0 in obj), !this.checkOutput(obj));
             alert("You have not filled out all fields, or have entered an invalid value!");
         }
         else {
@@ -136,10 +124,18 @@ class TabList extends Component {
                 int++;
             }
             finalObj["count"] = int;
+            finalObj["type"] = "experiment";
+
+            const username = this.props.auth.user.username;
+            const survey_name = this.state.surveyName;
+
             axios.post(
-                'https://test-api-615.herokuapp.com/api/feedback/surveys/',
+                'http://localhost:5000/api/feedback/' + username + '/' + survey_name,
                 finalObj
             )
+            .then(res => {
+                console.log(res)
+            })
             .then(function (response) {
                 alert("Your survey has been successfully created");
                 console.log(response);
@@ -155,7 +151,10 @@ class TabList extends Component {
             <div className="list" ref={this.myRef}>
                 <form action="/submit" method="POST" className="unit">
                     <p>Enter a name for this survey</p>
-                    <input ref={this.nameRef} type="text" id="userid" name="userid" /><br /><br />
+                    <input ref={this.nameRef} 
+                        value={this.state.surveyName} 
+                        onChange={this.onChange}
+                        type="text" id="userid" name="surveyName" /><br /><br />
                 </form>
                 {
                     this.state.children
@@ -173,4 +172,13 @@ class TabList extends Component {
     }
 }
 
-export default TabList;
+TabList.propTypes = {
+    auth: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+// export default TabList;
+export default connect(mapStateToProps)(TabList);
