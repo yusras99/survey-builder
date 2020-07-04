@@ -1,16 +1,32 @@
-import { GET_EXPT_NAMES } from "../actions/types";
+import { 
+    ADD_STUDY_NAME,
+    GET_DB_INFO,
+    GET_STUDY_INFO
+} from "../actions/types";
 
 const initialState = {
-    items: []
+    studyName: '',
+    dbInfo: [],
+    studyInfo: []
 };
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        case GET_EXPT_NAMES: 
+        case ADD_STUDY_NAME:
             return {
                 ...state,
-                items: action.payload
+                studyName: action.payload
             };
+        case GET_DB_INFO:
+            return {
+                ...state,
+                dbInfo: action.payload
+            };
+        case GET_STUDY_INFO:
+            return {
+                ...state,
+                studyInfo: action.payload
+            }
         default: 
             return state;
     }

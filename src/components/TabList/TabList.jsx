@@ -127,10 +127,13 @@ class TabList extends Component {
             finalObj["type"] = "experiment";
 
             const username = this.props.auth.user.username;
-            const expt_name = this.state.surveyName;
+            const expt_name = this.state.exptName;
+            const studyName = this.props.match.params.studyName;
 
-            axios.post(
-                'http://localhost:5000/api/feedback/' + username + '/info',
+            // use the API to add a json object into an array under the study
+            axios.put(
+                'http://localhost:5000/api/feedback/' + username + 
+                    '/info/studyName-' + studyName + '/experiments',
                 finalObj
             )
             .then(res => {
@@ -173,11 +176,13 @@ class TabList extends Component {
 }
 
 TabList.propTypes = {
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    dataFlowDBInfo: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    dataFlowDBInfo: state.dataFlow.dbInfo
 });
 
 // export default TabList;

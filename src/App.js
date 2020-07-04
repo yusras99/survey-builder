@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
+import PrivateRoute from "./components/private-route/PrivateRoute";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
@@ -13,10 +13,13 @@ import store from "./store";
 import TabList from './components/TabList/TabList';
 import NavBar from './components/layout/NavBar';
 import Landing from './components/layout/Landing';
+
 import Register from './components/auth/Register';
-import Login from './components/auth/Login';
-import PrivateRoute from "./components/private-route/PrivateRoute";
+import Login from './components/auth/Login'
+
 import Dashboard from "./components/dashboard/Dashboard";
+import PartData from './components/data/PartData';
+import ConfigStudy from './components/Study/ConfigStudy';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -52,7 +55,11 @@ function App() {
           < Route exact path="/login" component={Login} />
           <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
-              <PrivateRoute exact path="/researcher/survey-builder" 
+              <PrivateRoute exact path="/:expt/participantsData" 
+                component={PartData} />
+              <PrivateRoute exact path="/:username/:studyName"
+                component={ConfigStudy} />
+              <PrivateRoute exact path="/:username/:studyName/exptBuilder" 
                 component={TabList} />
           </Switch>
         </div>

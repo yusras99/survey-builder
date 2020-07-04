@@ -1,72 +1,72 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
 import { Link } from "react-router-dom";
-import TabList from "../TabList/TabList";
 
-import { fetchExptNames } from "../../actions/dataActions";
+import { logoutUser } from "../../actions/authActions";
+
+import {
+    addStudyName,
+    getDBInfo
+} from "../../actions/dataActions";
 
 import './Dashboard.css';
 
 class Dashboard extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            surveys: [
-                {id: 1, name: "survey1"}, 
-                {id: 2, name: "survey2"}
-            ]
-        };
+            studyName: ''
+        }
+
+        this.onChange = this.onChange.bind(this);
+        this.onAddStudy = this.onAddStudy.bind(this);
     }
 
+    onChange(e) {
+        this.setState({[e.target.name]: e.target.value})
+    }
+
+    // load experiment names when the page loads
     componentWillMount() {
         const username = this.props.auth.user.username;
-        console.log(this.props.auth)
-        this.props.fetchExptNames(username);
+        this.props.getDBInfo(username); // dbInfo will be in the store now
     }
 
-    // need to fetch data and put it in componentWillMount
-    fetchUserData () {
-        return null;
-    }
-
-    getNames() {
-        // return this.state.surveys.map(item => {
-        //     const username = this.props.auth.user.username;
-        //     const nameLink = "/" + username + "/" + item.name;
-        //     const dataLink = nameLink + "/" + "data";
-        //     return (
-        //     <div className="text-center">
-        //         <p>
-        //             <Link to={nameLink}>
-        //                 <p>{item.name}</p>
-        //             </Link> <p> </p>
-        //             <Link to={dataLink} onClick={this.fetchUserData}>
-        //                 <p>Data</p>
-        //             </Link>
-        //         </p>
-        //     </div>)
-        // });
-        return this.props.dataFlow.map(item => {
-            const name = item.exptName;
-            return (
-                <div className="text-center">
-                    <p>{name}</p>
-                </div>
-            )
+    getStudyNames() {
+        // TODO. Filter out study names. If an item doesn't have study names
+        // as a key, then don't do anything. (wrap everything inside an if)
+        const allInfo = this.props.dataFlowDBInfo;
+        return allInfo.map(item => {
+            const allKeys = Object.keys(item);
+            if (allKeys.includes("studyName")) {
+                const username = this.props.auth.user.username;
+                const link = "/" + username + "/" + item.studyName;
+                return(
+                    <div className="container">
+                        <p> 
+                            {item.studyName} <p> </p>
+                            <Link to={link}>
+                                Configure
+                            </Link>
+                        </p>
+                    </div>
+                )
+            }
         });
     }
+
+    onAddStudy(e) {
+        e.preventDefault();
+        const username = this.props.auth.user.username;
+        this.props.addStudyName(username, this.state.studyName);
+        // alert("Your study has been succesfully created.");
+    };
 
     onLogoutClick = e => {
         e.preventDefault();
         this.props.logoutUser();
     };
-
-    // Researcher can create a collection for each survey
-    onSubmit = e => {
-        e.preventDefault();
-    }
 
     render() {
         const username = this.props.auth.user.username;
@@ -75,15 +75,18 @@ class Dashboard extends Component {
                 <h1>You are logged in.</h1>
                 <p>Scientist: <b>{username}</b></p>
                 <br/><br/>
-                <p>Your surveys: </p>
-                {this.getNames()}
-                <br/>
-                <Link to="/researcher/survey-builder">
-                    Build your own survey
-                </Link>
-                <br /><br />
-                {/* Collection management */}
-                {/* Change button later */}
+
+                <form onSubmit={this.onAddStudy}>
+                    Enter a name for your study: <p>  </p>
+                    <input type="text" name="studyName" 
+                        value={this.state.studyName} onChange={this.onChange}/>
+                    <input type="submit" value="Add Study"/>
+                </form>
+
+                <br/><br/>
+                {this.getStudyNames()}
+                <br/><br/>
+
                 <button
                     onClick={this.onLogoutClick}
                     className="btn">
@@ -95,18 +98,22 @@ class Dashboard extends Component {
 };
 
 Dashboard.propTypes = {
+    // Proptype.type, the type here must match initialState of reducer
     logoutUser: PropTypes.func.isRequired,
+    addStudyName: PropTypes.func.isRequired,
+    getDBInfo: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    dataFlow: PropTypes.array.isRequired,
-    fetchExptNames: PropTypes.func.isRequired
+    dataFlowDBInfo: PropTypes.array.isRequired
 };
 
+// interaction between reducer and store (state), connect to props 
+// for components to use
 const mapStateToProps = state => ({
     auth: state.auth,
-    dataFlow: state.dataFlow.items
+    dataFlowDBInfo: state.dataFlow.dbInfo
 });
 
 export default connect(
     mapStateToProps,
-    { logoutUser, fetchExptNames }
+    { logoutUser, addStudyName, getDBInfo }
 )(Dashboard);
