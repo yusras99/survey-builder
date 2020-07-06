@@ -1,13 +1,15 @@
 import { 
     ADD_STUDY_NAME,
     GET_DB_INFO,
-    GET_STUDY_INFO
+    GET_STUDY_INFO,
+    GET_PART_DATA
 } from "../actions/types";
 
 const initialState = {
     studyName: '',
     dbInfo: [],
-    studyInfo: []
+    studyInfo: [],
+    partData: []
 };
 
 export default function(state = initialState, action) {
@@ -26,7 +28,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 studyInfo: action.payload
-            }
+            };
+        case GET_PART_DATA:
+            return {
+                ...state,
+                partData: action.payload
+            };
         default: 
             return state;
     }

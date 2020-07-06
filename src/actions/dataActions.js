@@ -2,7 +2,8 @@ import axios from "axios";
 import { 
     ADD_STUDY_NAME,
     GET_DB_INFO,
-    GET_STUDY_INFO
+    GET_STUDY_INFO,
+    GET_PART_DATA
 } from "./types";
 
 export const addStudyName = (which_database, study_name) => dispatch => {
@@ -43,18 +44,27 @@ export const getStudyInfo = (which_database, which_study) => dispatch => {
         .get('http://localhost:5000/api/feedback/' + which_database + 
             '/info/studyName-' + which_study)
         .then(res => {
-            console.log(res);
             dispatch({
                 type: GET_STUDY_INFO,
                 payload: res.data.experiments
             })
         })
-
 }
 
-export const specificExptData = (which_database, which_col) => dispatch => {
+export const createExptCol = (which_database, col_name) => dispatch => {
     axios
-        .get("API_URL that points to cluster" + "/" + which_database + "/" +
-            which_col)
-        .then(res => dispatch(res.data))
+        .post('http://localhost:5000/api/' + which_database + 
+            "/createCol/" + col_name)
+}
+
+export const getPartData = (which_database, col_name) => dispatch => {
+    axios
+        .get('http://localhost:5000/api/feedback/' + which_database + 
+            "/" + col_name)
+        .then(res => {
+            dispatch({
+                type: GET_PART_DATA,
+                payload: res.data
+            })
+        })
 }

@@ -6,3 +6,4 @@ export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const ADD_STUDY_NAME = "ADD_STUDY_NAME";
 export const GET_DB_INFO = "GET_DB_INFO";
 export const GET_STUDY_INFO = "GET_STUDY_INFO";
+export const GET_PART_DATA = "GET_PART_DATA";

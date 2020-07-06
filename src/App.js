@@ -18,8 +18,9 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login'
 
 import Dashboard from "./components/dashboard/Dashboard";
-import PartData from './components/data/PartData';
 import ConfigStudy from './components/Study/ConfigStudy';
+import ExptConfigs from './components/Study/ExptConfigs';
+import PartData from './components/Study/PartData';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -54,13 +55,17 @@ function App() {
           < Route exact path="/register" component={Register} />
           < Route exact path="/login" component={Login} />
           <Switch>
-              <PrivateRoute exact path="/dashboard" component={Dashboard} />
-              <PrivateRoute exact path="/:expt/participantsData" 
-                component={PartData} />
-              <PrivateRoute exact path="/:username/:studyName"
-                component={ConfigStudy} />
-              <PrivateRoute exact path="/:username/:studyName/exptBuilder" 
-                component={TabList} />
+                <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <PrivateRoute exact path="/:expt/participantsData" 
+                    component={PartData} />
+                <PrivateRoute exact path="/:username/:studyName"
+                    component={ConfigStudy} />
+                <PrivateRoute exact path="/:username/:studyName/exptBuilder" 
+                    component={TabList} />
+                <PrivateRoute exact path="/:username/:studyName/:exptName/configs" 
+                    component={ExptConfigs}/>
+                <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
+                    component={PartData}/>
           </Switch>
         </div>
       </Router>

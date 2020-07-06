@@ -47,7 +47,7 @@ class Dashboard extends Component {
                         <p> 
                             {item.studyName} <p> </p>
                             <Link to={link}>
-                                Configure
+                                View
                             </Link>
                         </p>
                     </div>

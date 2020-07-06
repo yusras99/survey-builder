@@ -4,24 +4,61 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import {
-    getStudyInfo
+    getStudyInfo,
+    createExptCol
 } from "../../actions/dataActions"
 
 class ConfigStudy extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+
+        this.deployExpts = this.deployExpts.bind(this);
+    }
+    // note: using params to get studyName is probably not good practice. 
+    // figure out a better way to get info from previous page later, might
+    // use cookies? or does react have some way to pass states between pages?
     componentWillMount() {
         const username = this.props.auth.user.username;
         const studyName = this.props.match.params.studyName;
         this.props.getStudyInfo(username, studyName);
     }
 
+    // for now deployment simply creates a collection for each experiment 
+    // that would later store participants data
+    deployExpts(e) {
+        e.preventDefault();
+        // create a collection. Collection name: studyName - exptName 
+        const username = this.props.auth.user.username;
+        const studyName = this.props.match.params.studyName;
+        const exptNames = this.props.experiments.map(item => item.exptName);
+        console.log(exptNames);
+        exptNames.forEach(expt_name => {
+            this.props.createExptCol(username, studyName + "-" + expt_name);
+        });
+        // the alert could include res data from API
+        alert("Successfully deployed your experiments")
+    }
+
     getExptNames() {
-        console.log(this.props.experiments)
+        const username = this.props.match.params.username;
+        const studyName = this.props.match.params.studyName;
+        // check if the experiments are deployed 
         return this.props.experiments.map(expt => {
+            const exptName = expt.exptName;
+            const exptDataLink = "/" + username + "/" + studyName + "/" + 
+                exptName + "/configs";
+            const partDataLink = "/" + username + "/" + studyName + "/" + 
+                exptName + "/participantsData";
             return (
                 <div className="container">
-                    <p>
-                        {expt.exptName}
-                    </p>
+                    {expt.exptName} <p> </p>
+                    <Link to={exptDataLink}>
+                        Experiment Configs
+                    </Link> <p> </p>
+                    <Link to={partDataLink}>
+                        View Participants Data
+                    </Link>
                 </div>
             )
         })
@@ -42,8 +79,14 @@ class ConfigStudy extends Component {
                 <Link to={exptBuilderLink}>
                     Build an Experiment
                 </Link>
-                <br/><br/>
-                {this.getExptNames()}
+                <form onSubmit={this.deployExpts}>
+                    <br/>
+                    Your Experiments
+                    <br/><br/>
+                    {this.getExptNames()}
+                    <br/><br/>
+                    <input type="submit" value="Deploy All Experiments" />
+                </form>
             </div>
         )
     }
@@ -52,6 +95,7 @@ class ConfigStudy extends Component {
 ConfigStudy.propTypes = {
     // Proptype.type, the type here must match initialState of reducer
     getStudyInfo: PropTypes.func.isRequired,
+    createExptCol: PropTypes.func.isRequired,
     experiments: PropTypes.array.isRequired,
     auth: PropTypes.object.isRequired
 };
@@ -65,5 +109,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getStudyInfo }
+    { getStudyInfo, createExptCol }
 )(ConfigStudy);
