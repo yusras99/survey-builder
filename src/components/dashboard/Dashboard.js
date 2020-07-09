@@ -57,10 +57,10 @@ class Dashboard extends Component {
     }
 
     onAddStudy(e) {
-        e.preventDefault();
         const username = this.props.auth.user.username;
         this.props.addStudyName(username, this.state.studyName);
         // alert("Your study has been succesfully created.");
+        window.location.reload(true);
     };
 
     onLogoutClick = e => {
@@ -72,20 +72,18 @@ class Dashboard extends Component {
         const username = this.props.auth.user.username;
         return (
             <div className="container">
-                <h1>You are logged in.</h1>
-                <p>Scientist: <b>{username}</b></p>
-                <br/><br/>
-
                 <form onSubmit={this.onAddStudy}>
                     Enter a name for your study: <p>  </p>
                     <input type="text" name="studyName" 
                         value={this.state.studyName} onChange={this.onChange}/>
                     <input type="submit" value="Add Study"/>
                 </form>
-
-                <br/><br/>
-                {this.getStudyNames()}
-                <br/><br/>
+                
+                <form>
+                    <br/>
+                    {this.getStudyNames()}
+                    <br/>
+                </form>
 
                 <button
                     onClick={this.onLogoutClick}

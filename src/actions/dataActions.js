@@ -17,7 +17,7 @@ export const addStudyName = (which_database, study_name) => dispatch => {
     // just makes things more organized and fits well with the rest of the 
     // redux structure I have used to create this demo
     axios
-        .post('http://localhost:5000/api/feedback/' + which_database + '/info',
+        .post('https://test-api-615.herokuapp.com/api/feedback/' + which_database + '/info',
             dataToPost)
         .then(entry => {
             // console.log(entry);
@@ -30,7 +30,7 @@ export const addStudyName = (which_database, study_name) => dispatch => {
 
 export const getDBInfo = (which_database) => dispatch => {
     axios
-        .get('http://localhost:5000/api/feedback/' + which_database + '/info')
+        .get('https://test-api-615.herokuapp.com/api/feedback/' + which_database + '/info')
         .then(res => {
             dispatch({
                 type: GET_DB_INFO,
@@ -41,7 +41,7 @@ export const getDBInfo = (which_database) => dispatch => {
 
 export const getStudyInfo = (which_database, which_study) => dispatch => {
     axios
-        .get('http://localhost:5000/api/feedback/' + which_database + 
+        .get('https://test-api-615.herokuapp.com/api/feedback/' + which_database + 
             '/info/studyName-' + which_study)
         .then(res => {
             dispatch({
@@ -53,13 +53,13 @@ export const getStudyInfo = (which_database, which_study) => dispatch => {
 
 export const createExptCol = (which_database, col_name) => dispatch => {
     axios
-        .post('http://localhost:5000/api/' + which_database + 
+        .post('https://test-api-615.herokuapp.com/api/' + which_database + 
             "/createCol/" + col_name)
 }
 
 export const getPartData = (which_database, col_name) => dispatch => {
     axios
-        .get('http://localhost:5000/api/feedback/' + which_database + 
+        .get('https://test-api-615.herokuapp.com/api/feedback/' + which_database + 
             "/" + col_name)
         .then(res => {
             dispatch({

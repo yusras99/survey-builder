@@ -5,6 +5,7 @@ import TabBuilder from '../TabBuilder/TabBuilder';
 import SliderTab from '../SliderTab/SliderTab';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const axios = require('axios');
 
@@ -132,7 +133,7 @@ class TabList extends Component {
 
             // use the API to add a json object into an array under the study
             axios.put(
-                'http://localhost:5000/api/feedback/' + username + 
+                'https://test-api-615.herokuapp.com/api/feedback/' + username + 
                     '/info/studyName-' + studyName + '/experiments',
                 finalObj
             )
@@ -142,6 +143,7 @@ class TabList extends Component {
             .then(function (response) {
                 alert("Your survey has been successfully created");
                 console.log(response);
+                window.location.reload(false);
             })
             .catch(function (error) {
                 console.log(error);
@@ -150,10 +152,17 @@ class TabList extends Component {
     }
 
     render() {
+        const username = this.props.match.params.username;
+        const studyName = this.props.match.params.studyName;
+        const studyLink = "/" + username + "/" + studyName;
         return(
             <div className="list" ref={this.myRef}>
+                Back to <p> </p>
+                <Link to={studyLink}>
+                    {studyName}
+                </Link>
                 <form action="/submit" method="POST" className="unit">
-                    <p>Enter a name for this survey</p>
+                    <p>Enter a name for this experiment</p>
                     <input ref={this.nameRef} 
                         value={this.state.exptName} 
                         onChange={this.onChange}
