@@ -11,17 +11,17 @@ class Navbar extends Component {
       <div className="navbar-fixed">
         <nav className="z-depth-0">
           <div className="nav-wrapper white">
-            <Link to="/">
+            <Link to={process.env.PUBLIC_URL + "/"}>
               Home
             </Link>
             <br/>
             {userIsLoggedIn ? '' : 
-              <Link to="/register">Register</Link>}
+              <Link to={process.env.PUBLIC_URL + "/register"}>Register</Link>}
             <br/>
             {userIsLoggedIn ? 
-              <Link to="/dashboard"> Dashboard </Link> 
+              <Link to={process.env.PUBLIC_URL + "/dashboard"}> Dashboard </Link> 
               : 
-              <Link to="/login">Login</Link>}
+              <Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>}
           </div>
         </nav>
       </div>

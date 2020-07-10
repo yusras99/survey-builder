@@ -20,7 +20,7 @@ class Register extends Component {
         // If logged in and user navigates to Register page,
         // should redirect them to dashboard
         if (this.props.auth.isAuthenticated) {
-            this.props.history.push("/dashboard");
+            this.props.history.push(process.env.PUBLIC_URL + "/dashboard");
         }
     }
 
@@ -54,7 +54,7 @@ class Register extends Component {
                 <h1>Register below</h1>
                 <p className="grey-text text-darken-1">
                     Already have an account? 
-                    <Link to="/login">Log in</Link>
+                    <Link to={process.env.PUBLIC_URL + "/login"}>Log in</Link>
                 </p>
                 <form noValidate onSubmit={this.onSubmit}>
                     Username:

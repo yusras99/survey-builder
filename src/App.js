@@ -50,20 +50,20 @@ function App() {
           < NavBar />
           <br/>
           < Landing />
-          < Route exact path="/" component={HomePage} />
-          < Route exact path="/register" component={Register} />
-          < Route exact path="/login" component={Login} />
+          < Route exact path={process.env.PUBLIC_URL + "/"} component={HomePage} />
+          < Route exact path={process.env.PUBLIC_URL + "/register"} component={Register} />
+          < Route exact path={process.env.PUBLIC_URL + "/login"} component={Login} />
           <Switch>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <PrivateRoute exact path="/:expt/participantsData" 
+                <PrivateRoute exact path={process.env.PUBLIC_URL + "/dashboard"} component={Dashboard} />
+                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:expt/participantsData"} 
                     component={PartData} />
-                <PrivateRoute exact path="/:username/:studyName"
+                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName"}
                     component={ConfigStudy} />
-                <PrivateRoute exact path="/:username/:studyName/exptBuilder" 
+                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName/exptBuilder"} 
                     component={TabList} />
-                <PrivateRoute exact path="/:username/:studyName/:exptName/configs" 
+                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName/:exptName/configs"} 
                     component={ExptConfigs}/>
-                <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
+                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName/:exptName/participantsData"}
                     component={PartData}/>
           </Switch>
         </div>
