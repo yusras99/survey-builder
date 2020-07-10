@@ -44,18 +44,11 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      Hello
-    </Provider>
-  );
-}
-
-export default App;
-
-{/* <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Router basename={process.env.PUBLIC_URL}>
         <div className="App">
           < NavBar />
           <br/>
-          < Landing />
+          < Route exact path='/' componenet={Landing} />
           < Route exact path="/register" component={Register} />
           < Route exact path="/login" component={Login} />
           <Switch>
@@ -72,4 +65,9 @@ export default App;
                     component={PartData}/>
           </Switch>
         </div>
-      </BrowserRouter> */}
+      </Router>
+    </Provider>
+  );
+}
+
+export default App;
