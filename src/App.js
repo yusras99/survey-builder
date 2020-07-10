@@ -45,7 +45,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <Router>
+      <Router basename="/survey-builder">
         <div className="App">
           < NavBar />
           <br/>
