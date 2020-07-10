@@ -45,7 +45,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <Router basename={process.env.PUBLIC_URL}>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
         <div className="App">
           < NavBar />
           <br/>
@@ -67,7 +67,7 @@ function App() {
                     component={PartData}/>
           </Switch>
         </div>
-      </Router>
+      </BrowserRouter>
     </Provider>
   );
 }
