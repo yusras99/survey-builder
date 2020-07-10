@@ -158,7 +158,7 @@ class TabList extends Component {
         return(
             <div className="list" ref={this.myRef}>
                 Back to <p> </p>
-                <Link to={process.env.PUBLIC_URL + studyLink}>
+                <Link to={studyLink}>
                     {studyName}
                 </Link>
                 <form action="/submit" method="POST" className="unit">

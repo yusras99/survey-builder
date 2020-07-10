@@ -53,10 +53,10 @@ class ConfigStudy extends Component {
             return (
                 <div className="container">
                     {expt.exptName} <p> </p>
-                    <Link to={process.env.PUBLIC_URL + exptDataLink}>
+                    <Link to={exptDataLink}>
                         Experiment Configs
                     </Link> <p> </p>
-                    <Link to={process.env.PUBLIC_URL + partDataLink}>
+                    <Link to={partDataLink}>
                         View Participants Data
                     </Link>
                 </div>
@@ -76,7 +76,7 @@ class ConfigStudy extends Component {
                 <br/>
                 <b>{this.props.match.params.studyName}</b>
                 <br/><br/>
-                <Link to={process.env.PUBLIC_URL + exptBuilderLink}>
+                <Link to={exptBuilderLink}>
                     Build an Experiment
                 </Link>
                 <form onSubmit={this.deployExpts}>

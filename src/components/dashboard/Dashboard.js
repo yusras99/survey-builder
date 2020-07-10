@@ -46,7 +46,7 @@ class Dashboard extends Component {
                     <div className="container">
                         <p> 
                             {item.studyName} <p> </p>
-                            <Link to={process.env.PUBLIC_URL + link}>
+                            <Link to={link}>
                                 View
                             </Link>
                         </p>
