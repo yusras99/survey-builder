@@ -67,7 +67,7 @@ function App() {
                     component={PartData}/>
           </Switch>
         </div>
-      </HashRouter>
+      </Router>
     </Provider>
   );
 }
