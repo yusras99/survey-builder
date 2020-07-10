@@ -45,7 +45,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <HashRouter basename="/">
+      <Router>
         <div className="App">
           < NavBar />
           <br/>
