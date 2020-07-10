@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch, BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, BrowserRouter, HashRouter } from "react-router-dom";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
@@ -45,29 +45,29 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <HashRouter basename="/">
         <div className="App">
           < NavBar />
           <br/>
           < Landing />
-          < Route exact path={process.env.PUBLIC_URL + "/"} component={HomePage} />
-          < Route exact path={process.env.PUBLIC_URL + "/register"} component={Register} />
-          < Route exact path={process.env.PUBLIC_URL + "/login"} component={Login} />
+          < Route exact path="/" component={HomePage} />
+          < Route exact path="/register" component={Register} />
+          < Route exact path="/login" component={Login} />
           <Switch>
-                <PrivateRoute exact path={process.env.PUBLIC_URL + "/dashboard"} component={Dashboard} />
-                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:expt/participantsData"} 
+                <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <PrivateRoute exact path="/:expt/participantsData"
                     component={PartData} />
-                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName"}
+                <PrivateRoute exact path="/:username/:studyName"
                     component={ConfigStudy} />
-                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName/exptBuilder"} 
+                <PrivateRoute exact path="/:username/:studyName/exptBuilder"
                     component={TabList} />
-                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName/:exptName/configs"} 
+                <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
                     component={ExptConfigs}/>
-                <PrivateRoute exact path={process.env.PUBLIC_URL + "/:username/:studyName/:exptName/participantsData"}
+                <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
                     component={PartData}/>
           </Switch>
         </div>
-      </BrowserRouter>
+      </HashRouter>
     </Provider>
   );
 }
