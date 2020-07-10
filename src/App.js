@@ -44,7 +44,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <Router>
+      <Router basename="/React">
         <div className="App">
           {/* Route to TabList later */}
           {/* <TabList /> */}
