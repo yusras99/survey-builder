@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, HashRouter } from "react-router-dom";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
@@ -44,7 +44,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <Router basename="/React">
+      <HashRouter>
         <div className="App">
           {/* Route to TabList later */}
           {/* <TabList /> */}
@@ -68,7 +68,7 @@ function App() {
                     component={PartData}/>
           </Switch>
         </div>
-      </Router>
+      </HashRouter>
     </Provider>
   );
 }
