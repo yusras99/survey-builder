@@ -13,6 +13,7 @@ import store from "./store";
 import TabList from './components/TabList/TabList';
 import NavBar from './components/layout/NavBar';
 import Landing from './components/layout/Landing';
+import HomePage from './components/layout/HomePage';
 
 import Register from './components/auth/Register';
 import Login from './components/auth/Login'
@@ -48,7 +49,8 @@ function App() {
         <div className="App">
           < NavBar />
           <br/>
-          < Route exact path='/' componenet={Landing} />
+          < Landing />
+          < Route exact path="/" component={HomePage} />
           < Route exact path="/register" component={Register} />
           < Route exact path="/login" component={Login} />
           <Switch>

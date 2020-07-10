@@ -2,28 +2,19 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-class Landing extends Component {
-  componentWillMount() {
-    console.log(!this.props.auth)
-  }
-
+class HomePage extends Component {
   render() {
-    if (!this.props.auth.isAuthenticated) {
-      return (
+      return(
         <div className="container">
+            <h1>
+            Welcome to Psych Researcher App!
+            </h1>
         </div>
-      );
-    } else {
-      return (
-        <div className="container">
-          Scientist: <b>{this.props.auth.user.username}</b>
-        </div>
-      );
-    }
+      )
   }
 }
 
-Landing.propTypes = {
+HomePage.propTypes = {
   auth: PropTypes.object.isRequired
 }
 
@@ -34,6 +25,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {}
-)(Landing);
+)(HomePage);
 
 // export default Landing;
