@@ -11,7 +11,7 @@ import {
 export const registerUser = (userData, history) => dispatch => {
     axios
         // set up proxy in package.json later
-        .post("http://localhost:5000/api/register", userData)
+        .post("https://test-api-615.herokuapp.com/api/register", userData)
         .then(res => history.push("/login")) // re-direct to login on successful register
         .catch(err =>
             dispatch({
@@ -25,7 +25,7 @@ export const registerUser = (userData, history) => dispatch => {
 export const loginUser = userData => dispatch => {
     axios
         // set up proxy in package.json later
-        .post("http://localhost:5000/api/login", userData)
+        .post("https://test-api-615.herokuapp.com/api/login", userData)
         .then(res => {
         // Save to localStorage
         // Set token to localStorage
