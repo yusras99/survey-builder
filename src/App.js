@@ -44,11 +44,15 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      Hello
+    </Provider>
+  );
+}
+
+export default App;
+
+{/* <BrowserRouter basename={process.env.PUBLIC_URL}>
         <div className="App">
-          {/* Route to TabList later */}
-          {/* <TabList /> */}
-          {/* <h1>Hello world</h1> */}
           < NavBar />
           <br/>
           < Landing />
@@ -68,9 +72,4 @@ function App() {
                     component={PartData}/>
           </Switch>
         </div>
-      </BrowserRouter>
-    </Provider>
-  );
-}
-
-export default App;
+      </BrowserRouter> */}
