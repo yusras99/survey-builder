@@ -44,7 +44,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
         <div className="App">
           {/* Route to TabList later */}
           {/* <TabList /> */}
