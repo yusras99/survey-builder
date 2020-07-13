@@ -1,4 +1,4 @@
-###### Project Description
+# Project Description
 
 This is a React- Redux project. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -12,13 +12,13 @@ Resources used for the project:
 - MongoDB Atlas (referred to as "MongoDB" below)
 - Heroku (hosts API)
 
-## Components
+# Components
 
-# layout
+## layout
 
 **Displays home page, nav bar, etc ...**
 
-# auth
+## auth
 
 **Handles login and register.**
 
@@ -26,7 +26,7 @@ Upon registration:
 - User's credentials will be sent to a database on MongoDB via API. Password is encoded with passport hwt (http://www.passportjs.org/packages/passport-jwt/). 
 - A database on MongoDB is created for the user. The databse will contain a collection called "info". 
 
-# dashboard 
+## dashboard 
 
 **Displays user's studies and allows users to create new studies.**
 
@@ -34,7 +34,7 @@ When a study is created, a document containing the name of the study will be sto
 
 The dashboard component will pull study names from the "info" collection via API. 
 
-# Study 
+## Study 
 
 **Displays experiments associated with a study and allows users to create and deploy experiments**
 
@@ -42,12 +42,12 @@ When a new experiment is created, the name of the experiment and its configurati
 
 When experiments are deployed, new collections will be created under user's database. Each new collection is dedicated to a specific experiment for a specific study. These collections will save participants data. 
 
-# SliderTab + TabBuilder + Tablist 
+## SliderTab + TabBuilder + Tablist 
 
 Current demo for creating a simple slider question. 
 
 
-## Explanation for src/actions, src/reducers, src/store.js:
+# Explanation for src/actions, src/reducers, src/store.js:
 
 A form submission in the app will trigger an action. 
 
@@ -56,7 +56,7 @@ Reducers have functions that determine how state reacts to actions.
 Store holds the complete state tree of app. It sends state to React components that will react to states. 
 
 
-## How to run this project on localhost:
+# How to run this project on localhost:
 
 Install npm and yarn on system.
 
