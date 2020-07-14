@@ -142,7 +142,6 @@ class TabList extends Component {
             })
             .then(function (response) {
                 alert("Your survey has been successfully created");
-                console.log(response);
                 window.location.reload(false);
             })
             .catch(function (error) {

@@ -3,7 +3,8 @@ import {
     ADD_STUDY_NAME,
     GET_DB_INFO,
     GET_STUDY_INFO,
-    GET_PART_DATA
+    GET_PART_DATA, 
+    GET_COL_NAMES
 } from "./types";
 
 export const addStudyName = (which_database, study_name) => dispatch => {
@@ -64,6 +65,17 @@ export const getPartData = (which_database, col_name) => dispatch => {
         .then(res => {
             dispatch({
                 type: GET_PART_DATA,
+                payload: res.data
+            })
+        })
+}
+
+export const getColNames = (which_database) => dispatch => {
+    axios
+        .get('https://test-api-615.herokuapp.com/api/' + which_database + "/collections")
+        .then(res => {
+            dispatch({
+                type: GET_COL_NAMES,
                 payload: res.data
             })
         })

@@ -2,14 +2,16 @@ import {
     ADD_STUDY_NAME,
     GET_DB_INFO,
     GET_STUDY_INFO,
-    GET_PART_DATA
+    GET_PART_DATA, 
+    GET_COL_NAMES
 } from "../actions/types";
 
 const initialState = {
     studyName: '',
     dbInfo: [],
     studyInfo: [],
-    partData: []
+    partData: [],
+    colNames: []
 };
 
 export default function(state = initialState, action) {
@@ -33,6 +35,11 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 partData: action.payload
+            };
+        case GET_COL_NAMES:
+            return {
+                ...state,
+                colNames: action.payload
             };
         default: 
             return state;

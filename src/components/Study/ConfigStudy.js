@@ -5,14 +5,15 @@ import { connect } from "react-redux";
 
 import {
     getStudyInfo,
-    createExptCol
+    createExptCol,
+    getColNames
 } from "../../actions/dataActions"
 
 class ConfigStudy extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            deployedExpts: []
         };
 
         this.deployExpts = this.deployExpts.bind(this);
@@ -24,26 +25,38 @@ class ConfigStudy extends Component {
         const username = this.props.auth.user.username;
         const studyName = this.props.match.params.studyName;
         this.props.getStudyInfo(username, studyName);
+        this.props.getColNames(username);
+    }
+
+    processColNames() {
+        const studyName = this.props.match.params.studyName;
+        const processedArr = this.props.colNames.filter(name => name != "info");
+        const currentStudyExpts = processedArr.filter(name => 
+            name.split('-')[0] == studyName);
+        const deployedExpts = currentStudyExpts.map(name => name.split('-')[1]);
+        // this.setState({ deployExpts: deployedExpts });
+        return deployedExpts;
     }
 
     showDeployedExpts() {
         // add an action to check if collection studyname-exptname exists
-        const exptNames = this.props.experiments.map(item => item.exptName);
-        console.log(exptNames);
-        if (exptNames.length == 0) {
+        const deployed = this.processColNames();
+        // this.setState({ deployExpts: deployedExpts });
+        if (deployed.length == 0) {
             return (
-                <b>None</b>
+                <div className="container">
+                    <p>None</p>
+                </div>
             )
         } else {
-            return exptNames.map(name => {
+            return deployed.map(name => {
                 return (
                     <div className="container">
                         <b>{name}</b>
-                        <br/>
                     </div>
                 )
             })
-        };
+        }
     }
 
     // for now deployment simply creates a collection for each experiment 
@@ -59,7 +72,8 @@ class ConfigStudy extends Component {
             this.props.createExptCol(username, studyName + "-" + expt_name);
         });
         // the alert could include res data from API
-        alert("Successfully deployed your experiments")
+        alert("Successfully deployed your experiments");
+        window.location.reload(false);
     }
 
     getExptNames() {
@@ -93,6 +107,10 @@ class ConfigStudy extends Component {
         const exptBuilderLink = "/" + username + "/" + 
             studyName + "/exptBuilder"
 
+        const deployed = this.processColNames();
+        const exptNames = this.props.experiments.map(item => item.exptName);
+        const difference = exptNames.filter(name => !deployed.includes(name));
+        console.log(difference);
         return (
             <div className="container">
                 <br/>
@@ -107,11 +125,11 @@ class ConfigStudy extends Component {
                     <br/><br/>
                     {this.getExptNames()}
                     <br/><br/>
-                    Deployed Experiments: 
-                    {this.showDeployedExpts()}
-                    <br/>
-                    <input type="submit" value="Deploy All Experiments" />
+                    <input type="submit" value="Deploy:" /> <p></p>
+                    {difference.map(name => {return (<p>{name} </p>)})}
                 </form>
+                Deployed Experiments:
+                {this.showDeployedExpts()}
             </div>
         )
     }
@@ -119,10 +137,15 @@ class ConfigStudy extends Component {
 
 ConfigStudy.propTypes = {
     // Proptype.type, the type here must match initialState of reducer
+    auth: PropTypes.object.isRequired,
+
     getStudyInfo: PropTypes.func.isRequired,
-    createExptCol: PropTypes.func.isRequired,
     experiments: PropTypes.array.isRequired,
-    auth: PropTypes.object.isRequired
+
+    createExptCol: PropTypes.func.isRequired,
+
+    getColNames: PropTypes.func.isRequired,
+    colNames: PropTypes.array.isRequired
 };
 
 // interaction between reducer and store (state), connect to props 
@@ -131,9 +154,10 @@ ConfigStudy.propTypes = {
 const mapStateToProps = state => ({
     auth: state.auth,
     experiments: state.dataFlow.studyInfo,
+    colNames: state.dataFlow.colNames
 });
 
 export default connect(
     mapStateToProps,
-    { getStudyInfo, createExptCol }
+    { getStudyInfo, createExptCol, getColNames }
 )(ConfigStudy);
