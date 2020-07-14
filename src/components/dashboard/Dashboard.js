@@ -37,6 +37,7 @@ class Dashboard extends Component {
         // TODO. Filter out study names. If an item doesn't have study names
         // as a key, then don't do anything. (wrap everything inside an if)
         const allInfo = this.props.dataFlowDBInfo;
+        console.log(allInfo);
         return allInfo.map(item => {
             const allKeys = Object.keys(item);
             if (allKeys.includes("studyName")) {

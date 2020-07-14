@@ -10,7 +10,7 @@ Below is a diagram that helps explain Redux:
 
 Resources used for the project:
 - MongoDB Atlas (referred to as "MongoDB" below)
-- Heroku (hosts API)
+- Heroku (hosts API. API: https://github.com/statistical-perceptions/demoAPI-v2)
 
 # Components
 

@@ -11,7 +11,9 @@ import {
 class ConfigStudy extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            
+        };
 
         this.deployExpts = this.deployExpts.bind(this);
     }
@@ -22,6 +24,26 @@ class ConfigStudy extends Component {
         const username = this.props.auth.user.username;
         const studyName = this.props.match.params.studyName;
         this.props.getStudyInfo(username, studyName);
+    }
+
+    showDeployedExpts() {
+        // add an action to check if collection studyname-exptname exists
+        const exptNames = this.props.experiments.map(item => item.exptName);
+        console.log(exptNames);
+        if (exptNames.length == 0) {
+            return (
+                <b>None</b>
+            )
+        } else {
+            return exptNames.map(name => {
+                return (
+                    <div className="container">
+                        <b>{name}</b>
+                        <br/>
+                    </div>
+                )
+            })
+        };
     }
 
     // for now deployment simply creates a collection for each experiment 
@@ -85,6 +107,9 @@ class ConfigStudy extends Component {
                     <br/><br/>
                     {this.getExptNames()}
                     <br/><br/>
+                    Deployed Experiments: 
+                    {this.showDeployedExpts()}
+                    <br/>
                     <input type="submit" value="Deploy All Experiments" />
                 </form>
             </div>
@@ -102,6 +127,7 @@ ConfigStudy.propTypes = {
 
 // interaction between reducer and store (state), connect to props 
 // for components to use
+// props: state
 const mapStateToProps = state => ({
     auth: state.auth,
     experiments: state.dataFlow.studyInfo,
