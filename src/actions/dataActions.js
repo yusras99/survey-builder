@@ -52,10 +52,15 @@ export const getStudyInfo = (which_database, which_study) => dispatch => {
         })
 }
 
-export const createExptCol = (which_database, col_name) => dispatch => {
+export const createExptCol = (which_database, col_name, which_expt) => dispatch => {
     axios
         .post('https://test-api-615.herokuapp.com/api/' + which_database + 
             "/createCol/" + col_name)
+        .then(res => {
+            // we can potentially improve the alert box
+            alert("Experiment ["+ which_expt + "] is deployed.");
+            window.location.reload(false);
+        })
 }
 
 export const getPartData = (which_database, col_name) => dispatch => {

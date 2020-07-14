@@ -12,9 +12,7 @@ import {
 class ConfigStudy extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            deployedExpts: []
-        };
+        this.state = {};
 
         this.deployExpts = this.deployExpts.bind(this);
     }
@@ -36,44 +34,6 @@ class ConfigStudy extends Component {
         const deployedExpts = currentStudyExpts.map(name => name.split('-')[1]);
         // this.setState({ deployExpts: deployedExpts });
         return deployedExpts;
-    }
-
-    showDeployedExpts() {
-        // add an action to check if collection studyname-exptname exists
-        const deployed = this.processColNames();
-        // this.setState({ deployExpts: deployedExpts });
-        if (deployed.length == 0) {
-            return (
-                <div className="container">
-                    <p>None</p>
-                </div>
-            )
-        } else {
-            return deployed.map(name => {
-                return (
-                    <div className="container">
-                        <b>{name}</b>
-                    </div>
-                )
-            })
-        }
-    }
-
-    // for now deployment simply creates a collection for each experiment 
-    // that would later store participants data
-    deployExpts(e) {
-        e.preventDefault();
-        // create a collection. Collection name: studyName - exptName 
-        const username = this.props.auth.user.username;
-        const studyName = this.props.match.params.studyName;
-        const exptNames = this.props.experiments.map(item => item.exptName);
-        console.log(exptNames);
-        exptNames.forEach(expt_name => {
-            this.props.createExptCol(username, studyName + "-" + expt_name);
-        });
-        // the alert could include res data from API
-        alert("Successfully deployed your experiments");
-        window.location.reload(false);
     }
 
     getExptNames() {
@@ -100,6 +60,76 @@ class ConfigStudy extends Component {
         })
     }
 
+    // for now deployment simply creates a collection for each experiment 
+    // that would later store participants data
+    deployExpts() {
+        const username = this.props.auth.user.username;
+        const studyName = this.props.match.params.studyName;
+
+        const deployed = this.processColNames();
+        const exptNames = this.props.experiments.map(item => item.exptName);
+        const difference = exptNames.filter(name => !deployed.includes(name));
+        difference.forEach(expt_name => {
+            this.props.createExptCol(username, studyName + "-" + expt_name, expt_name);
+        });
+    }
+
+    deploy() {
+        const deployed = this.processColNames();
+        const exptNames = this.props.experiments.map(item => item.exptName);
+        const difference = exptNames.filter(name => !deployed.includes(name));
+        if (exptNames.length == 0) {
+            return (
+                <div className="container">
+                    <p style={{color : "grey"}}>
+                        No experiments.
+                    </p>
+                </div>
+            )
+        } else if (difference.length == 0) {
+            return (
+                <div className="container">
+                    <p style={{color : "grey"}}>
+                        All experiments are deployed.
+                    </p>
+                </div>
+            )
+        } else {
+            return (
+                <div className="container">
+                    <button 
+                        class="btn" 
+                        onClick={this.deployExpts}>
+                        Deploy: <b>
+                            {difference.map(name => {return (<p>{name} </p>)})}
+                        </b>
+                    </button>
+                </div>
+            )
+        }
+    }
+
+    showDeployedExpts() {
+        // add an action to check if collection studyname-exptname exists
+        const deployed = this.processColNames();
+        // this.setState({ deployExpts: deployedExpts });
+        if (deployed.length == 0) {
+            return (
+                <div className="container">
+                    <p style={{color : "grey"}}>None</p>
+                </div>
+            )
+        } else {
+            return deployed.map(name => {
+                return (
+                    <div className="container">
+                        <b>{name}</b>
+                    </div>
+                )
+            })
+        }
+    }
+
     // an action to fetch userData from APi for componentWillMount
     render () {
         const username = this.props.match.params.username;
@@ -110,7 +140,6 @@ class ConfigStudy extends Component {
         const deployed = this.processColNames();
         const exptNames = this.props.experiments.map(item => item.exptName);
         const difference = exptNames.filter(name => !deployed.includes(name));
-        console.log(difference);
         return (
             <div className="container">
                 <br/>
@@ -119,15 +148,13 @@ class ConfigStudy extends Component {
                 <Link to={exptBuilderLink}>
                     Build an Experiment
                 </Link>
-                <form onSubmit={this.deployExpts}>
-                    <br/>
-                    Your Experiments
-                    <br/><br/>
-                    {this.getExptNames()}
-                    <br/><br/>
-                    <input type="submit" value="Deploy:" /> <p></p>
-                    {difference.map(name => {return (<p>{name} </p>)})}
-                </form>
+                <br/><br/>
+                Your Experiments
+                <br/><br/>
+                {this.getExptNames()}
+                <br/><br/>
+                {this.deploy()}
+                <br/><br/>
                 Deployed Experiments:
                 {this.showDeployedExpts()}
             </div>
