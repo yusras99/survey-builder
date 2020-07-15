@@ -27,9 +27,19 @@ class ExptConfigs extends Component {
 
     // an action to fetch userData from APi for componentWillMount
     render () {
+        const username = this.props.match.params.username;
+        const studyName = this.props.match.params.studyName;
+        const studyLink = "/" + username + "/" + studyName;
         return (
             <div className="container">
-                <br/>
+                <br/><br/>
+                Back to <p> </p>
+                <Link to={studyLink}>
+                    {studyName}
+                </Link>
+                <br/><br/>
+                <b>Participants data: </b>
+                <br/><br/>
                 {this.showPartData()}
             </div>
         )
