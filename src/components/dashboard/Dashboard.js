@@ -57,11 +57,11 @@ class Dashboard extends Component {
         });
     }
 
-    onAddStudy(e) {
+    onAddStudy() {
         const username = this.props.auth.user.username;
         this.props.addStudyName(username, this.state.studyName);
-        // alert("Your study has been succesfully created.");
-        window.location.reload(true);
+        // // alert("Your study has been succesfully created.");
+        // window.location.reload(false);
     };
 
     onLogoutClick = e => {

@@ -25,7 +25,9 @@ export const addStudyName = (which_database, study_name) => dispatch => {
             dispatch({
                 type: ADD_STUDY_NAME,
                 payload: entry.data.studyName
-            })
+            });
+            alert("Study [" + study_name + "] is created.");
+            window.location.reload(false);
         })
 }
 

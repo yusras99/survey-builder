@@ -28,7 +28,7 @@ class ConfigStudy extends Component {
 
     processColNames() {
         const studyName = this.props.match.params.studyName;
-        const processedArr = this.props.colNames.filter(name => name != "info");
+        const processedArr = this.props.colNames.filter(name => name !== "info");
         const currentStudyExpts = processedArr.filter(name => 
             name.split('-')[0] == studyName);
         const deployedExpts = currentStudyExpts.map(name => name.split('-')[1]);
@@ -39,6 +39,8 @@ class ConfigStudy extends Component {
     getExptNames() {
         const username = this.props.match.params.username;
         const studyName = this.props.match.params.studyName;
+
+        const deployed = this.processColNames();
         // check if the experiments are deployed 
         return this.props.experiments.map(expt => {
             const exptName = expt.exptName;
@@ -46,17 +48,34 @@ class ConfigStudy extends Component {
                 exptName + "/configs";
             const partDataLink = "/" + username + "/" + studyName + "/" + 
                 exptName + "/participantsData";
-            return (
-                <div className="container">
-                    {expt.exptName} <p> </p>
-                    <Link to={exptDataLink}>
-                        Experiment Configs
-                    </Link> <p> </p>
-                    <Link to={partDataLink}>
-                        View Participants Data
-                    </Link>
-                </div>
-            )
+            if (deployed.includes(exptName)) {
+                return (
+                    <div className="container">
+                        {expt.exptName} <p> </p>
+                        <Link to={exptDataLink}>
+                            <button type="button">
+                                Experiment Configs
+                            </button>
+                        </Link> <p> </p>
+                        <Link to={partDataLink}>
+                            <button type="button">
+                                View Participants Data
+                            </button>
+                        </Link>
+                    </div>
+                )
+            } else {
+                return (
+                    <div className="container">
+                        {expt.exptName} <p> </p>
+                        <Link to={exptDataLink}>
+                            <button type="button">
+                                Experiment Configs
+                            </button>
+                        </Link>
+                    </div>
+                )
+            };
         })
     }
 
@@ -109,27 +128,6 @@ class ConfigStudy extends Component {
         }
     }
 
-    showDeployedExpts() {
-        // add an action to check if collection studyname-exptname exists
-        const deployed = this.processColNames();
-        // this.setState({ deployExpts: deployedExpts });
-        if (deployed.length == 0) {
-            return (
-                <div className="container">
-                    <p style={{color : "grey"}}>None</p>
-                </div>
-            )
-        } else {
-            return deployed.map(name => {
-                return (
-                    <div className="container">
-                        <b>{name}</b>
-                    </div>
-                )
-            })
-        }
-    }
-
     // an action to fetch userData from APi for componentWillMount
     render () {
         const username = this.props.match.params.username;
@@ -148,15 +146,15 @@ class ConfigStudy extends Component {
                 <Link to={exptBuilderLink}>
                     Build an Experiment
                 </Link>
-                <br/><br/>
-                Your Experiments
-                <br/><br/>
-                {this.getExptNames()}
-                <br/><br/>
-                {this.deploy()}
-                <br/><br/>
-                Deployed Experiments:
-                {this.showDeployedExpts()}
+                <form>
+                    <br/>
+                    Your Experiments
+                    <br/><br/>
+                    {this.getExptNames()}
+                    <br/><br/>
+                    {this.deploy()}
+                    <br/>
+                </form>
             </div>
         )
     }
@@ -180,6 +178,8 @@ ConfigStudy.propTypes = {
 // props: state
 const mapStateToProps = state => ({
     auth: state.auth,
+    // experiments refer to the experiment configurations 
+    // stored in collection [info] under the user's database
     experiments: state.dataFlow.studyInfo,
     colNames: state.dataFlow.colNames
 });

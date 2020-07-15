@@ -8,33 +8,33 @@ import {
 } from "../../actions/dataActions"
 
 class ExptConfigs extends Component {
-    componentWillMount() {
+    componentDidMount() {
         const username = this.props.match.params.username;
         const studyName = this.props.match.params.studyName;
         this.props.getStudyInfo(username, studyName);
+        // console.log(this.props.experiments);
     }
 
     showExptData() {
         const thisExpt = this.props.match.params.exptName;
         const exptObj = 
             this.props.experiments.find(item => item.exptName == thisExpt);
+        // console.log(exptObj);
+        // const exptName = exptObj.exptName;
+        // SOLVE THIS ERROR
         const info = JSON.stringify(exptObj);
         return (
             <div>
-                <p>
-                    {info}
-                </p>
+                {/* <p>{exptName}</p> */}
             </div>
         )
-        // return this.props.experiments.find(item => item.exptName == thisExpt);
     }
 
     // an action to fetch userData from APi for componentWillMount
     render () {
         return (
             <div className="container">
-                <br/>
-                <br/>
+                <br/><br/>
                 {this.showExptData()}
             </div>
         )
