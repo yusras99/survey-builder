@@ -54,17 +54,17 @@ function App() {
           < Route exact path="/register" component={Register} />
           < Route exact path="/login" component={Login} />
           <Switch>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <PrivateRoute exact path="/:expt/participantsData"
-                    component={PartData} />
-                <PrivateRoute exact path="/:username/:studyName"
-                    component={ConfigStudy} />
-                <PrivateRoute exact path="/:username/:studyName/exptBuilder"
-                    component={TabList} />
-                <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
-                    component={ExptConfigs}/>
-                <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
-                    component={PartData}/>
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute exact path="/:expt/participantsData"
+              component={PartData} />
+            <PrivateRoute exact path="/:username/:studyName"
+              component={ConfigStudy} />
+            <PrivateRoute exact path="/:username/:studyName/exptBuilder"
+              component={TabList} />
+            <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
+              component={ExptConfigs}/>
+            <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
+              component={PartData}/>
           </Switch>
         </div>
       </HashRouter>

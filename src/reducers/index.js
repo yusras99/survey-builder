@@ -4,7 +4,7 @@ import errorReducer from "./errorReducers";
 import dataReducer from "./dataReducers";
 
 export default combineReducers({
-    auth: authReducer,
-    errors: errorReducer,
-    dataFlow: dataReducer
+  auth: authReducer,
+  errors: errorReducer,
+  dataFlow: dataReducer
 });
