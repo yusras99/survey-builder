@@ -47,7 +47,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <Router basename="/survey-builder/">
+      <HashRouter basename="/survey-builder/">
         <div className="App">
           < NavBar />
           <br/>
@@ -71,7 +71,7 @@ function App() {
               component={PartData}/>
           </Switch>
         </div>
-      </Router>
+      </HashRouter>
     </Provider>
   );
 }
