@@ -11,6 +11,8 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 import TabList from './components/TabList/TabList';
+import NormalCurveResearch from './components/items/NormalCurveResearch'
+
 import NavBar from './components/layout/NavBar';
 import Landing from './components/layout/Landing';
 import HomePage from './components/layout/HomePage';
@@ -61,6 +63,8 @@ function App() {
               component={ConfigStudy} />
             <PrivateRoute exact path="/:username/:studyName/exptBuilder"
               component={TabList} />
+            <PrivateRoute exact path="/:username/:studyName/normalCurves"
+              component={NormalCurveResearch} />
             <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
               component={ExptConfigs}/>
             <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
