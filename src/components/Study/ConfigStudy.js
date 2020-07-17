@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+
 import {
   getStudyInfo,
   createExptCol,
@@ -50,7 +52,7 @@ class ConfigStudy extends Component {
         exptName + "/participantsData";
       const exptPartLink = "https://statistical-perceptions.github.io/" + 
         "participant-app/#/participant-app/" + username + 
-          "/" + studyName + "-" + exptName + "/experiment"
+          "/" + studyName + "-" + exptName
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
@@ -65,12 +67,14 @@ class ConfigStudy extends Component {
                 View Participants Data
               </button>
             </Link> <p> </p>
-            <button 
-              onClick={() => 
-                alert("Copy the link below and add to your" + 
-                  "Qualtrics survey: \n \n" + exptPartLink)}>
-              Get Expt Link
-            </button>
+            <CopyToClipboard text={exptPartLink}>
+              <button 
+                onClick={() => 
+                  alert("Experiment link has been copied to clipboard. " + 
+                    "Paste it into your Qualtrics survey :)")}>
+                Copy experiment link to clipboard
+              </button>
+            </CopyToClipboard>
           </div>
         )
       } else {
