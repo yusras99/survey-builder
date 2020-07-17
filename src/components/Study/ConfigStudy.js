@@ -48,6 +48,9 @@ class ConfigStudy extends Component {
         exptName + "/configs";
       const partDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/participantsData";
+      const exptPartLink = "https://statistical-perceptions.github.io/" + 
+        "participant-app/#/participant-app/" + username + 
+          "/" + studyName + "-" + exptName + "/experiment"
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
@@ -55,13 +58,14 @@ class ConfigStudy extends Component {
             <Link to={exptDataLink}>
               <button type="button">
                 Experiment Configs
-                            </button>
+              </button>
             </Link> <p> </p>
             <Link to={partDataLink}>
               <button type="button">
                 View Participants Data
-                            </button>
-            </Link>
+              </button>
+            </Link> <p> </p>
+            Link to experiment: {exptPartLink}
           </div>
         )
       } else {
