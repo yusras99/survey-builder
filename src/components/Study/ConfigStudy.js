@@ -65,7 +65,12 @@ class ConfigStudy extends Component {
                 View Participants Data
               </button>
             </Link> <p> </p>
-            Link to experiment: {exptPartLink}
+            <button 
+              onClick={() => 
+                alert("Copy the link below and add to your" + 
+                  "Qualtrics survey: \n \n" + exptPartLink)}>
+              Get Expt Link
+            </button>
           </div>
         )
       } else {
@@ -75,7 +80,7 @@ class ConfigStudy extends Component {
             <Link to={exptDataLink}>
               <button type="button">
                 Experiment Configs
-                            </button>
+              </button>
             </Link>
           </div>
         )
@@ -153,13 +158,13 @@ class ConfigStudy extends Component {
           Build an Experiment
         </Link>
         <br/>
-        <Link to={normalCurvesLink}>
+        {/* <Link to={normalCurvesLink}>
           Build a normal curve item
-        </Link>
+        </Link> */}
         <form>
           <br />
-                    Your Experiments
-                    <br /><br />
+          Your Experiments
+          <br /><br />
           {this.getExptNames()}
           <br /><br />
           {this.deploy()}

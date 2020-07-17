@@ -1,0 +1,11 @@
+table {
+  width:50%;
+}
+
+table td {
+  border: 1px solid green;
+}
+
+table td.shrink {
+  white-space:nowrap
+}
