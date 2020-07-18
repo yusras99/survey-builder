@@ -9,49 +9,44 @@ class BuildExpt extends Component {
     this.state = {
       exptName: '',
       numOfItems: Number,
-      showItems: false
+      showItems: false,
+      itemToSelect: ["slider", "normal curve"]
     }
 
     this.onChange = this.onChange.bind(this);
     this.preBuild = this.preBuild.bind(this);
     this.showItem = this.showItem.bind(this);
     this.toggleShowItems = this.toggleShowItems.bind(this);
-    this.button = this.button.bind(this);
+    this.inputNumItems = this.inputNumItems.bind(this);
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
   }
 
-  item() {
-    return (
-      <div className="container">
-        Hello
-      </div>
-    )
-  }
-
   showItem() {
     console.log(this.state.numOfItems);
-    return (
-      <div>
-        {/* {Array(this.state.numOfItems).fill(
-          <div>
-            Hello
-          </div>
-        )} */}
-        {this.state.numOfItems}
-      </div>
-    )
+    const inputs = [];
+    for (let i = 1; i <= this.state.numOfItems; i ++) {
+      inputs.push(
+        <div>
+          Hello
+        </div>
+      )
+    }
+    return inputs;
   }
 
   toggleShowItems() {
     this.setState({ showItems: true })
   }
 
-  button() {
+  inputNumItems() {
     return (
       <div>
+        How many items do you want to build? <br/><br/>
+        <input type="text" name="numOfItems" value={this.state.numOfItems}
+          onChange={this.onChange}/> <p></p>
         <button class="btn" onClick={this.toggleShowItems}>Ok</button>
       </div>
     )
@@ -63,14 +58,10 @@ class BuildExpt extends Component {
         Enter experiment name: <br/><br/>
         <input type="text" name="exptName" value={this.state.exptName}
           onChange={this.onChange}/> <br/><br/>
-        How many items do you want to build? <br/><br/>
-        <input type="text" name="numOfItems" value={this.state.numOfItems}
-          onChange={this.onChange}/> <p></p>
           {
             !this.state.showItems && 
-            <this.button/>
+            <this.inputNumItems/>
           }
-        
       </div>
     )
   }
@@ -80,7 +71,6 @@ class BuildExpt extends Component {
       <div className="container">
         <h3>Experiment Builder</h3> <br/>
         {this.preBuild()} <br/>
-        {/* {this.showItems()} */}
         { this.state.showItems && <this.showItem/>}
       </div>
     )

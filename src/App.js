@@ -24,7 +24,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import ConfigStudy from './components/Study/ConfigStudy';
 import ExptConfigs from './components/Study/ExptConfigs';
 import PartData from './components/Study/PartData';
-import BuildExpt from './components/Study/BuildExpt';
+import BuildExpt from './components/Study/BuildExpt.jsx';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {

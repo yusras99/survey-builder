@@ -123,7 +123,7 @@ class ConfigStudy extends Component {
         <div className="container">
           <p style={{ color: "grey" }}>
             All experiments are deployed.
-                    </p>
+          </p>
         </div>
       )
     } else {
