@@ -155,7 +155,7 @@ class TabList extends Component {
           console.log(res)
         })
         .then(function (response) {
-          alert("Your survey has been successfully created");
+          alert("Your experiment has been successfully created");
           window.location.reload(false);
         })
         .catch(function (error) {
@@ -175,7 +175,7 @@ class TabList extends Component {
           {studyName}
         </Link>
         <form action="/submit" method="POST" className="unit">
-          <p>Enter a name for this experiment</p>
+          <p>Enter a name for this experiment </p>
           <input ref={this.nameRef}
             value={this.state.exptName}
             onChange={this.onChange}

@@ -14,10 +14,13 @@ class SliderTab extends Component {
     // console.log(this.props);
 
     this.state = {
-      checked: false
+      checked: false,
+      minVal: Number,
+      maxVal: Number
     }
 
     this.handleChange = this.handleChange.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   delete() {
@@ -26,6 +29,10 @@ class SliderTab extends Component {
 
   getCount() {
     this.props.getCount(this.props.count);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   handleChange(type, q, count) {
@@ -38,13 +45,19 @@ class SliderTab extends Component {
   render() {
     return (
       <form className="unit">
-        <p>Drag the slider and click confirm</p>
-        <p>Question: <input onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)} ref={this.qRef} type="text" /></p>
+        <p>Question: <input onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)} ref={this.qRef} type="text" /></p><br/>
+        {this.state.minVal}
         <input type="range" min="1" max="100" defaultValue="50" className="slider" name="myRange" id="myRange" ref={this.sliderRef} />
-        <p>Minimum: <input onInput={() => this.handleChange("lowRange", this.minRef.current.value, this.props.count)} ref={this.minRef} type="text" /></p>
+        {this.state.maxVal} <br/>
+        <p>Minimum: 
+          <input onInput={() => this.handleChange("lowRange", this.minRef.current.value, this.props.count)} 
+          ref={this.minRef} type="text" 
+          name="minVal" value={this.state.minVal} onChange={this.onChange}/></p><br/>
         {/* <p>Value: <span id="slider1" ref={this.outputRef}></span></p> */}
-        <p>Maximum: <input onInput={() => this.handleChange("highRange", this.maxRef.current.value, this.props.count)} ref={this.maxRef} type="text" /></p>
-        <p onClick={this.delete.bind(this)}>Delete</p>
+        <p>Maximum: <input onInput={() => this.handleChange("highRange", this.maxRef.current.value, this.props.count)} 
+          ref={this.maxRef} type="text" 
+          name="maxVal" value={this.state.maxVal} onChange={this.onChange}/></p><br/>
+        <button onClick={this.delete.bind(this)}>Delete</button>
       </form>
     )
   }

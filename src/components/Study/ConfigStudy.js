@@ -163,10 +163,10 @@ class ConfigStudy extends Component {
           Build an Experiment
         </Link>
         <br/>
-        <Link to={buildExptLink}>
+        {/* <Link to={buildExptLink}>
           Build a new experiment
         </Link>
-        <br/>
+        <br/> */}
         {/* <Link to={normalCurvesLink}>
           Build a normal curve item
         </Link> */}
