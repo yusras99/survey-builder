@@ -146,9 +146,10 @@ class ConfigStudy extends Component {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     const exptBuilderLink = "/" + username + "/" +
-      studyName + "/exptBuilder"
+      studyName + "/exptBuilder";
     const normalCurvesLink = "/" + username + "/" +
-      studyName + "/normalCurves"
+      studyName + "/normalCurves";
+    const buildExptLink = "/" + username + "/" + studyName + "/newExpt";
 
     const deployed = this.processColNames();
     const exptNames = this.props.experiments.map(item => item.exptName);
@@ -160,6 +161,10 @@ class ConfigStudy extends Component {
         <br /><br />
         <Link to={exptBuilderLink}>
           Build an Experiment
+        </Link>
+        <br/>
+        <Link to={buildExptLink}>
+          Build a new experiment
         </Link>
         <br/>
         {/* <Link to={normalCurvesLink}>

@@ -24,6 +24,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import ConfigStudy from './components/Study/ConfigStudy';
 import ExptConfigs from './components/Study/ExptConfigs';
 import PartData from './components/Study/PartData';
+import BuildExpt from './components/Study/BuildExpt';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -63,6 +64,8 @@ function App() {
               component={ConfigStudy} />
             <PrivateRoute exact path="/:username/:studyName/exptBuilder"
               component={TabList} />
+            <PrivateRoute exact path="/:username/:studyName/newExpt" 
+              component={BuildExpt} />
             <PrivateRoute exact path="/:username/:studyName/normalCurves"
               component={NormalCurveResearch} />
             <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
