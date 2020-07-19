@@ -10,6 +10,13 @@ import {
 import "./PartData.css";
 
 class ExptConfigs extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+
+    this.returnRow = this.returnRow.bind(this);
+  }
+
   componentWillMount() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
@@ -19,7 +26,11 @@ class ExptConfigs extends Component {
   }
 
   partDataHeader() {
-    const header = ["Participant ID", "Slider Value"];
+    var item = {};
+    if (!this.props.partData.length == 0) {
+      item = this.props.partData[0];
+    }
+    const header = Object.keys(item).filter(x => x != "_id");
     return header.map(hd => {
       return (
       <th>{hd}</th>
@@ -27,25 +38,31 @@ class ExptConfigs extends Component {
     })
   }
 
+  returnRow(answer) {
+    var item = {};
+    if (!this.props.partData.length == 0) {
+      item = this.props.partData[0];
+    }
+    const header = Object.keys(item).filter(x => x != "_id");
+    return header.map(hd => {
+      return (
+        <th>
+          {answer[hd]}
+        </th>
+      )
+    })
+  }
+
   showPartData() {
-    console.log(this.props.partData);
     if (!this.props.partData.length == 0) {
       return this.props.partData.map(answer => {
-        const { _id, PartID, sliderVal } = answer;
         return (
-          <tr key={_id}>
-            <th>{PartID}</th>
-            <th>{sliderVal}</th>
+          <tr>
+            {this.returnRow(answer)}
           </tr>
         )
       })
     }
-    // const info = JSON.stringify(this.props.partData);
-    // return (
-    //   <div className="container">
-    //     {info}
-    //   </div>
-    // )
   }
 
   // an action to fetch userData from APi for componentWillMount

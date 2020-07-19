@@ -73,10 +73,11 @@ class Dashboard extends Component {
     return (
       <div className="container">
         <form onSubmit={this.onAddStudy}>
-          Enter a name for your study: <p>  </p>
+          <b>Enter a name for your study:</b> <br/>
           <input type="text" name="studyName"
             value={this.state.studyName} onChange={this.onChange} />
-          <input type="submit" value="Add Study" />
+          <input type="submit" value="Add Study" /> <br/>
+          Please do <b>not</b> use "-" in the name
         </form>
 
         <form>
