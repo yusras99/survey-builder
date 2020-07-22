@@ -51,7 +51,7 @@ class ConfigStudy extends Component {
       const partDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/participantsData";
       const exptPartLink = "https://statistical-perceptions.github.io/" + 
-        "participant-app/#/participant-app/" + username + 
+        "participant-app/#/participant-app/expt/" + username + 
           "/" + studyName + "-" + exptName
       if (deployed.includes(exptName)) {
         return (
@@ -115,7 +115,7 @@ class ConfigStudy extends Component {
         <div className="container">
           <p style={{ color: "grey" }}>
             No experiments.
-                    </p>
+          </p>
         </div>
       )
     } else if (difference.length == 0) {
