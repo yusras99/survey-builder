@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
 import './NormalCurve.css';
+import { Link } from "react-router-dom";
 
 class NormalCurveResearch extends Component {
   constructor(props) {
@@ -24,7 +25,6 @@ class NormalCurveResearch extends Component {
       rectX: 12.5,
       down: false,
       svgWidth: 500,
-      svgHeight: 250,
       svgX: 6,
       distancing: 7,
       mousePointerRange: 0,
@@ -50,10 +50,10 @@ class NormalCurveResearch extends Component {
     var hard;
 
     if (CX < this.state.rectX) {
-      hard = <circle className="icon" stroke="DarkCyan" fill="DarkCyan" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
+      hard = <circle className="icon" stroke="#039" fill="#039" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
     else {
-      hard = <circle className="icon" stroke="DarkCyan" fill="DarkCyan" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
+      hard = <circle className="icon" stroke="#555" fill="#555" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
 
     return hard;
@@ -74,16 +74,16 @@ class NormalCurveResearch extends Component {
     var hard;
 
     if (CX < this.state.rectX) {
-      hard = <circle className="icon" stroke="Crimson" fill="Crimson" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
+      hard = <circle className="icon" stroke="#039" fill="#039" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
     else {
-      hard = <circle className="icon" stroke="Crimson" fill="Crimson" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
+      hard = <circle className="icon" stroke="#555" fill="#555" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
 
     return hard;
   }
 
-  triMouseDown(e, num) {
+  triMouseDown(e) {
     if (e.type === "mousedown") {
       // console.log("MOUSEDOWN");
       e.preventDefault();
@@ -94,20 +94,11 @@ class NormalCurveResearch extends Component {
       var ptPre = svgPre.createSVGPoint();
       ptPre.x = e.clientX;
       var svgPPre = ptPre.matrixTransform(svgPre.getScreenCTM().inverse());
-      if (num === 1) {
-        this.setState(prevState => ({
-          // rectX : svgP.x,
-          triDown: num,
-          mousePointerRange: prevState.triCent1 + this.state.distancing1 - svgPPre.x
-        }));
-      }
-      else if (num === 2) {
-        this.setState(prevState => ({
-          // rectX : svgP.x,
-          triDown: num,
-          mousePointerRange: prevState.triCent2 + this.state.distancing2 - svgPPre.x
-        }));
-      }
+      this.setState(prevState => ({
+        // rectX : svgP.x,
+        triDown: true,
+        mousePointerRange: prevState.triCent + this.state.distancing2 - svgPPre.x
+      }));
       // console.log(this.state);
     }
   }
@@ -121,44 +112,35 @@ class NormalCurveResearch extends Component {
     ptPre.x = e.clientX;
     var svgPPree = ptPre.matrixTransform(svgPre.getScreenCTM().inverse());
     this.setState({ x: e.screenX, y: e.screenY, svgX: svgPPree.x });
-    if (this.state.triDown === 2) {
+    if (this.state.triDown) {
       // console.log("DRAG CONT'D");
       var svg = this.svgRef.current;
       var pt = svg.createSVGPoint();
       pt.x = e.clientX;
       var svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
       e.preventDefault();
-      var x = svgP.x - this.state.triCent2 + this.state.mousePointerRange;
+      var x = svgP.x - this.state.triCent + this.state.mousePointerRange;
+      // if (x < 6) {
+      //     this.setState({ rectX : 6, col : 0 })
+      // }
+      // else if (x > 250) {
+      //     // this.setState({ rectX : this.state.svgWidth - this.state.cursorWidth})
+      //     this.setState({ rectX : 250 - 187, col : 15});
+      // }
+      // else {
+      //     var colValTemp = Math.round((svgP.x - 6) / 7);
+      //     var newX = this.state.distancing * colValTemp + 6;
+      //     this.setState({ rectX : newX, col : colValTemp });
+      // }
       var col = Math.round((x - 6) / 7);
       if (col < 0) {
         this.setState({ distancing2: 0, col21: 0, col22: this.state.len2 - 1 });
       }
-      else if (col > this.state.colLim2) {
-        this.setState({ distancing2: this.state.distancing * this.state.colLim2, col21: this.state.colLim2, col22: this.state.colLim2 + this.state.len2 - 1 })
+      else if (col > 55) {
+        this.setState({ distancing2: this.state.distancing * 55, col21: 58, col22: 69 })
       }
       else {
         this.setState({ distancing2: this.state.distancing * col, col21: col, col22: col + this.state.len2 - 1 });
-      }
-      this.curveArea(col);
-      // this.setState({ distancing2 : x })
-    }
-    else if (this.state.triDown === 1) {
-      // console.log("DRAG CONT'D");
-      var svg = this.svgRef.current;
-      var pt = svg.createSVGPoint();
-      pt.x = e.clientX;
-      var svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
-      e.preventDefault();
-      var x = svgP.x - this.state.triCent1 + this.state.mousePointerRange;
-      var col = Math.round((x - 6) / 7);
-      if (col < 0) {
-        this.setState({ distancing1: 0, col11: 0, col12: this.state.len1 - 1 });
-      }
-      else if (col > this.state.colLim1) {
-        this.setState({ distancing1: this.state.distancing * this.state.colLim1, col11: this.state.colLim1, col2: this.state.colLim1 + this.state.len1 - 1 })
-      }
-      else {
-        this.setState({ distancing1: this.state.distancing * col, col11: col, col12: col + this.state.len1 - 1 });
       }
       this.curveArea(col);
       // this.setState({ distancing2 : x })
@@ -173,7 +155,7 @@ class NormalCurveResearch extends Component {
   }
 
   curveArea(col) {
-    if (this.state.col11 >= this.state.col22 || this.state.col12 <= this.state.col21) {
+    if (this.state.col11 > this.state.col22 || this.state.col12 < this.state.col21) {
       this.areaRef.current.innerHTML = 0;
     }
     else {
@@ -202,14 +184,11 @@ class NormalCurveResearch extends Component {
             colValHeiS2: jsonData["colValHeiS2"],
             distancing1: (jsonData["len2"] + 1) * 7,
             distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * 7,
-            triCent1: Math.round((0.5 * jsonData["len1"]) * 7) + 7,
-            triCent2: Math.round((0.5 * jsonData["len2"]) * 7) + 7,
+            triCent: Math.round((0.5 * jsonData["len2"]) * 7) + 7,
             col11: jsonData["len2"] + 1,
-            col12: jsonData["len1"] + jsonData["len2"] + 1,
-            col21: jsonData["len1"] + jsonData["len2"] + 3,
-            col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
-            colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
-            colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
+            col12: jsonData["len1"] + jsonData["len2"],
+            col21: 17,
+            col22: 28,
             overlapVals: jsonData["overlapVals"],
           })
         }
@@ -220,22 +199,15 @@ class NormalCurveResearch extends Component {
   }
 
   render() {
-    // const { isDragActive, getRootProps, getInputProps, isDragReject, acceptedFiles, rejectedFiles } = useDropzone({
-    //     onDrop: this.handleDrop,
-    //                 // minSize={1024}
-    //                 // maxSize={3072000}
-    //     accept: "application/JSON, .json",
-    //     minSize: 0
-    //     // maxSize,
-    // });
-
+    // const username = this.props.match.params.username;
+    // const studyName = this.props.match.params.studyName;
+    // const studyLink = "/" + username + "/" + studyName;
     if (this.state.dataReceived) {
       return (
         <div
           onMouseMove={e => this.triDrag(e)}
           onMouseUp={e => this.triUp(e)}>
-          <svg width={this.state.svgWidth} height={this.state.svgHeight} ref={this.svgRef}>
-            {/* <rect width="100%" height="100%" fill="red"/> */}
+          <svg width={this.state.svgWidth} height="500" ref={this.svgRef}>
             {[...Array(this.state.len1).keys()].map(
               (col) =>
                 [...Array(this.state.colValHeiS[col]).keys()].map(
@@ -251,40 +223,26 @@ class NormalCurveResearch extends Component {
             <polygon
               points={
                 [
-                  [this.state.triCent1 + this.state.distancing1 - 15, 175],
-                  [this.state.triCent1 + this.state.distancing1 + 15, 175],
-                  [this.state.triCent1 + this.state.distancing1, 160]
+                  [this.state.triCent + this.state.distancing2 - 15, 175],
+                  [this.state.triCent + this.state.distancing2 + 15, 175],
+                  [this.state.triCent + this.state.distancing2, 160]
                 ]
               }
-              onMouseDown={(e, num) => this.triMouseDown(e, 1)}
+              onMouseDown={e => this.triMouseDown(e)}
             />
-            <polygon
-              points={
-                [
-                  [this.state.triCent2 + this.state.distancing2 - 15, 175],
-                  [this.state.triCent2 + this.state.distancing2 + 15, 175],
-                  [this.state.triCent2 + this.state.distancing2, 160]
-                ]
-              }
-              onMouseDown={(e, num) => this.triMouseDown(e, 2)}
-            />
-            Sorry, please use a different browser.
+              Sorry, please use a different browser.
           </svg>
-          <br />
-          <div class="boxed">
-            <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
-            <input type="text" id="Data1" name="Data1"></input>
-            <br />
-            <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
-            <input type="text" id="Data2" name="Data2"></input>
-          </div>
-          <h4>Area Under Curve: <span ref={this.areaRef}></span></h4>
+          {/* <h1>Area Under Curve: {this.state.colVals[this.state.col]}</h1> */}
+          {/* <h1>Mouse coordinates: { this.state.x } { this.state.y } {this.state.svgX} {Math.round((this.state.svgX - 6) / 7)} | Triangle Tip: {this.state.triCent + this.state.distancing2} | Tip-Mouse Distance: {this.state.mousePointerRange}</h1> */}
+          <h1>Area Under Curve: <span ref={this.areaRef}></span></h1>
+          {/* <input className="slider" type="range" min="1" max="15" defaultValue="8" className="slider" name="myRange" ref={this.sliderRef} /> */}
         </div>
       )
     }
     else {
       return (
         <div>
+          <br />
           <Dropzone
             onDrop={this.handleDrop}
             // minSize={1024}

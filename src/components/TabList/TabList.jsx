@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import NormalCurveResearch from '../items/NormalCurveResearch';
+import NormalCurveResearch from '../items/NormalCurveResearch.jsx';
 
 const axios = require('axios');
 
@@ -40,6 +40,7 @@ class TabList extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  // Developers need to add more cases here
   builderFunction = (tabDefine) => {
     var arr = this.state.children;
 
@@ -139,7 +140,6 @@ class TabList extends Component {
         int++;
       }
       finalObj["count"] = int;
-      finalObj["type"] = "experiment";
 
       const username = this.props.auth.user.username;
       const expt_name = this.state.exptName;

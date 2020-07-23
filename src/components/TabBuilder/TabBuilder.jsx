@@ -6,13 +6,14 @@ class TabBuilder extends Component {
     this.selectRef = React.createRef();
   }
 
+  // Developers need to add options here
   render() {
     return (
       <div className="unit">
         <span>Choose what element to add next</span><br />
         <select name="tabType" id="tabType" ref={this.selectRef}>
           <option value="slider">Slider</option>
-          {/* <option value="normal-curve">Normal Curve</option> */}
+          <option value="normal-curve">Normal Curve</option>
         </select>
         <button onClick={() => this.props.build(this.selectRef.current.value)}>+</button>
       </div>
