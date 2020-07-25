@@ -57,7 +57,10 @@ class TabList extends Component {
       case "normal-curve": 
         arr.push({
           id: this.state.count,
-          tab: <NormalCurveResearch /> 
+          tab: <NormalCurveResearch getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count} 
+                  handleChange={this.handleChange} 
+                  key={this.state.count.toString()}/> 
         })
         break;  
       default:
@@ -86,6 +89,8 @@ class TabList extends Component {
     return count;
   }
 
+  // validating input fields. 
+  // for now: developers will need to add a case below 
   checkOutput(obj) {
     var int = 0;
     var complete = true;
@@ -113,8 +118,9 @@ class TabList extends Component {
           break;
         default:
           complete = false;
+      case "normal-curve":
+        complete = true;
       }
-
       int++;
     }
     return complete;

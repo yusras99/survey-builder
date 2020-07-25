@@ -4,7 +4,8 @@ import {
   GET_DB_INFO,
   GET_STUDY_INFO,
   GET_PART_DATA,
-  GET_COL_NAMES
+  GET_COL_NAMES,
+  COMPONENT_DATA
 } from "./types";
 
 export const addStudyName = (which_database, study_name) => dispatch => {

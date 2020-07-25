@@ -11,12 +11,15 @@ class NormalCurveResearch extends Component {
     this.svgRef = React.createRef();
     this.areaRef = React.createRef();
 
+    this.qRef = React.createRef();
+    this.data1Ref = React.createRef();
+    this.data2Ref = React.createRef();
+
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
     this.triMouseDown = this.triMouseDown.bind(this);
     this.triDrag = this.triDrag.bind(this);
     this.triUp = this.triUp.bind(this);
-    this.curveArea = this.curveArea.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
 
     this.state = {
@@ -44,7 +47,6 @@ class NormalCurveResearch extends Component {
 
     const CX = this.state.distancing1 + this.state.distancing * xPosOrig + 10;
     const CY = 140 - this.state.distancing * yPos + 10;
-
 
     // const soft = <circle className="icon" stroke="#555" fill="#555" fillOpacity="0.3" strokeOpacity="0.4" cx={CX} cy={CY} r="2"></circle>;
     var hard;
@@ -219,19 +221,26 @@ class NormalCurveResearch extends Component {
     this.setState({ fileNames: acceptedFiles.map(file => file.name) })
   }
 
-  render() {
-    // const { isDragActive, getRootProps, getInputProps, isDragReject, acceptedFiles, rejectedFiles } = useDropzone({
-    //     onDrop: this.handleDrop,
-    //                 // minSize={1024}
-    //                 // maxSize={3072000}
-    //     accept: "application/JSON, .json",
-    //     minSize: 0
-    //     // maxSize,
-    // });
+  delete() {
+    this.props.delete(this.props.count);
+  }
 
+  getCount() {
+    this.props.getCount(this.props.count);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleChange(type, q, count) {
+    this.props.handleChange(type, q, count);
+  }
+
+  render() {
     if (this.state.dataReceived) {
       return (
-        <div
+        <form
           onMouseMove={e => this.triDrag(e)}
           onMouseUp={e => this.triUp(e)}>
           <svg width={this.state.svgWidth} height={this.state.svgHeight} ref={this.svgRef}>
@@ -269,17 +278,25 @@ class NormalCurveResearch extends Component {
               onMouseDown={(e, num) => this.triMouseDown(e, 2)}
             />
             Sorry, please use a different browser.
-          </svg>
-          <br />
-          <div class="boxed">
-            <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
-            <input type="text" id="Data1" name="Data1"></input>
+          </svg><br/>
+          <p>
+            Question: <p></p>
+            <input type="text" ref={this.qRef} 
+              onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}/>
+          </p><br/><br/>
+          <div className="boxed">
+            <div className="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
+            <input type="text" id="Data1" name="Data1" ref={this.data1Ref}
+              onInput={() => this.handleChange("Data1", this.data1Ref.current.value, this.props.count)} />
             <br />
-            <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
-            <input type="text" id="Data2" name="Data2"></input>
-          </div>
+            <div className="color-box" style={{ backgroundColor: "Crimson" }}></div>
+            <input type="text" id="Data2" name="Data2" ref={this.data2Ref}
+              onInput={() => this.handleChange("Data2", this.data2Ref.current.value, this.props.count)}/>
+          </div><br/>
           <h4>Area Under Curve: <span ref={this.areaRef}></span></h4>
-        </div>
+          <button onClick={this.delete.bind(this)}>Delete this Question</button>
+          <br/><br/>
+        </form>
       )
     }
     else {
@@ -301,14 +318,14 @@ class NormalCurveResearch extends Component {
               </div>
             )}
           </Dropzone>
-          <div>
+          {/* <div>
             <strong>Files:</strong>
             <ul>
               {this.state.fileNames.map(fileName => (
                 <li key={fileName}>{fileName}</li>
               ))}
             </ul>
-          </div>
+          </div> */}
         </div>
       )
     }
