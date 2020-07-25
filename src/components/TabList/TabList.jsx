@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 
 import NormalCurveResearch from '../items/NormalCurveResearch.jsx';
 
+import { sendFile } from '../../actions/dataActions'
+
 const axios = require('axios');
 
 class TabList extends Component {
@@ -151,7 +153,13 @@ class TabList extends Component {
       const expt_name = this.state.exptName;
       const studyName = this.props.match.params.studyName;
 
+      console.log(this.props.dataFlowFiles);
+
       // use the API to add a json object into an array under the study
+      if (!this.props.dataFlowFiles.length == 0) {
+        this.props.dataFlowFiles.map(item => this.props.sendFile(username, item))
+      }
+
       axios.put(
         'https://test-api-615.herokuapp.com/api/feedback/' + username +
         '/info/studyName-' + studyName + '/experiments',
@@ -167,6 +175,7 @@ class TabList extends Component {
         .catch(function (error) {
           console.log(error);
         });
+
     }
   }
 
@@ -205,13 +214,19 @@ class TabList extends Component {
 
 TabList.propTypes = {
   auth: PropTypes.object.isRequired,
-  dataFlowDBInfo: PropTypes.array.isRequired
+  dataFlowDBInfo: PropTypes.array.isRequired,
+  sendFile: PropTypes.func.isRequired,
+  dataFlowFiles: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  dataFlowDBInfo: state.dataFlow.dbInfo
+  dataFlowDBInfo: state.dataFlow.dbInfo,
+  dataFlowFiles: state.dataFlow.files
 });
 
 // export default TabList;
-export default connect(mapStateToProps)(TabList);
+export default connect(
+  mapStateToProps,
+  { sendFile }
+)(TabList);

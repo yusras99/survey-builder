@@ -56,25 +56,29 @@ class ConfigStudy extends Component {
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
-            {expt.exptName} <p> </p>
-            <Link to={exptDataLink}>
-              <button type="button">
-                Experiment Configs
-              </button>
-            </Link> <p> </p>
-            <Link to={partDataLink}>
-              <button type="button">
-                View Participants Data
-              </button>
-            </Link> <p> </p>
-            <CopyToClipboard text={exptPartLink}>
-              <button 
-                onClick={() => 
-                  alert("Experiment link has been copied to clipboard. " + 
-                    "Paste it into your Qualtrics survey :)")}>
-                Copy experiment link to clipboard
-              </button>
-            </CopyToClipboard>
+            <div className="boxed">
+              <b>{expt.exptName}</b> <br/>
+              <Link to={exptDataLink}>
+                <button type="button">
+                  Experiment Configs
+                </button>
+              </Link> <p> </p>
+              <Link to={partDataLink}>
+                <button type="button">
+                  View Participants Data
+                </button>
+              </Link> <p> </p> <br/><br/>
+              Experiment Link: <br/>
+              {exptPartLink} <br/>
+              <CopyToClipboard text={exptPartLink}>
+                <button 
+                  onClick={() => 
+                    alert("Experiment link has been copied to clipboard. " + 
+                      "Paste it into your Qualtrics survey :)")}>
+                  Copy experiment link to clipboard
+                </button>
+              </CopyToClipboard>
+            </div>
           </div>
         )
       } else {
@@ -171,9 +175,9 @@ class ConfigStudy extends Component {
           Build a normal curve item
         </Link> */}
         <form>
-          <br />
-          Your Experiments
-          <br /><br />
+          <h3>
+            Your Experiments
+          </h3>
           {this.getExptNames()}
           <br /><br />
           {this.deploy()}

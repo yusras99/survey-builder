@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
 import './NormalCurve.css';
 
+// NEW:
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { storeFile } from '../../actions/dataActions'
+
 class NormalCurveResearch extends Component {
   constructor(props) {
     super(props);
@@ -185,39 +191,56 @@ class NormalCurveResearch extends Component {
   }
 
   handleDrop(acceptedFiles) {
-    console.log(acceptedFiles.map(file => {
-      acceptedFiles.forEach((file) => {
-        const reader = new FileReader()
+    if (acceptedFiles) {
 
-        reader.onabort = () => console.log('file reading was aborted')
-        reader.onerror = () => console.log('file reading has failed')
-        reader.onload = () => {
-          // Do whatever you want with the file contents
-          const fileText = reader.result;
-          console.log(fileText);
-          const jsonData = JSON.parse(fileText);
-          this.setState({
-            dataReceived: true,
-            len1: jsonData["len1"],
-            colValHeiS: jsonData["colValHeiS"],
-            len2: jsonData["len2"],
-            colValHeiS2: jsonData["colValHeiS2"],
-            distancing1: (jsonData["len2"] + 1) * 7,
-            distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * 7,
-            triCent1: Math.round((0.5 * jsonData["len1"]) * 7) + 7,
-            triCent2: Math.round((0.5 * jsonData["len2"]) * 7) + 7,
-            col11: jsonData["len2"] + 1,
-            col12: jsonData["len1"] + jsonData["len2"] + 1,
-            col21: jsonData["len1"] + jsonData["len2"] + 3,
-            col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
-            colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
-            colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
-            overlapVals: jsonData["overlapVals"],
-          })
-        }
-        reader.readAsText(file)
-      })
-    }));
+      // this.props.storeFile(acceptedFiles[0].name, )
+
+      console.log(acceptedFiles.map(file => {
+        acceptedFiles.forEach((file) => {
+
+          const reader = new FileReader()
+  
+          reader.onabort = () => console.log('file reading was aborted')
+          reader.onerror = () => console.log('file reading has failed')
+          reader.onload = () => {
+            // Do whatever you want with the file contents
+            const fileText = reader.result;
+            // console.log(fileText);
+            const jsonData = JSON.parse(fileText);
+
+            // put content in store
+            if (this.props.dataFlowFiles.length == 0) {
+              this.props.storeFile(file.name, jsonData);
+            } else {
+              const names = this.props.dataFlowFiles.map(item => item.fileName);
+              if (!names.includes(file.name)) {
+                this.props.storeFile(file.name, jsonData);
+              }
+            };
+
+            this.setState({
+              dataReceived: true,
+              len1: jsonData["len1"],
+              colValHeiS: jsonData["colValHeiS"],
+              len2: jsonData["len2"],
+              colValHeiS2: jsonData["colValHeiS2"],
+              distancing1: (jsonData["len2"] + 1) * 7,
+              distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * 7,
+              triCent1: Math.round((0.5 * jsonData["len1"]) * 7) + 7,
+              triCent2: Math.round((0.5 * jsonData["len2"]) * 7) + 7,
+              col11: jsonData["len2"] + 1,
+              col12: jsonData["len1"] + jsonData["len2"] + 1,
+              col21: jsonData["len1"] + jsonData["len2"] + 3,
+              col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
+              colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
+              colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
+              overlapVals: jsonData["overlapVals"],
+            })
+          }
+          reader.readAsText(file)
+        })
+      }));
+    }
     this.setState({ fileNames: acceptedFiles.map(file => file.name) })
   }
 
@@ -284,6 +307,7 @@ class NormalCurveResearch extends Component {
             <input type="text" ref={this.qRef} 
               onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}/>
           </p><br/><br/>
+          {/* Modified below */}
           <div className="boxed">
             <div className="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
             <input type="text" id="Data1" name="Data1" ref={this.data1Ref}
@@ -332,4 +356,16 @@ class NormalCurveResearch extends Component {
   }
 }
 
-export default NormalCurveResearch;
+NormalCurveResearch.propTypes = {
+  storeFile: PropTypes.func.isRequired,
+  dataFlowFiles: PropTypes.array.isRequired
+}
+
+const mapStateToProps = state => ({
+  dataFlowFiles: state.dataFlow.files
+});
+
+export default connect(
+  mapStateToProps,
+  { storeFile }
+)(NormalCurveResearch);

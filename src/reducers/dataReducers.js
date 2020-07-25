@@ -3,7 +3,8 @@ import {
   GET_DB_INFO,
   GET_STUDY_INFO,
   GET_PART_DATA,
-  GET_COL_NAMES
+  GET_COL_NAMES,
+  STORE_FILE
 } from "../actions/types";
 
 const initialState = {
@@ -11,7 +12,8 @@ const initialState = {
   dbInfo: [],
   studyInfo: [],
   partData: [],
-  colNames: []
+  colNames: [],
+  files: []
 };
 
 export default function (state = initialState, action) {
@@ -40,6 +42,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         colNames: action.payload
+      };
+    case STORE_FILE:
+      return {
+        ...state,
+        files: [...state.files, action.payload]
       };
     default:
       return state;

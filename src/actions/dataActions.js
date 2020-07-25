@@ -5,7 +5,8 @@ import {
   GET_STUDY_INFO,
   GET_PART_DATA,
   GET_COL_NAMES,
-  COMPONENT_DATA
+  STORE_FILE,
+  SEND_FILE
 } from "./types";
 
 export const addStudyName = (which_database, study_name) => dispatch => {
@@ -86,5 +87,25 @@ export const getColNames = (which_database) => dispatch => {
         type: GET_COL_NAMES,
         payload: res.data
       })
+    })
+}
+
+export const storeFile = (fileName, content) => dispatch => {
+  const itemToStore = {
+    "fileName": fileName,
+    "content": content
+  };
+  dispatch({
+    type: STORE_FILE,
+    payload: itemToStore
+  })
+}
+
+export const sendFile = (which_database, file) => dispatch => {
+  axios
+    .post('https://test-api-615.herokuapp.com/api/feedback/' + which_database + 
+      "/itemData", file)
+    .then(res => {
+      console.log("Data sent to DB");
     })
 }
