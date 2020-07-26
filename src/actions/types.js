@@ -9,6 +9,6 @@ export const GET_STUDY_INFO = "GET_STUDY_INFO";
 export const GET_PART_DATA = "GET_PART_DATA";
 export const GET_COL_NAMES = "GET_COL_NAMES";
 
-export const STORE_FILE = "STORE_FILE";
+export const STORE_FILENAME = "STORE_FILENAME";
 export const DELETE_FILE = "DELETE_FILE";
 export const SEND_FILE = "SEND_FILE";

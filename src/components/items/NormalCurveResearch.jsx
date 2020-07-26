@@ -6,7 +6,7 @@ import './NormalCurve.css';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { storeFile } from '../../actions/dataActions'
+import { storeFileName } from '../../actions/dataActions'
 
 class NormalCurveResearch extends Component {
   constructor(props) {
@@ -190,6 +190,10 @@ class NormalCurveResearch extends Component {
     }
   }
 
+  saveFile(name, content) {
+    this.props.saveFile(name, content);
+  }
+
   handleDrop(acceptedFiles) {
     if (acceptedFiles) {
 
@@ -197,8 +201,11 @@ class NormalCurveResearch extends Component {
 
       console.log(acceptedFiles.map(file => {
         acceptedFiles.forEach((file) => {
+          // this.setCurrFileName(file.name);
+          // this.props.storeFileName(file.name);
+          this.handleChange("FileName", file.name, this.props.count);
 
-          const reader = new FileReader()
+          const reader = new FileReader();
   
           reader.onabort = () => console.log('file reading was aborted')
           reader.onerror = () => console.log('file reading has failed')
@@ -208,15 +215,14 @@ class NormalCurveResearch extends Component {
             // console.log(fileText);
             const jsonData = JSON.parse(fileText);
 
-            // put content in store
-            if (this.props.dataFlowFiles.length == 0) {
-              this.props.storeFile(file.name, jsonData);
+            if (this.props.files.length == 0) {
+              this.saveFile(file.name, jsonData);
             } else {
-              const names = this.props.dataFlowFiles.map(item => item.fileName);
+              const names = this.props.files.map(item => item.fileName);
               if (!names.includes(file.name)) {
-                this.props.storeFile(file.name, jsonData);
+                this.saveFile(file.name, jsonData);
               }
-            };
+            }
 
             this.setState({
               dataReceived: true,
@@ -324,8 +330,12 @@ class NormalCurveResearch extends Component {
       )
     }
     else {
+      // add a bunch of functions here
+      
       return (
         <div>
+          Select previously uploaded files: 
+          <br/>
           <Dropzone
             onDrop={this.handleDrop}
             // minSize={1024}
@@ -357,15 +367,15 @@ class NormalCurveResearch extends Component {
 }
 
 NormalCurveResearch.propTypes = {
-  storeFile: PropTypes.func.isRequired,
-  dataFlowFiles: PropTypes.array.isRequired
+  storeFileName: PropTypes.func.isRequired,
+  dataFlowFileName: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
-  dataFlowFiles: state.dataFlow.files
+  dataFlowFileName: state.dataFlow.fileName
 });
 
 export default connect(
   mapStateToProps,
-  { storeFile }
+  { storeFileName }
 )(NormalCurveResearch);

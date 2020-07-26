@@ -22,7 +22,8 @@ class TabList extends Component {
       output: {},
       deleted: [],
       complete: false,
-      exptName: ''
+      exptName: '',
+      files: []
     }
     this.myRef = React.createRef();
     this.submitRef = React.createRef();
@@ -34,6 +35,8 @@ class TabList extends Component {
     this.getCount = this.getCount.bind(this);
     this.outputCreate = this.outputCreate.bind(this);
     this.checkOutput = this.checkOutput.bind(this);
+
+    this.saveFile = this.saveFile.bind(this);
 
     this.onChange = this.onChange.bind(this);
   }
@@ -62,6 +65,7 @@ class TabList extends Component {
           tab: <NormalCurveResearch getCount={this.getCount} 
                   delete={this.delete} count={this.state.count} 
                   handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
                   key={this.state.count.toString()}/> 
         })
         break;  
@@ -71,6 +75,7 @@ class TabList extends Component {
 
     var curOutput = this.state.output;
     curOutput[this.state.count.toString()] = { "Type": tabDefine };
+    // curOutput[this.state.count.toString()] = { "fileName": this.state.currentFileName };
     var newCount = this.state.count + 1;
     this.setState({ children: arr, count: newCount, output: curOutput, complete: false });
   }
@@ -89,6 +94,14 @@ class TabList extends Component {
 
   getCount(count) {
     return count;
+  }
+
+  saveFile(name, content) {
+    const newFile = {
+      "fileName": name,
+      "fileContent": content
+    };
+    this.setState({ files: this.state.files.concat(newFile) });
   }
 
   // validating input fields. 
@@ -153,12 +166,10 @@ class TabList extends Component {
       const expt_name = this.state.exptName;
       const studyName = this.props.match.params.studyName;
 
-      console.log(this.props.dataFlowFiles);
-
-      // use the API to add a json object into an array under the study
-      if (!this.props.dataFlowFiles.length == 0) {
-        this.props.dataFlowFiles.map(item => this.props.sendFile(username, item))
-      }
+      console.log(finalObj);
+      if (!this.state.files.length == 0) {
+        this.state.files.map(item => this.props.sendFile(username, item))
+      };
 
       axios.put(
         'https://test-api-615.herokuapp.com/api/feedback/' + username +
@@ -216,13 +227,13 @@ TabList.propTypes = {
   auth: PropTypes.object.isRequired,
   dataFlowDBInfo: PropTypes.array.isRequired,
   sendFile: PropTypes.func.isRequired,
-  dataFlowFiles: PropTypes.array.isRequired
+  dataFlowFileName: PropTypes.string.isRequired
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
   dataFlowDBInfo: state.dataFlow.dbInfo,
-  dataFlowFiles: state.dataFlow.files
+  dataFlowFileName: state.dataFlow.fileName
 });
 
 // export default TabList;

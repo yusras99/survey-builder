@@ -4,7 +4,7 @@ import {
   GET_STUDY_INFO,
   GET_PART_DATA,
   GET_COL_NAMES,
-  STORE_FILE
+  STORE_FILENAME
 } from "../actions/types";
 
 const initialState = {
@@ -13,7 +13,8 @@ const initialState = {
   studyInfo: [],
   partData: [],
   colNames: [],
-  files: []
+  // files: []
+  fileName: ''
 };
 
 export default function (state = initialState, action) {
@@ -43,11 +44,16 @@ export default function (state = initialState, action) {
         ...state,
         colNames: action.payload
       };
-    case STORE_FILE:
+    // case STORE_FILE:
+    //   return {
+    //     ...state,
+    //     files: [...state.files, action.payload]
+    //   };
+    case STORE_FILENAME:
       return {
         ...state,
-        files: [...state.files, action.payload]
-      };
+        fileName: action.payload
+      }
     default:
       return state;
   }

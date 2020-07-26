@@ -5,7 +5,7 @@ import {
   GET_STUDY_INFO,
   GET_PART_DATA,
   GET_COL_NAMES,
-  STORE_FILE,
+  STORE_FILENAME,
   SEND_FILE
 } from "./types";
 
@@ -90,14 +90,10 @@ export const getColNames = (which_database) => dispatch => {
     })
 }
 
-export const storeFile = (fileName, content) => dispatch => {
-  const itemToStore = {
-    "fileName": fileName,
-    "content": content
-  };
+export const storeFileName = (fileName) => dispatch => {
   dispatch({
-    type: STORE_FILE,
-    payload: itemToStore
+    type: STORE_FILENAME,
+    payload: fileName
   })
 }
 
