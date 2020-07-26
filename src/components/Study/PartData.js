@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import {
-  getPartData
+  getColData
 } from "../../actions/dataActions"
 
 import "./PartData.css";
@@ -22,13 +22,13 @@ class ExptConfigs extends Component {
     const studyName = this.props.match.params.studyName;
     const exptName = this.props.match.params.exptName;
     const colName = studyName + "-" + exptName;
-    this.props.getPartData(username, colName);
+    this.props.getColData(username, colName);
   }
 
   partDataHeader() {
     var item = {};
-    if (!this.props.partData.length == 0) {
-      item = this.props.partData[0];
+    if (!this.props.colData.length == 0) {
+      item = this.props.colData[0];
     }
     const header = Object.keys(item).filter(x => x != "_id");
     return header.map(hd => {
@@ -40,8 +40,8 @@ class ExptConfigs extends Component {
 
   returnRow(answer) {
     var item = {};
-    if (!this.props.partData.length == 0) {
-      item = this.props.partData[0];
+    if (!this.props.colData.length == 0) {
+      item = this.props.colData[0];
     }
     const header = Object.keys(item).filter(x => x != "_id");
     return header.map(hd => {
@@ -54,8 +54,8 @@ class ExptConfigs extends Component {
   }
 
   showPartData() {
-    if (!this.props.partData.length == 0) {
-      return this.props.partData.map(answer => {
+    if (!this.props.colData.length == 0) {
+      return this.props.colData.map(answer => {
         return (
           <tr>
             {this.returnRow(answer)}
@@ -93,8 +93,8 @@ class ExptConfigs extends Component {
 
 ExptConfigs.propTypes = {
   // Proptype.type, the type here must match initialState of reducer
-  getPartData: PropTypes.func.isRequired,
-  partData: PropTypes.array.isRequired,
+  getColData: PropTypes.func.isRequired,
+  colData: PropTypes.array.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -102,10 +102,10 @@ ExptConfigs.propTypes = {
 // for components to use
 const mapStateToProps = state => ({
   auth: state.auth,
-  partData: state.dataFlow.partData
+  colData: state.dataFlow.colData
 });
 
 export default connect(
   mapStateToProps,
-  { getPartData }
+  { getColData }
 )(ExptConfigs);

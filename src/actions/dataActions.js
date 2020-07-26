@@ -3,7 +3,7 @@ import {
   ADD_STUDY_NAME,
   GET_DB_INFO,
   GET_STUDY_INFO,
-  GET_PART_DATA,
+  GET_COL_DATA,
   GET_COL_NAMES,
   STORE_FILENAME,
   SEND_FILE
@@ -67,13 +67,13 @@ export const createExptCol = (which_database, col_name, which_expt) => dispatch 
     })
 }
 
-export const getPartData = (which_database, col_name) => dispatch => {
+export const getColData = (which_database, col_name) => dispatch => {
   axios
     .get('https://test-api-615.herokuapp.com/api/feedback/' + which_database +
       "/" + col_name)
     .then(res => {
       dispatch({
-        type: GET_PART_DATA,
+        type: GET_COL_DATA,
         payload: res.data
       })
     })
