@@ -96,8 +96,9 @@ class TabList extends Component {
     return count;
   }
 
-  saveFile(name, content) {
+  saveFile(type, name, content) {
     const newFile = {
+      "itemType": type,
       "fileName": name,
       "fileContent": content
     };

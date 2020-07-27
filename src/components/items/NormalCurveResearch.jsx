@@ -6,7 +6,9 @@ import './NormalCurve.css';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { storeFileName } from '../../actions/dataActions'
+import { 
+  getColData
+} from '../../actions/dataActions'
 
 class NormalCurveResearch extends Component {
   constructor(props) {
@@ -27,6 +29,8 @@ class NormalCurveResearch extends Component {
     this.triDrag = this.triDrag.bind(this);
     this.triUp = this.triUp.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.handleSelectedFile = this.handleSelectedFile.bind(this);
 
     this.state = {
       x: 0, y: 0, isDown: false,
@@ -40,8 +44,14 @@ class NormalCurveResearch extends Component {
       triDown: false,
       dataReceived: false,
       fileNames: [],
-      setFileNames: []
+      setFileNames: [],
+      fileChosen: ''
     };
+  }
+
+  componentDidMount() {
+    const username = this.props.auth.user.username;
+    this.props.getColData(username, "itemData");
   }
 
   dotReturn(xPos, yPos) {
@@ -190,15 +200,12 @@ class NormalCurveResearch extends Component {
     }
   }
 
-  saveFile(name, content) {
-    this.props.saveFile(name, content);
+  saveFile(type, name, content) {
+    this.props.saveFile(type, name, content);
   }
 
   handleDrop(acceptedFiles) {
     if (acceptedFiles) {
-
-      // this.props.storeFile(acceptedFiles[0].name, )
-
       console.log(acceptedFiles.map(file => {
         acceptedFiles.forEach((file) => {
           // this.setCurrFileName(file.name);
@@ -216,11 +223,11 @@ class NormalCurveResearch extends Component {
             const jsonData = JSON.parse(fileText);
 
             if (this.props.files.length == 0) {
-              this.saveFile(file.name, jsonData);
+              this.saveFile("normal-curve", file.name, jsonData);
             } else {
               const names = this.props.files.map(item => item.fileName);
               if (!names.includes(file.name)) {
-                this.saveFile(file.name, jsonData);
+                this.saveFile("normal-curve", file.name, jsonData);
               }
             }
 
@@ -248,6 +255,33 @@ class NormalCurveResearch extends Component {
       }));
     }
     this.setState({ fileNames: acceptedFiles.map(file => file.name) })
+  }
+
+  handleSelectedFile() {
+    console.log(this.state.fileChosen);
+    this.handleChange("FileName", this.state.fileChosen, this.props.count);
+
+    const jsonData = this.props.dataFlowColData.filter(item => 
+      item.fileName == this.state.fileChosen)[0].fileContent;
+
+    this.setState({
+      dataReceived: true,
+      len1: jsonData["len1"],
+      colValHeiS: jsonData["colValHeiS"],
+      len2: jsonData["len2"],
+      colValHeiS2: jsonData["colValHeiS2"],
+      distancing1: (jsonData["len2"] + 1) * 7,
+      distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * 7,
+      triCent1: Math.round((0.5 * jsonData["len1"]) * 7) + 7,
+      triCent2: Math.round((0.5 * jsonData["len2"]) * 7) + 7,
+      col11: jsonData["len2"] + 1,
+      col12: jsonData["len1"] + jsonData["len2"] + 1,
+      col21: jsonData["len1"] + jsonData["len2"] + 3,
+      col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
+      colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
+      colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
+      overlapVals: jsonData["overlapVals"],
+    })
   }
 
   delete() {
@@ -331,10 +365,22 @@ class NormalCurveResearch extends Component {
     }
     else {
       // add a bunch of functions here
+      // get normal curve items
+      const normalCurveFiles = this.props.dataFlowColData.filter(
+        item => item.itemType == "normal-curve");
+      var fileNames = normalCurveFiles.map(item => item.fileName);
+      fileNames.unshift("Select File");
+      const renderOption = item => <option value={item}>{item}</option>
+      const fileOptions = fileNames.map(renderOption);
       
       return (
-        <div>
+        <div className="boxed">
           Select previously uploaded files: 
+          <br/>
+          <select name="fileChosen" value={this.state.fileChosen} onChange={this.onChange}>
+            {fileOptions}
+          </select>
+          <button onClick={this.handleSelectedFile}>OK</button>
           <br/>
           <Dropzone
             onDrop={this.handleDrop}
@@ -367,15 +413,17 @@ class NormalCurveResearch extends Component {
 }
 
 NormalCurveResearch.propTypes = {
-  storeFileName: PropTypes.func.isRequired,
-  dataFlowFileName: PropTypes.array.isRequired
+  auth: PropTypes.object.isRequired,
+  getColData: PropTypes.func.isRequired,
+  dataFlowColData: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
-  dataFlowFileName: state.dataFlow.fileName
+  auth: state.auth,
+  dataFlowColData: state.dataFlow.colData
 });
 
 export default connect(
   mapStateToProps,
-  { storeFileName }
+  { getColData }
 )(NormalCurveResearch);
