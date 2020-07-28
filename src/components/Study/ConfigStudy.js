@@ -138,9 +138,8 @@ class ConfigStudy extends Component {
           <button
             class="btn"
             onClick={this.deployExpts}>
-            Deploy: <b>
-              {difference.map(name => { return (<p>{name} </p>) })}
-            </b>
+            Deploy: <p></p>
+              {difference.map(name => { return (<b>{name}, </b>) })}
           </button>
         </div>
       )
@@ -163,7 +162,7 @@ class ConfigStudy extends Component {
     return (
       <div className="container">
         <br />
-        <b>{this.props.match.params.studyName}</b>
+        Study: <b>{this.props.match.params.studyName}</b>
         <br /><br />
         <Link to={exptBuilderLink}>
           Build an Experiment

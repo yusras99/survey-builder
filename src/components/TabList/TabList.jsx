@@ -148,7 +148,8 @@ class TabList extends Component {
       .filter(item => this.state.deleted.indexOf(item.id) === -1)
       .map((item) => { obj[item.id.toString()] = this.state.output[item.id.toString()] });
     var validName = this.nameRef.current.value.length > 0;
-    if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
+    // if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
+    if (!validName) {
       alert("You have not filled out all fields, or have entered an invalid value!");
     }
     else {
