@@ -50,6 +50,8 @@ class ConfigStudy extends Component {
         exptName + "/configs";
       const partDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/participantsData";
+      const partJSONDataLink = "/" + username + "/" + studyName + "/" +
+        exptName + "/participantsJSONData";
       const exptPartLink = "https://statistical-perceptions.github.io/" + 
         "participant-app/#/participant-app/expt/" + username + 
           "/" + studyName + "-" + exptName
@@ -63,7 +65,7 @@ class ConfigStudy extends Component {
                   Experiment Configs
                 </button>
               </Link> <p> </p>
-              <Link to={partDataLink}>
+              <Link to={partJSONDataLink}>
                 <button type="button">
                   View Participants Data
                 </button>

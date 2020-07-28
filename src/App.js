@@ -24,6 +24,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import ConfigStudy from './components/Study/ConfigStudy';
 import ExptConfigs from './components/Study/ExptConfigs';
 import PartData from './components/Study/PartData';
+import PartJSONData from './components/Study/PartJSONData';
 import BuildExpt from './components/Study/BuildExpt.jsx';
 
 // Check for token to keep user logged in
@@ -72,6 +73,8 @@ function App() {
               component={ExptConfigs}/>
             <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
               component={PartData}/>
+            <PrivateRoute exact path="/:username/:studyName/:exptName/participantsJSONData"
+              component={PartJSONData}/>
           </Switch>
         </div>
       </HashRouter>
