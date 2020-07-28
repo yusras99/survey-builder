@@ -66,8 +66,8 @@ function App() {
               component={TabList} />
             <PrivateRoute exact path="/:username/:studyName/newExpt" 
               component={BuildExpt} />
-            <PrivateRoute exact path="/:username/:studyName/normalCurves"
-              component={NormalCurveResearch} />
+            {/* <PrivateRoute exact path="/:username/:studyName/normalCurves"
+              component={NormalCurveResearch} /> */}
             <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
               component={ExptConfigs}/>
             <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"

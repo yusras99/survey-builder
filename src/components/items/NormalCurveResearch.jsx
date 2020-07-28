@@ -222,6 +222,8 @@ class NormalCurveResearch extends Component {
             // console.log(fileText);
             const jsonData = JSON.parse(fileText);
 
+            this.handleChange("FileContent", jsonData, this.props.count);
+
             if (this.props.files.length == 0) {
               this.saveFile("normal-curve", file.name, jsonData);
             } else {
@@ -263,6 +265,8 @@ class NormalCurveResearch extends Component {
 
     const jsonData = this.props.dataFlowColData.filter(item => 
       item.fileName == this.state.fileChosen)[0].fileContent;
+
+    this.handleChange("FileContent", jsonData, this.props.count);
 
     this.setState({
       dataReceived: true,
