@@ -6,7 +6,7 @@ class TabBuilder extends Component {
     this.selectRef = React.createRef();
   }
 
-  // Developers need to add options here
+  // ###TODO###: add options here when you add your experiment type
   render() {
     return (
       <div className="unit">

@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import './TabList.css';
 import '../TabBuilder/TabBuilder'
-import TabBuilder from '../TabBuilder/TabBuilder';
-import SliderTab from '../SliderTab/SliderTab';
+import TabBuilder from '../TabBuilder/TabBuilder'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import NormalCurveResearch from '../items/NormalCurveResearch.jsx';
+// ###TODO###: import your component here
+import SliderTab from '../items/Slider/SliderTab';
+import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
 
 import { sendFile } from '../../actions/dataActions'
 
 const axios = require('axios');
 
+// This component allows Psych researchers to configure an experiment 
 class TabList extends Component {
   constructor(props) {
     super(props);
@@ -45,10 +47,10 @@ class TabList extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
-  // Developers need to add more cases here
   builderFunction = (tabDefine) => {
     var arr = this.state.children;
-
+    // ###TODO###: Add more cases here for TabList to display 
+    //             Follow the format of the provided components below
     switch (tabDefine) {
       case "slider":
         arr.push({ 
@@ -75,11 +77,15 @@ class TabList extends Component {
 
     var curOutput = this.state.output;
     curOutput[this.state.count.toString()] = { "Type": tabDefine };
-    // curOutput[this.state.count.toString()] = { "fileName": this.state.currentFileName };
     var newCount = this.state.count + 1;
     this.setState({ children: arr, count: newCount, output: curOutput, complete: false });
   }
 
+  // Input: 
+  //  pos: key of JSON object
+  //  newVal: value of JSON object
+  //  count: the numerical order of the JSON object
+  // Action: put the key and value pair in the final output JSON object
   handleChange(pos, newVal, count) {
     var curOutput = this.state.output;
     curOutput[count.toString()][pos] = newVal;
@@ -96,6 +102,8 @@ class TabList extends Component {
     return count;
   }
 
+  // Action: put newly uploaded files into this.state. 
+  //         All newly uploaded files will be sent to database as JSON objs
   saveFile(type, name, content) {
     const newFile = {
       "itemType": type,
@@ -165,10 +173,8 @@ class TabList extends Component {
       finalObj["count"] = int;
 
       const username = this.props.auth.user.username;
-      const expt_name = this.state.exptName;
       const studyName = this.props.match.params.studyName;
 
-      console.log(finalObj);
       if (!this.state.files.length == 0) {
         this.state.files.map(item => this.props.sendFile(username, item))
       };
@@ -188,7 +194,6 @@ class TabList extends Component {
         .catch(function (error) {
           console.log(error);
         });
-
     }
   }
 

@@ -12,11 +12,37 @@ Resources used for the project:
 - MongoDB Atlas (referred to as "MongoDB" below)
 - Heroku (hosts API. API: https://github.com/statistical-perceptions/demoAPI-v2)
 
+---
+
+# Table of Contents
+
+- [Components](#components)
+- [Explanation for src/actions, src/reducers, src/store.js](#redux)
+- [How to run this project on localhost](#localhost)
+- [survey-builder Dev Tutorial ](#tutorial)
+
+---
+
+<a name="components"/>
+
 # Components
+
+Jump to: 
+
+- [layout](#layout)
+- [auth](#auth)
+- [dashboard](#dashboard)
+- [Study](#study)
+- [TabBuilder + TabList](#tab)
+- [items](#items)
+
+<a name="layout"/>
 
 ## layout
 
 **Displays home page, nav bar, etc ...**
+
+<a name="auth"/>
 
 ## auth
 
@@ -26,6 +52,8 @@ Upon registration:
 - User's credentials will be sent to a database on MongoDB via API. Password is encoded with passport hwt (http://www.passportjs.org/packages/passport-jwt/). 
 - A database on MongoDB is created for the user. The databse will contain a collection called "info". 
 
+<a name="dashboard"/>
+
 ## dashboard 
 
 **Displays user's studies and allows users to create new studies.**
@@ -33,6 +61,8 @@ Upon registration:
 When a study is created, a document containing the name of the study will be stored in the "info" collection of the user's database. 
 
 The dashboard component will pull study names from the "info" collection via API. 
+
+<a name="study"/>
 
 ## Study 
 
@@ -42,10 +72,27 @@ When a new experiment is created, the name of the experiment and its configurati
 
 When experiments are deployed, new collections will be created under user's database. Each new collection is dedicated to a specific experiment for a specific study. These collections will save participants data. 
 
-## SliderTab + TabBuilder + Tablist 
+<a name="tab"/>
 
-Current demo for creating a simple slider question. 
+## TabBuilder + TabList 
 
+**An interface for psych researchers to build experiments**
+
+TabBuilder returns a drop down list that gives researchers options to select their desired experiment type. 
+
+TabList records experiment configuration data and sends it to database via API. 
+
+<a name="items"/>
+
+## items
+
+**Contains experiment type components**
+
+Developers can add more experiment types into this folder. 
+
+---
+
+<a name="redux"/>
 
 # Explanation for src/actions, src/reducers, src/store.js:
 
@@ -55,8 +102,11 @@ Reducers have functions that determine how state reacts to actions.
 
 Store holds the complete state tree of app. It sends state to React components that will react to states. 
 
+---
 
-# How to run this project on localhost:
+<a name="localhost"/>
+
+# How to run this project on localhost
 
 Install npm and yarn on system.
 
@@ -66,11 +116,23 @@ git clone -b master https://github.com/statistical-perceptions/survey-builder.gi
 npm install
 yarn start
 ```
+---
+
+<a name="tutorial"/>
+
+# survey-builder Dev Tutorial 
+
+This tutorial will walk you through the process to add your own experiment type to the app. Even though the tutorial covers some concepts of React and React-Redux, please read the Medium post below and the short YouTube video to get a better understanding of React and how Redux works with React. 
+
+How React works: https://medium.com/leanjs/introduction-to-react-3000e9cbcd26#:~:text=What%20is%20React%3F,utilise%20it%20with%20other%20libraries
+
+How Redux works: https://www.youtube.com/watch?v=nFryvdyMI8s&t=238s
 
 
 
 
-###############################################################
+
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -85,58 +147,3 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

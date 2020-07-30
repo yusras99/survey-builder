@@ -11,7 +11,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 import TabList from './components/TabList/TabList';
-import NormalCurveResearch from './components/items/NormalCurveResearch';
+import NormalCurveResearch from './components/items/NormalCurve/NormalCurveResearch';
 
 import NavBar from './components/layout/NavBar';
 import Landing from './components/layout/Landing';

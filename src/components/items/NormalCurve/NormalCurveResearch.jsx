@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 
 import { 
   getColData
-} from '../../actions/dataActions'
+} from '../../../actions/dataActions'
 
 class NormalCurveResearch extends Component {
   constructor(props) {
@@ -56,48 +56,35 @@ class NormalCurveResearch extends Component {
 
   dotReturn(xPos, yPos) {
     const xPosOrig = xPos;
-
     if (xPos > 7) {
       xPos = 15 - xPos;
     }
-
     const CX = this.state.distancing1 + this.state.distancing * xPosOrig + 10;
     const CY = 140 - this.state.distancing * yPos + 10;
-
-    // const soft = <circle className="icon" stroke="#555" fill="#555" fillOpacity="0.3" strokeOpacity="0.4" cx={CX} cy={CY} r="2"></circle>;
     var hard;
-
     if (CX < this.state.rectX) {
       hard = <circle className="icon" stroke="DarkCyan" fill="DarkCyan" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
     else {
       hard = <circle className="icon" stroke="DarkCyan" fill="DarkCyan" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
-
     return hard;
   }
 
   dotReturn2(xPos, yPos) {
     const xPosOrig = xPos;
-
     if (xPos > 7) {
       xPos = 15 - xPos;
     }
-
     const CX = this.state.distancing2 + this.state.distancing * xPosOrig + 10;
     const CY = 140 - this.state.distancing * yPos + 10;
-
-
-    // const soft = <circle className="icon" stroke="#555" fill="#555" fillOpacity="0.3" strokeOpacity="0.4" cx={CX} cy={CY} r="2"></circle>;
     var hard;
-
     if (CX < this.state.rectX) {
       hard = <circle className="icon" stroke="Crimson" fill="Crimson" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
     else {
       hard = <circle className="icon" stroke="Crimson" fill="Crimson" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r="2"></circle>;
     }
-
     return hard;
   }
 
@@ -195,7 +182,6 @@ class NormalCurveResearch extends Component {
       this.areaRef.current.innerHTML = 0;
     }
     else {
-      // console.log(this.state.col22, this.state.col11, Math.abs(this.state.col22 - this.state.col11));
       this.areaRef.current.innerHTML = this.state.overlapVals[Math.abs(this.state.col22 - this.state.col11)];
     }
   }
@@ -208,12 +194,8 @@ class NormalCurveResearch extends Component {
     if (acceptedFiles) {
       console.log(acceptedFiles.map(file => {
         acceptedFiles.forEach((file) => {
-          // this.setCurrFileName(file.name);
-          // this.props.storeFileName(file.name);
           this.handleChange("FileName", file.name, this.props.count);
-
           const reader = new FileReader();
-  
           reader.onabort = () => console.log('file reading was aborted')
           reader.onerror = () => console.log('file reading has failed')
           reader.onload = () => {
@@ -221,9 +203,7 @@ class NormalCurveResearch extends Component {
             const fileText = reader.result;
             // console.log(fileText);
             const jsonData = JSON.parse(fileText);
-
             this.handleChange("FileContent", jsonData, this.props.count);
-
             if (this.props.files.length == 0) {
               this.saveFile("normal-curve", file.name, jsonData);
             } else {
@@ -232,7 +212,6 @@ class NormalCurveResearch extends Component {
                 this.saveFile("normal-curve", file.name, jsonData);
               }
             }
-
             this.setState({
               dataReceived: true,
               len1: jsonData["len1"],
@@ -249,7 +228,7 @@ class NormalCurveResearch extends Component {
               col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
               colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
               colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
-              overlapVals: jsonData["overlapVals"],
+              overlapVals: jsonData["overlapVals"]
             })
           }
           reader.readAsText(file)
@@ -284,7 +263,7 @@ class NormalCurveResearch extends Component {
       col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
       colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
       colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
-      overlapVals: jsonData["overlapVals"],
+      overlapVals: jsonData["overlapVals"]
     })
   }
 
@@ -368,8 +347,6 @@ class NormalCurveResearch extends Component {
       )
     }
     else {
-      // add a bunch of functions here
-      // get normal curve items
       const normalCurveFiles = this.props.dataFlowColData.filter(
         item => item.itemType == "normal-curve");
       var fileNames = normalCurveFiles.map(item => item.fileName);
@@ -396,9 +373,6 @@ class NormalCurveResearch extends Component {
               <div {...getRootProps({ className: "dropzone" })}>
                 <input {...getInputProps()} />
                 <p>Drag'n'drop files, or click to select files (must be valid JSON file)</p>
-                {/* {!isDragActive && 'Click here or drag and drop a file to upload!'}
-                            {isDragActive && !isDragReject && "Drop file here"}
-                            {isDragReject && "File type not accepted"} */}
               </div>
             )}
           </Dropzone>
