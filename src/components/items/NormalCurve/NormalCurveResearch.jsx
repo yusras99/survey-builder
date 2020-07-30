@@ -14,8 +14,6 @@ class NormalCurveResearch extends Component {
   constructor(props) {
     super(props);
 
-    this.sliderRef = React.createRef();
-    this.rectRef = React.createRef();
     this.svgRef = React.createRef();
     this.areaRef = React.createRef();
 
@@ -194,7 +192,9 @@ class NormalCurveResearch extends Component {
     if (acceptedFiles) {
       console.log(acceptedFiles.map(file => {
         acceptedFiles.forEach((file) => {
+
           this.handleChange("FileName", file.name, this.props.count);
+
           const reader = new FileReader();
           reader.onabort = () => console.log('file reading was aborted')
           reader.onerror = () => console.log('file reading has failed')
@@ -203,6 +203,7 @@ class NormalCurveResearch extends Component {
             const fileText = reader.result;
             // console.log(fileText);
             const jsonData = JSON.parse(fileText);
+
             this.handleChange("FileContent", jsonData, this.props.count);
             if (this.props.files.length == 0) {
               this.saveFile("normal-curve", file.name, jsonData);
@@ -239,7 +240,6 @@ class NormalCurveResearch extends Component {
   }
 
   handleSelectedFile() {
-    console.log(this.state.fileChosen);
     this.handleChange("FileName", this.state.fileChosen, this.props.count);
 
     const jsonData = this.props.dataFlowColData.filter(item => 
@@ -365,8 +365,6 @@ class NormalCurveResearch extends Component {
           <br/>
           <Dropzone
             onDrop={this.handleDrop}
-            // minSize={1024}
-            // maxSize={3072000}
             accept="application/JSON, .json"
           >
             {({ getRootProps, getInputProps }) => (
@@ -376,14 +374,6 @@ class NormalCurveResearch extends Component {
               </div>
             )}
           </Dropzone>
-          {/* <div>
-            <strong>Files:</strong>
-            <ul>
-              {this.state.fileNames.map(fileName => (
-                <li key={fileName}>{fileName}</li>
-              ))}
-            </ul>
-          </div> */}
         </div>
       )
     }

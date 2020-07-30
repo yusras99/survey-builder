@@ -128,6 +128,99 @@ How React works: https://medium.com/leanjs/introduction-to-react-3000e9cbcd26#:~
 
 How Redux works: https://www.youtube.com/watch?v=nFryvdyMI8s&t=238s
 
+## Create a new Experiment Type
+
+**Note**: you will need to create your own experiment type in both places: the survey-builder app and participant-app. There are some differences in how the two apps interact with your experiment type, but they should share the code that visually presents your item to researchers and participants. 
+
+Navigate to **/src/components/items** and open **Template.js**. You can build on this template and create your own experiment item. Follow the ```TODO``` tags to add more code. This template implements a dropzone that allows researchers to drag and drop their item data. It also implements a dropdown menu that allows researchers to select previously uploaded files. Note that the actual files are note stored on the database; the file name and file content are stored as a key-value pair within a JSON object. 
+
+This template serves as a reference. You can always add more functions / delete some existing functions depending on what you need. 
+
+Below is a walk-through of how we created **NormalCurveResearcher.jsx**. Please navigate to **/src/components/items/NormalCurve** to see the file used for this walk-through. 
+
+##### *TIP: How do React components work?*
+
+Your Experiment Type will be written into a React component. A React app consists of many components, and these components can talk to each other using ```props``` which stands for properties. When a parent component talks to a child component, it can pass ```props``` to the child component, and the child component can use these ```props```. We will see how this works in code in the section [Connect your Component to Success.js]. 
+
+### Connect your component to Redux
+
+First, we need to import the following packages.
+```sh
+import React, { Component } from 'react';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+```
+We will use ```PropTypes``` to call functions in **/src/actions/dataActions.js**. We will ```connect``` our ```NormalCurveResearch``` component to the aforementioned functions and React props. 
+
+Next, let's look at the function we have imported from ```dataActions.js```.
+```sh
+import { 
+  getColData
+} from '../../../actions/dataActions'
+```
+```getColData``` simply sends a GET request to our API to fetch all documents in a collection of a database. Specifically, we will be getting documents from a collection called **itemData** in a given user's database. The collection **itemData** contains all previously uploaded JSON files that are stored as JSON objects. Getting this data will populate the dropdown menu where researchers can select previously uploaded files. (**Limitation**: The dropdown menu will show file names, so when researchers upload a new dataset, they need to make sure that the file name is unique.)
+
+In order to use this action and data associated with the action, Redux requires us to implement the following code with ```PropTypes``` and ```connect```. Take a look at the end of our **NormalCurveResearch.js** file. 
+
+```sh
+NormalCurveResearch.propTypes = {
+  auth: PropTypes.object.isRequired,
+  getColData: PropTypes.func.isRequired,
+  dataFlowColData: PropTypes.array.isRequired
+}
+```
+In the redux store, ```auth``` is an object that contains user login information, ```getColData``` is a function previously described, and ```dataFlowColData``` is an array associated with the array ```colData``` in the redux reducer (**/src/reducers/dataReducers.js**). Listing these required PropTypes items are not enough, we need to connect them to ```this.props``` so that we can directly use them in our NormalCurve component. 
+
+```sh
+const mapStateToProps = state => ({
+  auth: state.auth,
+  dataFlowColData: state.dataFlow.colData
+});
+```
+In ```mapStateToProps```, we are saying that ```this.props.auth``` points to the ```auth``` object in the redux store, and ```this.props.dataFlowColData``` points to the ```colData``` array in the redux store. 
+
+```sh
+export default connect(
+  mapStateToProps,
+  { getColData }
+)(NormalCurveResearch);
+```
+Finally, using ```connect```, we connect all this information with the redux store. Note that functions should be wrapped in curly brackets. 
+
+---
+
+### How Component State and Functions Interact
+
+When we want to access instances in our component, for example, the area under both normal curves, we need to create ```Ref```s. When users drag the two sliders, the area changes, and the most recent value is accessible throughout the component if we create a ```Ref``` for this area in the constructor. 
+
+In the constructor, we would write:
+```sh
+this.areaRef = React.createRef();
+```
+When users drag on the triangular sliders, the function ```triDrag()``` is triggerd, and the area between two curves are calculated with ```curveArea```. The function then feed a numeric value into the ```current``` attribute of ```areaRef``` with:
+```sh
+curveArea(col) {
+  if (this.state.col11 >= this.state.col22 || this.state.col12 <= this.state.col21) {
+    this.areaRef.current.innerHTML = 0;
+  }
+  else {
+    this.areaRef.current.innerHTML = this.state.overlapVals[Math.abs(this.state.col22 - this.state.col11)];
+  }
+}
+```
+When we want to show the value of ```areaRef``` to users we simply call ```this.areaRef``` as shown below:
+```sh
+<h4>Area Under Curve: <span ref={this.areaRef}></span></h4>
+```
+
+You will also notice a lot of bindings below the ```createRef```s. Details on this can be found at https://reactjs.org/docs/handling-events.html. 
+
+Next, we have information stored in ```this.state```. Note that data stored in ```this.state``` is only accessible within the component where ```this.state``` lives unless you pass some data to a child component via ```props```.
+
+
+
+
+
 
 
 
