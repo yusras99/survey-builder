@@ -15,14 +15,12 @@ class NormalCurveResearch extends Component {
     super(props);
 
     this.svgRef = React.createRef();
-    this.areaRef = React.createRef();
 
     this.qRef = React.createRef();
     this.data1Ref = React.createRef();
     this.data2Ref = React.createRef();
 
     this.dotReturn = this.dotReturn.bind(this);
-    this.curveArea = this.curveArea.bind(this);
     this.triMouseDown = this.triMouseDown.bind(this);
     this.triDrag = this.triDrag.bind(this);
     this.triUp = this.triUp.bind(this);
@@ -142,7 +140,6 @@ class NormalCurveResearch extends Component {
       else {
         this.setState({ distancing2: this.state.distancing * col, col21: col, col22: col + this.state.len2 - 1 });
       }
-      this.curveArea(col);
       // this.setState({ distancing2 : x })
     }
     else if (this.state.triDown === 1) {
@@ -163,7 +160,6 @@ class NormalCurveResearch extends Component {
       else {
         this.setState({ distancing1: this.state.distancing * col, col11: col, col12: col + this.state.len1 - 1 });
       }
-      this.curveArea(col);
       // this.setState({ distancing2 : x })
     }
   }
@@ -172,15 +168,6 @@ class NormalCurveResearch extends Component {
     // console.log("UP");
     if (this.state.triDown) {
       this.setState({ triDown: false });
-    }
-  }
-
-  curveArea(col) {
-    if (this.state.col11 >= this.state.col22 || this.state.col12 <= this.state.col21) {
-      this.areaRef.current.innerHTML = 0;
-    }
-    else {
-      this.areaRef.current.innerHTML = this.state.overlapVals[Math.abs(this.state.col22 - this.state.col11)];
     }
   }
 
@@ -193,46 +180,56 @@ class NormalCurveResearch extends Component {
       console.log(acceptedFiles.map(file => {
         acceptedFiles.forEach((file) => {
 
-          this.handleChange("FileName", file.name, this.props.count);
+          const normalCurveFiles = this.props.dataFlowColData.filter(
+            item => item.itemType == "normal-curve");
+          var fileNames = normalCurveFiles.map(item => item.fileName);
+          if (fileNames.includes(file.name)) {
+            alert("File name already exists. Please upload a file" +  
+              " with a unique name.");
+            this.setState({ dataReceived: false });
+          } else {
+            
+            this.handleChange("FileName", file.name, this.props.count);
 
-          const reader = new FileReader();
-          reader.onabort = () => console.log('file reading was aborted')
-          reader.onerror = () => console.log('file reading has failed')
-          reader.onload = () => {
-            // Do whatever you want with the file contents
-            const fileText = reader.result;
-            // console.log(fileText);
-            const jsonData = JSON.parse(fileText);
+            const reader = new FileReader();
+            reader.onabort = () => console.log('file reading was aborted')
+            reader.onerror = () => console.log('file reading has failed')
+            reader.onload = () => {
+              // Do whatever you want with the file contents
+              const fileText = reader.result;
+              // console.log(fileText);
+              const jsonData = JSON.parse(fileText);
 
-            this.handleChange("FileContent", jsonData, this.props.count);
-            if (this.props.files.length == 0) {
-              this.saveFile("normal-curve", file.name, jsonData);
-            } else {
-              const names = this.props.files.map(item => item.fileName);
-              if (!names.includes(file.name)) {
+              this.handleChange("FileContent", jsonData, this.props.count);
+              if (this.props.files.length == 0) {
                 this.saveFile("normal-curve", file.name, jsonData);
+              } else {
+                const names = this.props.files.map(item => item.fileName);
+                if (!names.includes(file.name)) {
+                  this.saveFile("normal-curve", file.name, jsonData);
+                }
               }
-            }
-            this.setState({
-              dataReceived: true,
-              len1: jsonData["len1"],
-              colValHeiS: jsonData["colValHeiS"],
-              len2: jsonData["len2"],
-              colValHeiS2: jsonData["colValHeiS2"],
-              distancing1: (jsonData["len2"] + 1) * 7,
-              distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * 7,
-              triCent1: Math.round((0.5 * jsonData["len1"]) * 7) + 7,
-              triCent2: Math.round((0.5 * jsonData["len2"]) * 7) + 7,
-              col11: jsonData["len2"] + 1,
-              col12: jsonData["len1"] + jsonData["len2"] + 1,
-              col21: jsonData["len1"] + jsonData["len2"] + 3,
-              col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
-              colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
-              colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
-              overlapVals: jsonData["overlapVals"]
-            })
-          }
-          reader.readAsText(file)
+              this.setState({
+                dataReceived: true,
+                len1: jsonData["len1"],
+                colValHeiS: jsonData["colValHeiS"],
+                len2: jsonData["len2"],
+                colValHeiS2: jsonData["colValHeiS2"],
+                distancing1: (jsonData["len2"] + 1) * 7,
+                distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * 7,
+                triCent1: Math.round((0.5 * jsonData["len1"]) * 7) + 7,
+                triCent2: Math.round((0.5 * jsonData["len2"]) * 7) + 7,
+                col11: jsonData["len2"] + 1,
+                col12: jsonData["len1"] + jsonData["len2"] + 1,
+                col21: jsonData["len1"] + jsonData["len2"] + 3,
+                col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
+                colLim1: Math.round((500 - (jsonData["len1"] * 7)) / 7),
+                colLim2: Math.round((500 - (jsonData["len2"] * 7)) / 7),
+                overlapVals: jsonData["overlapVals"]
+              });
+            };
+            reader.readAsText(file);
+          };
         })
       }));
     }
@@ -327,8 +324,11 @@ class NormalCurveResearch extends Component {
           </svg><br/>
           <p>
             Question: <p></p>
-            <input type="text" ref={this.qRef} 
-              onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}/>
+            <textarea cols="30" rows="10" ref={this.qRef} 
+              onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
+            </textarea>
+            {/* <input type="text" ref={this.qRef} style={{ height: "100px", width: "100px" }}
+              onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}/> */}
           </p><br/><br/>
           {/* Modified below */}
           <div className="boxed">
@@ -340,7 +340,6 @@ class NormalCurveResearch extends Component {
             <input type="text" id="Data2" name="Data2" ref={this.data2Ref}
               onInput={() => this.handleChange("Data2", this.data2Ref.current.value, this.props.count)}/>
           </div><br/>
-          <h4>Area Under Curve: <span ref={this.areaRef}></span></h4>
           <button onClick={this.delete.bind(this)}>Delete this Question</button>
           <br/><br/>
         </form>
