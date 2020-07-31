@@ -130,7 +130,16 @@ How Redux works: https://www.youtube.com/watch?v=nFryvdyMI8s&t=238s
 
 ## Create a new Experiment Type
 
+Jump to:
+
+- [Connect your Component to Redux](#redux)
+- [How Component Constructor and Functions Interact](#interact)
+- [Connect your Component to TabList.jsx](#expt)
+- [Conclusion](#conclusion)
+
 **Note**: you will need to create your own experiment type in both places: the survey-builder app and participant-app. There are some differences in how the two apps interact with your experiment type, but they should share the code that visually presents your item to researchers and participants. 
+
+In this project folder, you need to create your own component that contains your experiment item and make changes in **src/components/TabList/TabList.jsx** to make sure the app is talking to your component. 
 
 Navigate to **/src/components/items** and open **Template.js**. You can build on this template and create your own experiment item. Follow the ```TODO``` tags to add more code. This template implements a dropzone that allows researchers to drag and drop their item data. It also implements a dropdown menu that allows researchers to select previously uploaded files. Note that the actual files are note stored on the database; the file name and file content are stored as a key-value pair within a JSON object. 
 
@@ -141,6 +150,10 @@ Below is a walk-through of how we created **NormalCurveResearcher.jsx**. Please 
 ##### *TIP: How do React components work?*
 
 Your Experiment Type will be written into a React component. A React app consists of many components, and these components can talk to each other using ```props``` which stands for properties. When a parent component talks to a child component, it can pass ```props``` to the child component, and the child component can use these ```props```. We will see how this works in code in the section [Connect your Component to Success.js]. 
+
+---
+
+<a name="redux"/>
 
 ### Connect your component to Redux
 
@@ -187,9 +200,39 @@ export default connect(
 ```
 Finally, using ```connect```, we connect all this information with the redux store. Note that functions should be wrapped in curly brackets. 
 
+Take a look at ```componentDidMount()```:
+```sh
+componentDidMount() {
+  const username = this.props.auth.user.username;
+  this.props.getColData(username, "itemData");
+}
+```
+Here, we are using both the ```auth``` object and the ```getColData``` function. From the ```auth``` object, we get current user's username. Using the ```getColData``` function, we get all documents from the ```itemData``` collection under current user's database. These documents represent previously uploaded JSON files. Once the function is ran, these documents will be stored inside the ```colData``` array in the redux store. We will use ```this.props.dataFlowColData``` to access these documents. 
+
+Inside ```handleSelectedFile()```, we have
+```sh
+const jsonData = this.props.dataFlowColData.filter(item => 
+  item.fileName == this.state.fileChosen)[0].fileContent;
+```
+```jsonData``` represents the content of the file that a researcher has selected from the dropdown menu. 
+
+Inside ```render()```, we have
+```sh
+const normalCurveFiles = this.props.dataFlowColData.filter(
+  item => item.itemType == "normal-curve");
+var fileNames = normalCurveFiles.map(item => item.fileName);
+fileNames.unshift("Select File");
+const renderOption = item => <option value={item}>{item}</option>
+const fileOptions = fileNames.map(renderOption);
+```
+These few lines basically filters through the acquired documents and list their names for the drop down menu. 
+
+
 ---
 
-### How Component State and Functions Interact
+<a name="interact"/>
+
+### How Component Constructor and Functions Interact
 
 When we want to access instances in our component, for example, the area under both normal curves, we need to create ```Ref```s. When users drag the two sliders, the area changes, and the most recent value is accessible throughout the component if we create a ```Ref``` for this area in the constructor. 
 
@@ -215,15 +258,45 @@ When we want to show the value of ```areaRef``` to users we simply call ```this.
 
 You will also notice a lot of bindings below the ```createRef```s. Details on this can be found at https://reactjs.org/docs/handling-events.html. 
 
-Next, we have information stored in ```this.state```. Note that data stored in ```this.state``` is only accessible within the component where ```this.state``` lives unless you pass some data to a child component via ```props```.
+Next, we have information stored in ```this.state```. Note that data stored in ```this.state``` is only accessible within the component where ```this.state``` lives unless you pass some data to a child component via ```props```. For instance, 
+```sh
+fileChosen: ''
+```
+indicates the file that a researcher has chosen from the drop down menu. The defult value is just an empty string. When users select a name from the drop down menu, the following lines are triggered. 
+```sh
+<select name="fileChosen" value={this.state.fileChosen} onChange={this.onChange}>
+  {fileOptions}
+</select>
+```
+While ```value``` points to the ```fileChosen``` string in ```this.state```, ```onChange``` actually changes ```this.state.fileChosen``` to the ```value``` that's been selected. 
 
+---
 
+<a name="expt"/>
 
+### Connect your Component to TabList.jsx
 
+Please navigate to **/src/components/item/Template.js** and read the comments above functions that will be passed from **TabList.jsx**. For instance, the functions that are passed into **NormalCurveResearcher** are found in the following few lines from **TabList.jsx**:
+```sh
+# inside builderFunction(tabDefine)
+case "normal-curve": 
+  arr.push({
+    id: this.state.count,
+    tab: <NormalCurveResearch getCount={this.getCount} 
+            delete={this.delete} count={this.state.count} 
+            handleChange={this.handleChange} 
+            files={this.state.files} saveFile={this.saveFile}
+            key={this.state.count.toString()}/> 
+  })
+  break;
+```
 
+---
 
+<a name="conclusion"/>
 
-
+### Conclusion
+This is the end of the walk-through. If you get stuck somewhere, please use ```console.log``` to debug. If you have more questions about Redux, feel free to check out this YouTube video: [https://www.youtube.com/watch?v=93p3LxR9xfM&t=1534s].
 
 ---
 
