@@ -72,6 +72,14 @@ class Dashboard extends Component {
     const username = this.props.auth.user.username;
     return (
       <div className="container">
+        <form>
+          Click on this <p></p>
+          <b>
+          <a href="https://colab.research.google.com/drive/1yleVQB_CrNJ5Z3v-YPatW2XqAD7yS8yp?usp=sharing" target="_blank">link</a>
+          </b> <p></p>
+          to configure a <b>normal curve</b> item.
+        </form>
+
         <form onSubmit={this.onAddStudy}>
           <b>Enter a name for your study:</b> <br/>
           <input type="text" name="studyName"

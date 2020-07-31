@@ -25,6 +25,10 @@ class ExptConfigs extends Component {
     this.props.getColData(username, colName);
   }
 
+  componentDidMount() {
+    console.log(this.props.match.params.exptName);
+  }
+
   showJSONData() {
     if (!Object.keys(this.props.colData).length == 0) {
       const data = JSON.stringify(this.props.colData);
@@ -48,9 +52,8 @@ class ExptConfigs extends Component {
         <Link to={studyLink}>
           {studyName}
         </Link>
-        <br /><br />
-        <b>Participants data: </b>
-        <br /><br />
+        <h3>{this.props.match.params.exptName}</h3>
+        <h4>Participants data: </h4>
         {this.showJSONData()}
       </div>
     )
