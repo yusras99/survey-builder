@@ -134,12 +134,13 @@ Jump to:
 
 - [Connect your Component to Redux](#redux)
 - [How Component Constructor and Functions Interact](#interact)
+- [Add your Experiment Type in TabBuilder.jsx](#tabbuilder)
 - [Connect your Component to TabList.jsx](#expt)
 - [Conclusion](#conclusion)
 
 **Note**: you will need to create your own experiment type in both places: the survey-builder app and participant-app. There are some differences in how the two apps interact with your experiment type, but they should share the code that visually presents your item to researchers and participants. 
 
-In this project folder, you need to create your own component that contains your experiment item and make changes in **src/components/TabList/TabList.jsx** to make sure the app is talking to your component. 
+In this project folder, you need to create your own component that contains your experiment item and make changes in **src/components/TabList/TabList.jsx** as well as **src/components/TabBuilder/TabBuilder.jsx** to make sure the app is talking to your component. 
 
 Navigate to **/src/components/items** and open **Template.js**. You can build on this template and create your own experiment item. Follow the ```TODO``` tags to add more code. This template implements a dropzone that allows researchers to drag and drop their item data. It also implements a dropdown menu that allows researchers to select previously uploaded files. Note that the actual files are note stored on the database; the file name and file content are stored as a key-value pair within a JSON object. 
 
@@ -226,6 +227,14 @@ const renderOption = item => <option value={item}>{item}</option>
 const fileOptions = fileNames.map(renderOption);
 ```
 These few lines basically filters through the acquired documents and list their names for the drop down menu. 
+
+---
+
+<a name="tabbuilder"/>
+
+### Add your Experiment Type in TabBuilder.jsx
+
+Please navigate to **/src/components/TabBuilder.jsx** and follow the ```TODO``` tag. 
 
 
 ---

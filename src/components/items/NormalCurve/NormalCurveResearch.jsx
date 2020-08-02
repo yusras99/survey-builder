@@ -323,8 +323,8 @@ class NormalCurveResearch extends Component {
             Sorry, please use a different browser.
           </svg><br/>
           <p>
-            Question: <p></p>
-            <textarea cols="30" rows="10" ref={this.qRef} 
+            Question: <p></p> <br/>
+            <textarea cols="60" rows="10" ref={this.qRef} 
               onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
             </textarea>
             {/* <input type="text" ref={this.qRef} style={{ height: "100px", width: "100px" }}

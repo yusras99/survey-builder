@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 
 // ###TODO###: import your component here
 import SliderTab from '../items/Slider/SliderTab';
+import StaticText from '../items/StaticText/StaticText';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
 
 import { sendFile } from '../../actions/dataActions'
@@ -59,6 +60,15 @@ class TabList extends Component {
                   delete={this.delete} count={this.state.count} 
                   handleChange={this.handleChange} 
                   key={this.state.count.toString()} /> 
+        })
+        break;
+      case "static-text": 
+        arr.push({
+          id: this.state.count,
+          tab: <StaticText getCount={this.getCount}
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange}
+                  key={this.state.count.toString()}/>
         })
         break;
       case "normal-curve": 
