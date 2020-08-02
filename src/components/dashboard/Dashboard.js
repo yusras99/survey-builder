@@ -72,6 +72,8 @@ class Dashboard extends Component {
     const username = this.props.auth.user.username;
     return (
       <div className="container">
+        <h2>Dashboard</h2>
+
         <form>
           Click on this <p></p>
           <b>

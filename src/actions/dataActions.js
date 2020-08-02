@@ -62,7 +62,7 @@ export const createExptCol = (which_database, col_name, which_expt) => dispatch 
       "/createCol/" + col_name)
     .then(res => {
       // we can potentially improve the alert box
-      alert("Experiment [" + which_expt + "] is deployed.");
+      // alert("Experiment [" + which_expt + "] is deployed.");
       window.location.reload(true);
     })
 }

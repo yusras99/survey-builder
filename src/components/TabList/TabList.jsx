@@ -202,7 +202,8 @@ class TabList extends Component {
     const studyName = this.props.match.params.studyName;
     const studyLink = "/" + username + "/" + studyName;
     return (
-      <div className="list" ref={this.myRef}>
+      <div ref={this.myRef}>
+        <h2>Experiment Builder</h2>
         Back to <p> </p>
         <Link to={studyLink}>
           {studyName}

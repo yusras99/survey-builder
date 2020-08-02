@@ -139,7 +139,7 @@ class ConfigStudy extends Component {
             class="btn"
             onClick={this.deployExpts}>
             Deploy: <p></p>
-              {difference.map(name => { return (<b>{name}, </b>) })}
+              {difference.map(name => { return (<b>[{name}] </b>) })}
           </button>
         </div>
       )
@@ -161,11 +161,11 @@ class ConfigStudy extends Component {
     const difference = exptNames.filter(name => !deployed.includes(name));
     return (
       <div className="container">
-        <br />
-        Study: <b>{this.props.match.params.studyName}</b>
-        <br /><br />
+        <h2>{this.props.match.params.studyName}</h2>
         <Link to={exptBuilderLink}>
-          Build an Experiment
+          <button>
+            Build an Experiment
+          </button>
         </Link>
         <br/>
         {/* <Link to={buildExptLink}>
