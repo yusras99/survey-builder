@@ -55,6 +55,8 @@ class ConfigStudy extends Component {
       const exptPartLink = "https://statistical-perceptions.github.io/" + 
         "participant-app/#/participant-app/expt/" + username + 
           "/" + studyName + "-" + exptName
+      const dbLink = "https://test-api-615.herokuapp.com/api/feedback/" + 
+        username + "/" + studyName + "-" + exptName
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
@@ -85,13 +87,37 @@ class ConfigStudy extends Component {
         )
       } else {
         return (
-          <div className="container">
-            {expt.exptName} <p> </p>
+          <div className="boxed">
+            Experiment: <b>{expt.exptName}</b><br/>
             <Link to={exptDataLink}>
               <button type="button">
-                Experiment Configs
+                Configurations
               </button>
-            </Link>
+            </Link><br/><br/>
+            <b>Experiment Link:</b><br/>
+            {exptPartLink} <br/>
+            <CopyToClipboard text={exptPartLink}>
+              <button 
+                onClick={() => 
+                  alert("Experiment link has been copied to clipboard. " + 
+                    "Paste it into your Qualtrics survey :)")}>
+                Copy experiment link to clipboard
+              </button>
+            </CopyToClipboard>
+            <br/><br/>
+            <b>Database Link:</b><br/>
+            {dbLink} <br/>
+            <CopyToClipboard text={dbLink}>
+              <button 
+                onClick={() => 
+                  alert("Database link has been copied to clipboard. " + 
+                    "Paste it into your Qualtrics survey :)")}>
+                Copy experiment link to clipboard
+              </button>
+            </CopyToClipboard>
+            <br/><br/>
+            <b>TODO</b>: Paste the link to demographics qualtrics survey below: <br/>
+            <textarea cols="60" rows="1"></textarea>
           </div>
         )
       };
