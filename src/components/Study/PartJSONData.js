@@ -47,12 +47,12 @@ class ExptConfigs extends Component {
     const studyLink = "/" + username + "/" + studyName;
     return (
       <div>
-        <br /><br />
+        <h2>Experiment: {this.props.match.params.exptName}</h2>
         Back to <p> </p>
         <Link to={studyLink}>
           {studyName}
         </Link>
-        <h3>{this.props.match.params.exptName}</h3>
+        <br/>
         <h4>Participants data: </h4>
         {this.showJSONData()}
       </div>

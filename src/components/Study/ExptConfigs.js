@@ -20,18 +20,24 @@ class ExptConfigs extends Component {
     if (!this.props.experiments.length == 0) {
       const exptObj =
         this.props.experiments.find(item => item.exptName == thisExpt);
-      const allKeys = Object.keys(exptObj);
-      const questionKeys = allKeys.filter(
-        x => x != "userID" && x != "count" &&
-          x != "type" && x != "exptName");
-      return questionKeys.map(q => {
-        const question = JSON.stringify(exptObj[q]);
-        return (
-          <div>
-            {question}
-          </div>
-        )
-      })
+      // const allKeys = Object.keys(exptObj);
+      // const questionKeys = allKeys.filter(
+      //   x => x != "userID" && x != "count" &&
+      //     x != "type" && x != "exptName");
+      // return questionKeys.map(q => {
+      //   const question = JSON.stringify(exptObj[q]);
+      //   return (
+      //     <div>
+      //       {question}
+      //     </div>
+      //   )
+      // })
+      const JSONString = JSON.stringify(exptObj);
+      return (
+        <div>
+          {JSONString}
+        </div>
+      )
     }
     // const exptName = exptObj.exptName;
     // const info = JSON.stringify(exptObj);
@@ -43,8 +49,8 @@ class ExptConfigs extends Component {
     const studyLink = "/" + username + "/" + studyName;
     return (
       <div className="container">
-        <br /><br />
-                Back to <p> </p>
+        <h2>Experiment: {this.props.match.params.exptName}</h2>
+        Back to <p> </p>
         <Link to={studyLink}>
           {studyName}
         </Link>

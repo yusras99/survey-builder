@@ -8,20 +8,25 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {
   getStudyInfo,
   createExptCol,
-  getColNames
+  getColNames,
+  saveLink
 } from "../../actions/dataActions"
 
 class ConfigStudy extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+
+    };
 
     this.deployExpts = this.deployExpts.bind(this);
+    this.recordLink = this.recordLink.bind(this);
+    this.onDeploy = this.onDeploy.bind(this);
   }
   // note: using params to get studyName is probably not good practice. 
   // figure out a better way to get info from previous page later, might
   // use cookies? or does react have some way to pass states between pages?
-  componentWillMount() {
+  componentDidMount() {
     const username = this.props.auth.user.username;
     const studyName = this.props.match.params.studyName;
     this.props.getStudyInfo(username, studyName);
@@ -72,7 +77,7 @@ class ConfigStudy extends Component {
                   View Participants Data
                 </button>
               </Link> <p> </p> <br/><br/>
-              Experiment Link: <br/>
+              <b>Experiment Link:</b> <br/>
               {exptPartLink} <br/>
               <CopyToClipboard text={exptPartLink}>
                 <button 
@@ -117,11 +122,33 @@ class ConfigStudy extends Component {
             </CopyToClipboard>
             <br/><br/>
             <b>TODO</b>: Paste the link to demographics qualtrics survey below: <br/>
-            <textarea cols="60" rows="1"></textarea>
+            <textarea cols="60" rows="1" id={exptName}
+              onInput={this.recordLink} value={this.state.exptName}></textarea>
+            <br/><br/>
+            {/* <button onClick={() => console.log(this.state)}>Show State</button><br/> */}
+            <button id={expt.exptName} onClick={this.onDeploy}> 
+              <b>DEPLOY</b>
+            </button>
           </div>
         )
       };
     })
+  }
+
+  recordLink(e) {
+    this.setState({ [e.target.id]: e.target.value });
+  }
+
+  onDeploy(e) {
+    const username = this.props.match.params.username;
+    const studyName = this.props.match.params.studyName;
+    const exptName = e.currentTarget.id;
+    const link = this.state[exptName];
+
+    const dataToPUT = { link : link };
+    console.log(dataToPUT);
+    this.props.saveLink(username, studyName, exptName, dataToPUT);
+    this.props.createExptCol(username, studyName + "-" + exptName, exptName);
   }
 
   // for now deployment simply creates a collection for each experiment 
@@ -158,18 +185,19 @@ class ConfigStudy extends Component {
           </p>
         </div>
       )
-    } else {
-      return (
-        <div className="container">
-          <button
-            class="btn"
-            onClick={this.deployExpts}>
-            Deploy: <p></p>
-              {difference.map(name => { return (<b>[{name}] </b>) })}
-          </button>
-        </div>
-      )
-    }
+    } 
+    // else {
+    //   return (
+    //     <div className="container">
+    //       <button
+    //         class="btn"
+    //         onClick={this.deployExpts}>
+    //         Deploy: <p></p>
+    //           {difference.map(name => { return (<b>[{name}] </b>) })}
+    //       </button>
+    //     </div>
+    //   )
+    // }
   }
 
   // an action to fetch userData from APi for componentWillMount
@@ -187,20 +215,13 @@ class ConfigStudy extends Component {
     const difference = exptNames.filter(name => !deployed.includes(name));
     return (
       <div className="container">
-        <h2>{this.props.match.params.studyName}</h2>
+        <h2>Study: {this.props.match.params.studyName}</h2>
         <Link to={exptBuilderLink}>
           <button>
             Build an Experiment
           </button>
         </Link>
         <br/>
-        {/* <Link to={buildExptLink}>
-          Build a new experiment
-        </Link>
-        <br/> */}
-        {/* <Link to={normalCurvesLink}>
-          Build a normal curve item
-        </Link> */}
         <form>
           <h3>
             Your Experiments
@@ -208,6 +229,9 @@ class ConfigStudy extends Component {
           {this.getExptNames()}
           <br /><br />
           {this.deploy()}
+          {/* <button onClick={() => console.log(this.state)}>
+            Show State
+          </button> */}
           <br />
         </form>
       </div>
@@ -225,7 +249,9 @@ ConfigStudy.propTypes = {
   createExptCol: PropTypes.func.isRequired,
 
   getColNames: PropTypes.func.isRequired,
-  colNames: PropTypes.array.isRequired
+  colNames: PropTypes.array.isRequired,
+
+  saveLink: PropTypes.func.isRequired
 };
 
 // interaction between reducer and store (state), connect to props 
@@ -241,5 +267,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getStudyInfo, createExptCol, getColNames }
+  { getStudyInfo, createExptCol, getColNames, saveLink }
 )(ConfigStudy);

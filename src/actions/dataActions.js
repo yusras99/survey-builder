@@ -56,13 +56,23 @@ export const getStudyInfo = (which_database, which_study) => dispatch => {
     })
 }
 
+export const saveLink = (which_database, study_name, expt_name, link) => dispatch => {
+  axios
+    .put('https://test-api-615.herokuapp.com/api/feedback/' + which_database + 
+      '/info/studyName-' + study_name + '/experiments/exptName-' + expt_name,
+      link)
+    .then(res => {
+      // alert(res);
+    })
+} 
+
 export const createExptCol = (which_database, col_name, which_expt) => dispatch => {
   axios
     .post('https://test-api-615.herokuapp.com/api/' + which_database +
       "/createCol/" + col_name)
     .then(res => {
       // we can potentially improve the alert box
-      // alert("Experiment [" + which_expt + "] is deployed.");
+      alert("Experiment [" + which_expt + "] is deployed.");
       window.location.reload(true);
     })
 }

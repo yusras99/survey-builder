@@ -45,7 +45,6 @@ class Login extends Component {
       username: this.state.username,
       password: this.state.password
     };
-    console.log(userData);
     // we are redirecting wthin a component, so we don't need to
     // pass in this.props.history
     this.props.loginUser(userData);
@@ -86,7 +85,7 @@ class Login extends Component {
           <input
             type="submit"
             value="Log in"
-            class="btn" />
+            className="btn" />
         </form>
       </div>
     );

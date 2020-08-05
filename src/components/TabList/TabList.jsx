@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 // ###TODO###: import your component here
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
-import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
+import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearchOld';
 
 import { sendFile } from '../../actions/dataActions'
 
@@ -171,7 +171,7 @@ class TabList extends Component {
       alert("You have not filled out all fields, or have entered an invalid value!");
     }
     else {
-      var finalObj = { userID: new Date().toString() };
+      var finalObj = {};
       finalObj["exptName"] = this.nameRef.current.value;
       var int = 0;
       while (int < this.state.count) {
