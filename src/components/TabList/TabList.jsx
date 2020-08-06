@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 // ###TODO###: import your component here
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
-import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearchOld';
+import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
 
 import { sendFile } from '../../actions/dataActions'
 
@@ -236,6 +236,7 @@ class TabList extends Component {
         <div className="extraPad">
           <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
         </div>
+        {/* <button onClick={() => console.log(this.state.output)}>output</button> */}
       </div>
     )
   }

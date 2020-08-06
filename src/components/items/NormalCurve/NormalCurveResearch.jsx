@@ -21,6 +21,8 @@ class NormalCurveResearch extends Component {
     this.handleDrop = this.handleDrop.bind(this);
     this.handleSelectedFile = this.handleSelectedFile.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.changeJSON = this.changeJSON.bind(this);
+    this.handleChange = this.handleChange.bind(this);
 
     this.state = {
       dataReceived: false,
@@ -81,7 +83,7 @@ class NormalCurveResearch extends Component {
             this.setState({
               dataReceived: true,
               fileText: fileText,
-              jsonData: jsonData,
+              jsonData: jsonData, 
               svgWidth: length,
               svgHeight: height,
               distancing: distancing,
@@ -167,14 +169,27 @@ class NormalCurveResearch extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  handleChange(type, q, count) {
-    this.props.handleChange(type, q, count);
+  handleChange(key, value, count) {
+    this.props.handleChange(key, value, count);
+  }
+
+  changeJSON(key, value) {
+    var data = this.state.jsonData;
+    data[key] = Number(value);
+    this.handleChange("FileContent", data, this.props.count);
   }
 
   render() {
     if (this.state.dataReceived) {
       return (
-        <NormalCurve data={this.state.jsonData} />
+        <div>
+          <NormalCurve 
+            data={this.state.jsonData} count={this.props.count}
+            changeJSON={this.changeJSON} 
+            handleChange={this.handleChange} />
+          <br/>
+          {/* <button onClick={() => console.log(this.state.jsonData)}>Click me</button> */}
+        </div>
       )
     }
     else {
