@@ -9,6 +9,9 @@ class HomePage extends Component {
             <h1>
             Welcome to Psych Researcher App!
             </h1>
+            Please click on this <p></p>
+            <a target="_blank" href="https://github.com/statistical-perceptions/statistical-perceptions.github.io">link</a> <p></p>
+            to view researcher user guide. 
         </div>
       )
   }

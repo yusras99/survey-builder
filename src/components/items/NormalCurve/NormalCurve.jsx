@@ -410,11 +410,11 @@ class NormalCurve extends Component {
                     Sorry, please use a different browser.
                 </svg>
         <br />
-        Question: <br/>
-        <textarea cols="60" rows="10" ref={this.qRef} 
-          onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
-        </textarea>
         <div class="boxed">
+          Question: <br/>
+          <textarea cols="60" rows="10" ref={this.qRef} 
+            onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
+          </textarea><br/>
           <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
           <input type="text" 
             ref={this.graph1keyRef}

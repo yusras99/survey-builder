@@ -60,6 +60,9 @@ class ConfigStudy extends Component {
       const exptPartLink = "https://statistical-perceptions.github.io/" + 
         "participant-app/#/participant-app/expt/" + username + 
           "/" + studyName + "-" + exptName
+      const previewLink = "https://statistical-perceptions.github.io/" + 
+      "participant-app/#/participant-app/preview/" + username + 
+        "/" + studyName + "-" + exptName
       const dbLink = "https://test-api-615.herokuapp.com/api/feedback/" + 
         username + "/" + studyName + "-" + exptName
       if (deployed.includes(exptName)) {
@@ -67,6 +70,9 @@ class ConfigStudy extends Component {
           <div className="container">
             <div className="boxed">
               <b>{expt.exptName}</b> <br/>
+              <a target="_blank" href={previewLink}>
+                Preview Experiment
+              </a> <br/><br/>
               <Link to={exptDataLink}>
                 <button type="button">
                   Experiment Configs
