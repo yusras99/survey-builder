@@ -188,7 +188,6 @@ class NormalCurveResearch extends Component {
             changeJSON={this.changeJSON} 
             handleChange={this.handleChange} />
           <br/>
-          {/* <button onClick={() => console.log(this.state.jsonData)}>Click me</button> */}
         </div>
       )
     }

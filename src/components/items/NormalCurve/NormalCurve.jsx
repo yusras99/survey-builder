@@ -15,6 +15,8 @@ class NormalCurve extends Component {
     this.graph1keyRef = React.createRef();
     this.graph2keyRef = React.createRef();
     this.qRef = React.createRef();
+    this.colNumValRef = React.createRef();
+    this.radiusRef = React.createRef();
 
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
@@ -27,7 +29,8 @@ class NormalCurve extends Component {
     this.alterStartPos1 = this.alterStartPos1.bind(this);
     this.alterStartPos2 = this.alterStartPos2.bind(this);
     this.onChange = this.onChange.bind(this);
-
+    this.svgColReturn = this.svgColReturn.bind(this);
+    this.svgColReturn = this.svgColReturn.bind(this);
     const unitHeight = this.props.data["max-height"];
     const circRad = this.props.data["circle-radius"];
     const len1 = this.props.data["len1"];
@@ -41,7 +44,6 @@ class NormalCurve extends Component {
     const edgeLength = Math.max(len1, len2) * distancing;
 
     const ceilDist = height - 50;
-    // const length = Math.ceil((distancing * this.props.data["len1"] * 2 + distancing * this.props.data["len2"] * 2) / 100) * 100;
     const length = edgeLength + internalLength;
     const colNum = Math.ceil(length / distancing);
     console.log(height, distancing, ceilDist, colNum);
@@ -52,40 +54,50 @@ class NormalCurve extends Component {
     const axisEndCol = internalLength / distancing;
     const axisEnd = axisEndCol * distancing;
 
-    const triCent1 = Math.ceil((0.5 * len1 + 1) * distancing);
-    const triCent2 = Math.ceil((0.5 * len2 + 1) * distancing);
+    const triCent1 = (0.5 * len1 + 1) * distancing;
+    const triCent2 = (0.5 * len2 + 1) * distancing;
     const triCentCol1 = Math.ceil(triCent1 / distancing);
     const triCentCol2 = Math.ceil(triCent2 / distancing);
 
-    const variance1 = Math.abs(Math.ceil(len1 / 2) - edgeCol);
-    const variance2 = Math.abs(Math.ceil(len2 / 2) - edgeCol);
+    const variance1 = Math.abs(Math.ceil(len1 / 2) - axisStartCol);
+    const variance2 = Math.abs(Math.ceil(len2 / 2) - axisStartCol);
 
-    let startPos1 = this.props.data["startPos1"];
+    const startPos1 = this.props.data["startPos1"];
+    let distancing1 = startPos1 + variance1 - 1;
     let col11 = startPos1;
     let col12 = startPos1 + len1 - 1;
-    if (startPos1 + triCentCol1 < axisStartCol) {
-      startPos1 = variance1 - 1;
+    if (col11 + triCentCol1 < axisStartCol) {
+      distancing1 = variance1 - 1;
       col11 = 0;
       col12 = len1 - 1;
     }
-    else if (startPos1 + triCentCol1 > axisStartCol + axisEndCol) {
-      startPos1 = variance1 + axisEndCol - 1;
+    else if (col11 + triCentCol1 > axisStartCol + axisEndCol) {
+      distancing1 = variance1 + axisEndCol - 1;
       col11 = axisEndCol;
       col12 = axisEndCol + len1 - 1;
     }
 
     let startPos2 = this.props.data["startPos2"];
+    let distancing2 = startPos2 + variance2 - 1;
     let col21 = startPos2;
     let col22 = startPos2 + len2 - 1;
-    if (startPos2 + triCentCol2 < axisStartCol) {
-      startPos2 = variance2 - 1;
+    if (col21 + triCentCol2 < axisStartCol) {
+      distancing2 = variance2 - 1;
       col21 = 0;
       col22 = len2 - 1;
     }
-    else if (startPos2 + triCentCol2 > axisStartCol + axisEndCol) {
-      startPos2 = variance2 + axisEndCol - 1;
+    else if (col21 + triCentCol2 > axisStartCol + axisEndCol) {
+      distancing2 = variance2 + axisEndCol - 1;
       col21 = axisEndCol;
       col22 = axisEndCol + len2 - 1;
+    }
+
+    let colNumVal;
+    if ("colNumVal" in this.props.data) {
+      colNumVal = this.props.data["colNumVal"];
+    }
+    else {
+      colNumVal = 1;
     }
 
     this.state = {
@@ -103,8 +115,8 @@ class NormalCurve extends Component {
       len2: len2,
       colValHeiS2: this.props.data["colValHeiS2"],
       distancing: distancing,
-      distancing1: startPos1 * distancing,
-      distancing2: startPos2 * distancing,
+      distancing1 : distancing1 * distancing,
+      distancing2: distancing2 * distancing,
       triCent1: triCent1,
       triCentCol1: triCentCol1,
       triCent2: triCent2,
@@ -128,10 +140,11 @@ class NormalCurve extends Component {
       edgeCol: edgeCol,
       edgeLength: edgeLength,
       colNum: colNumInit,
-      variance1: variance1 - 1,
-      variance2: variance2 - 1,
+      variance1: variance1,
+      variance2: variance2,
       lowVal: this.props.data["lowVal"],
-      showCoors: true
+      showCoors: true,
+      colNumVal: colNumVal
     };
   }
 
@@ -157,6 +170,57 @@ class NormalCurve extends Component {
     var hard = <circle className="icon" stroke="Crimson" fill="Crimson" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}></circle>;
 
     return hard;
+  }
+
+  svgColReturn(e, dragger) {
+    let distFromCent;
+    let variance;
+    if (dragger === 1) {
+      distFromCent = this.state.triCentCol1;
+      variance = this.state.variance1;
+    }
+    else if (dragger === 2) {
+      distFromCent = this.state.triCentCol2;
+      variance = this.state.variance2;
+    }
+    var svg = this.svgRef.current;
+    var pt = svg.createSVGPoint();
+    pt.x = e.clientX;
+    var svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+    e.preventDefault();
+    var x = svgP.x - distFromCent + this.state.mousePointerRange;
+    var col = Math.round((x - this.state.axisStart) / this.state.distancing) + variance;
+    var colRelative = Math.round((x - this.state.axisStart) / this.state.distancing) + 1;
+    // console.log(col, colRelative, variance);
+    return [col, colRelative];
+  }
+
+  svgColPlacement(col, colRelative, dragger) {
+    if (dragger === 2) {
+      if (col + this.state.triCentCol2 < this.state.axisStartCol) {
+        this.setState({ distancing2: (this.state.variance2 - 1) * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
+      }
+      else if (col + this.state.triCentCol2 > this.state.axisStartCol + this.state.axisEndCol) {
+        this.setState({ distancing2: this.state.distancing * (this.state.variance2 + this.state.axisEndCol - 1), col21: this.state.axisEndCol, col22: this.state.axisEndCol + this.state.len2 - 1 })
+      }
+      else {
+        this.setState({ distancing2: this.state.distancing * col, col21: colRelative, col22: colRelative + this.state.len2 - 1 });
+      }
+      this.curveArea();
+    }
+    else if (dragger === 1) {
+      if (col + this.state.triCentCol1 < this.state.axisStartCol) {
+        this.setState({ distancing1: (this.state.variance1 - 1) * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
+      }
+      else if (col + this.state.triCentCol1 > this.state.axisStartCol + this.state.axisEndCol) {
+        this.setState({ distancing1: this.state.distancing * (this.state.variance1 + this.state.axisEndCol - 1), col11: this.state.axisEndCol, col12: this.state.axisEndCol + this.state.len1 - 1 })
+      }
+      else {
+        this.setState({ distancing1: this.state.distancing * col, col11: colRelative, col12: colRelative + this.state.len1 - 1 });
+      }
+      this.curveArea();
+      // this.setState({ distancing2 : x })
+    }
   }
 
   triMouseDown(e, num) {
@@ -189,56 +253,14 @@ class NormalCurve extends Component {
   }
 
   triDrag(e) {
-    // Set mousePointerRange so that we know the distance
-    // from the mouse tip to the x-value of the triangle
-    // tip
-    var svgPre = this.svgRef.current;
-    var ptPre = svgPre.createSVGPoint();
-    ptPre.x = e.clientX;
-    var svgPPree = ptPre.matrixTransform(svgPre.getScreenCTM().inverse());
-    this.setState({ x: e.screenX, y: e.screenY, svgX: svgPPree.x });
-    if (this.state.triDown === 2) {
-      // console.log("DRAG CONT'D");
-      var svg = this.svgRef.current;
-      var pt = svg.createSVGPoint();
-      pt.x = e.clientX;
-      var svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
       e.preventDefault();
-      var x = svgP.x - this.state.triCent2 + this.state.mousePointerRange;
-      var col = Math.round((x - this.state.edgeCol) / this.state.distancing);
-      if (col + this.state.triCentCol2 < this.state.axisStartCol) {
-        this.setState({ distancing2: this.state.variance2 * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
-      }
-      else if (col + this.state.triCentCol2 > this.state.axisStartCol + this.state.axisEndCol) {
-        this.setState({ distancing2: this.state.distancing * (this.state.variance2 + this.state.axisEndCol), col21: this.state.axisEndCol, col22: this.state.axisEndCol + this.state.len2 - 1 })
-      }
-      else {
-        this.setState({ distancing2: this.state.distancing * col, col21: col - this.state.variance2, col22: col - this.state.variance2 + this.state.len2 - 1 });
-      }
-      this.curveArea(col);
-      // this.setState({ distancing2 : x })
-    }
-    else if (this.state.triDown === 1) {
-      // console.log("DRAG CONT'D");
-      var svg = this.svgRef.current;
-      var pt = svg.createSVGPoint();
-      pt.x = e.clientX;
-      var svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
-      e.preventDefault();
-      var x = svgP.x - this.state.triCent1 + this.state.mousePointerRange;
-      var col = Math.round((x - this.state.edgeCol) / this.state.distancing);
-      if (col + this.state.triCentCol1 < this.state.axisStartCol) {
-        this.setState({ distancing1: this.state.variance1 * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
-      }
-      else if (col + this.state.triCentCol1 > this.state.axisStartCol + this.state.axisEndCol) {
-        this.setState({ distancing1: this.state.distancing * (this.state.variance1 + this.state.axisEndCol), col11: this.state.axisEndCol, col12: this.state.axisEndCol + this.state.len1 - 1 })
-      }
-      else {
-        this.setState({ distancing1: this.state.distancing * col, col11: col - this.state.variance1, col12: col - this.state.variance1 + this.state.len1 - 1 });
-      }
-      this.curveArea(col);
-      // this.setState({ distancing2 : x })
-    }
+      var dragger = this.state.triDown;
+      var cols = this.svgColReturn(e, dragger);
+      var col = cols[0];
+      var colRelative = cols[1]
+      // console.log(col);
+      this.svgColPlacement(col, colRelative, dragger);
+      this.curveArea();
   }
 
   triUp(e) {
@@ -248,7 +270,7 @@ class NormalCurve extends Component {
     }
   }
 
-  curveArea(col) {
+  curveArea() {
     const col11 = this.state.col11 + this.state.variance1;
     const col12 = this.state.col12 + this.state.variance1;
     const col21 = this.state.col21 + this.state.variance2;
@@ -303,16 +325,16 @@ class NormalCurve extends Component {
   }
 
   alterStartPos1(newPos) {
-    let startPos1 = parseInt(this.startPos1Ref.current.value) + this.state.variance1;
-    let col11 = startPos1 - this.state.variance1;
+    let startPos1 = parseInt(this.startPos1Ref.current.value) + this.state.variance1 - 1;
+    let col11 = startPos1 - this.state.variance1 + 1;
     let col12 = col11 + this.state.len1 - 1;
     if (startPos1 + this.state.triCentCol1 < this.state.axisStartCol) {
-      startPos1 = this.state.variance1;
+      startPos1 = this.state.variance1 - 1;
       col11 = 0;
       col12 = this.state.len1 - 1;
     }
     else if (startPos1 + this.state.triCentCol1 > this.state.axisStartCol + this.state.axisEndCol) {
-      startPos1 = this.state.variance1 + this.state.axisEndCol;
+      startPos1 = this.state.variance1 + this.state.axisEndCol - 1;
       col11 = this.state.axisEndCol;
       col12 = this.state.axisEndCol + this.state.len1 - 1;
     }
@@ -327,21 +349,20 @@ class NormalCurve extends Component {
   }
 
   alterStartPos2(newPos) {
-    let startPos2 = parseInt(this.startPos2Ref.current.value) + this.state.variance2;
-    let col21 = startPos2 - this.state.variance2;
+    let startPos2 = parseInt(this.startPos2Ref.current.value) + this.state.variance2 - 1;
+    let col21 = startPos2 - this.state.variance2 + 1;
     let col22 = col21 + this.state.len2 - 1;
     if (startPos2 + this.state.triCentCol2 < this.state.axisStartCol) {
-      startPos2 = this.state.variance2;
+      startPos2 = this.state.variance2 - 1;
       col21 = 0;
       col22 = this.state.len2 - 1;
     }
     else if (startPos2 + this.state.triCentCol2 > this.state.axisStartCol + this.state.axisEndCol) {
-      startPos2 = this.state.variance2 + this.state.axisEndCol;
+      startPos2 = this.state.variance2 + this.state.axisEndCol - 1;
       col21 = this.state.axisEndCol;
       col22 = this.state.axisEndCol + this.state.len2 - 1;
     }
 
-    // this.changeStartPos2(newPos);
     this.changeJSON("startPos2", newPos);
 
     this.setState({
@@ -406,7 +427,7 @@ class NormalCurve extends Component {
             onMouseDown={(e, num) => this.triMouseDown(e, 2)}
           />
           <text text-anchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
-          <text text-anchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum}</text>
+          <text text-anchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
                     Sorry, please use a different browser.
                 </svg>
         <br />
@@ -415,16 +436,19 @@ class NormalCurve extends Component {
           <textarea cols="60" rows="10" ref={this.qRef} 
             onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
           </textarea><br/>
+
           <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
           <input type="text" 
             ref={this.graph1keyRef}
             onInput={() => this.handleChange("graph1key", this.graph1keyRef.current.value, this.props.count)}></input>
           <br />
+
           <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
           <input type="text" 
             ref={this.graph2keyRef}
             onInput={() => this.handleChange("graph2key", this.graph2keyRef.current.value, this.props.count)}></input>
           <br />
+
           <span>Enter the width of the graph (each point in the curves is 
             equivalent to 1 unit of width) </span>
           <input ref={this.lengthRef} type="text" 
@@ -434,6 +458,17 @@ class NormalCurve extends Component {
             Change Width
           </button>
           <br/>
+
+          <span>Enter your preferred value for the width of each unit in the curve</span>
+          <input type="text" ref={this.colNumValRef}></input>
+          <button onClick={() => this.changeJSON("colNumVal", this.colNumValRef.current.value)}>Change Unit Value</button>
+          <br />
+          
+          <span>Enter your preferred value for the radius of each unit in the curve (2 - 5, inclusive)</span>
+          <input type="text" ref={this.radiusRef}></input>
+          <button onClick={() => this.changeJSON("circRad", this.radiusRef.current.value)}>Change Radius</button>
+          <br />
+
           <span>Enter your preferred starting position for curve 1, 
             if you want to change it </span>
           <input ref={this.startPos1Ref} 
@@ -443,6 +478,7 @@ class NormalCurve extends Component {
             Change Curve 1
           </button>
           <br/>
+
           <span>Enter your preferred starting position for curve 2, 
             if you want to change it </span>
           <input ref={this.startPos2Ref} type="text" 

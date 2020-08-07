@@ -92,13 +92,13 @@ class TabList extends Component {
   }
 
   // Input: 
-  //  pos: key of JSON object
-  //  newVal: value of JSON object
+  //  key: key of JSON object
+  //  value: value of JSON object
   //  count: the numerical order of the JSON object
   // Action: put the key and value pair in the final output JSON object
-  handleChange(pos, newVal, count) {
+  handleChange(key, value, count) {
     var curOutput = this.state.output;
-    curOutput[count.toString()][pos] = newVal;
+    curOutput[count.toString()][key] = value;
     this.setState({ output: curOutput });
   }
 
@@ -236,7 +236,8 @@ class TabList extends Component {
         <div className="extraPad">
           <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
         </div>
-        {/* <button onClick={() => console.log(this.state.output)}>output</button> */}
+        <button onClick={() => console.log(this.state.output)}>show final output</button>
+        <br/>
       </div>
     )
   }
