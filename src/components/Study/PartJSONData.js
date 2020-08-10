@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import CsvDownload from "react-json-to-csv";
 
 import {
   getColData
@@ -12,9 +13,13 @@ import "./PartData.css";
 class ExptConfigs extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      finalObj: {}
+    };
 
+    this.makeObj = this.makeObj.bind(this);
     this.showJSONData = this.showJSONData.bind(this);
+    this.downloadData = this.downloadData.bind(this);
   }
 
   componentWillMount() {
@@ -25,38 +30,84 @@ class ExptConfigs extends Component {
     this.props.getColData(username, colName);
   }
 
-  componentDidMount() {
-    console.log(this.props.match.params.exptName);
+  makeObj() {
+    if (!Object.keys(this.props.colData).length == 0) {
+      // console.log(this.props.colData);
+      var obj = {};
+      const arrToProcess = this.props.colData;
+      arrToProcess.forEach(item => {
+        const id = item.participantID;
+        const keysInItem = Object.keys(item);
+        const qKeys = 
+          keysInItem.filter(k => k != "participantID" && k != "_id");
+        // const info = {};
+        // qKeys.forEach(k => info[k] = item[k]);
+        // console.log(info);
+        if (Object.keys(obj).includes(id)) {
+          const prevData = obj[id];
+          qKeys.forEach(k => prevData[k] = item[k]);
+          obj[id] = prevData;
+        } else {
+          const nowData = {};
+          qKeys.forEach(k => nowData[k] = item[k]);
+          obj[id] = nowData;
+        }
+      })
+      return obj;
+    }
   }
 
   showJSONData() {
-    if (!Object.keys(this.props.colData).length == 0) {
-      const data = JSON.stringify(this.props.colData);
-      return (
-        <div>
-          {data}
-        </div>
-      );
+    const obj = this.makeObj();
+    if (obj != null) {
+      const allIDs = Object.keys(obj);
+      return allIDs.map(id => {
+        const data = obj[id];
+        const stringedData = JSON.stringify(data);
+        return (
+          <div>
+            <br/>
+            <p>{id}: {stringedData}</p>
+          </div>
+        )
+      })
     }
   }
+
+  downloadData() {
+    const obj = this.makeObj();
+    if (obj != null) {
+      console.log(JSON.stringify(obj));
+    }
+  }
+  
 
   // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     const studyLink = "/" + username + "/" + studyName;
-    return (
-      <div>
-        <h2>Experiment: {this.props.match.params.exptName}</h2>
-        Back to <p> </p>
-        <Link to={studyLink}>
-          {studyName}
-        </Link>
-        <br/>
-        <h4>Participants data: </h4>
-        {this.showJSONData()}
-      </div>
-    )
+    const obj = this.makeObj();
+    if (obj != null) {
+      return (
+        <div>
+          <h2>Experiment: {this.props.match.params.exptName}</h2>
+          Back to <p> </p>
+          <Link to={studyLink}>
+            {studyName}
+          </Link>
+          <br/>
+          <h4>Participants data: </h4> 
+          <button onClick={this.downloadData}>Download data as csv</button>
+          {/* <CsvDownload data={obj} /> */}
+          {this.showJSONData()}
+        </div>
+      )
+    } else {
+      return (
+        <div>hello</div>
+      )
+    }
   }
 }
 

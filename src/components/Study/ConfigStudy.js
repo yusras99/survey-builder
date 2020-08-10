@@ -83,6 +83,17 @@ class ConfigStudy extends Component {
                   View Participants Data
                 </button>
               </Link> <p> </p> <br/><br/>
+              <b>Database Link:</b><br/>
+              {dbLink} <br/>
+              <CopyToClipboard text={dbLink}>
+                <button 
+                  onClick={() => 
+                    alert("Database link has been copied to clipboard. " + 
+                      "Paste it into your Qualtrics survey :)")}>
+                  Copy experiment link to clipboard
+                </button>
+              </CopyToClipboard>
+              <br/><br/>
               <b>Experiment Link:</b> <br/>
               {exptPartLink} <br/>
               <CopyToClipboard text={exptPartLink}>
