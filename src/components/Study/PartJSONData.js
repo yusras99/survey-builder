@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import CsvDownload from "react-json-to-csv";
+import { CSVLink } from "react-csv";
 
 import {
   getColData
 } from "../../actions/dataActions"
 
 import "./PartData.css";
+
+const { parse } = require('json2csv');
 
 class ExptConfigs extends Component {
   constructor(props) {
@@ -17,7 +19,7 @@ class ExptConfigs extends Component {
       finalObj: {}
     };
 
-    this.makeObj = this.makeObj.bind(this);
+    this.makeArr = this.makeArr.bind(this);
     this.showJSONData = this.showJSONData.bind(this);
     this.downloadData = this.downloadData.bind(this);
   }
@@ -30,44 +32,87 @@ class ExptConfigs extends Component {
     this.props.getColData(username, colName);
   }
 
-  makeObj() {
+  flattenObj(obj) {
+    var flattendObj = {};
+    const flattenObject = (obj, keyName) => {
+      Object.keys(obj).forEach(key => {
+        var newKey = `${keyName}.${key}` 
+        if (typeof obj[key] === "object") {
+          // calling the function again
+          flattenObject(obj[key], newKey);
+        } else {
+          flattendObj[newKey] = obj[key];
+        }
+      });
+    };
+    flattenObject(obj, "");
+
+    function renameKey (obj, oldKey, newKey) {
+      obj[newKey] = obj[oldKey];
+      delete obj[oldKey];
+    }
+
+    const allKeys = Object.keys(flattendObj);
+    allKeys.map(k => {
+      const oldKey = k;
+      const newKey = oldKey.substr(1, oldKey.length);
+      renameKey(flattendObj, oldKey, newKey)
+    })
+
+    return flattendObj;
+  } 
+
+  makeArr() {
     if (!Object.keys(this.props.colData).length == 0) {
       // console.log(this.props.colData);
-      var obj = {};
+      var arr = [];
+      var ids = [];
       const arrToProcess = this.props.colData;
+      // console.log(arrToProcess);
       arrToProcess.forEach(item => {
         const id = item.participantID;
         const keysInItem = Object.keys(item);
         const qKeys = 
           keysInItem.filter(k => k != "participantID" && k != "_id");
-        // const info = {};
-        // qKeys.forEach(k => info[k] = item[k]);
-        // console.log(info);
-        if (Object.keys(obj).includes(id)) {
-          const prevData = obj[id];
-          qKeys.forEach(k => prevData[k] = item[k]);
-          obj[id] = prevData;
+        
+        if (ids.includes(id)) {
+          // find that id in arr and update the item
+          arr.forEach(ele => {
+            if (ele.participantID == id) {
+              const prevData = ele;
+              qKeys.forEach(k => prevData[k] = item[k]);
+              ele = prevData;
+            }
+          })
         } else {
-          const nowData = {};
-          qKeys.forEach(k => nowData[k] = item[k]);
-          obj[id] = nowData;
+          // make a new item, put it in arr, and put id in ids 
+          const doc = {};
+          doc["participantID"] = id;
+          qKeys.forEach(k => doc[k] = item[k]);
+          arr.push(doc);
+          ids.push(id);
+          // console.log(doc);
         }
       })
-      return obj;
+      // arr.map(ele => ele = this.flattenObj(ele));
+      arr.map(ele => {
+        const newEle = this.flattenObj(ele);
+        const i = arr.indexOf(ele);
+        arr[i] = newEle;
+      });
+      return arr;
     }
   }
 
   showJSONData() {
-    const obj = this.makeObj();
-    if (obj != null) {
-      const allIDs = Object.keys(obj);
-      return allIDs.map(id => {
-        const data = obj[id];
-        const stringedData = JSON.stringify(data);
+    const arr = this.makeArr();
+    if (arr != null) {
+      return arr.map(ele => {
+        const line = JSON.stringify(ele);
         return (
           <div>
             <br/>
-            <p>{id}: {stringedData}</p>
+            {line}
           </div>
         )
       })
@@ -75,20 +120,19 @@ class ExptConfigs extends Component {
   }
 
   downloadData() {
-    const obj = this.makeObj();
-    if (obj != null) {
-      console.log(JSON.stringify(obj));
-    }
+    const arr = this.makeArr();
+    // if (arr != null) {
+    //   console.log(arr);
+    // }
   }
-  
 
   // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     const studyLink = "/" + username + "/" + studyName;
-    const obj = this.makeObj();
-    if (obj != null) {
+    const arr = this.makeArr();
+    if (arr != null) {
       return (
         <div>
           <h2>Experiment: {this.props.match.params.exptName}</h2>
@@ -98,14 +142,19 @@ class ExptConfigs extends Component {
           </Link>
           <br/>
           <h4>Participants data: </h4> 
-          <button onClick={this.downloadData}>Download data as csv</button>
-          {/* <CsvDownload data={obj} /> */}
+          {/* <button onClick={this.downloadData}>See data as csv</button> */}
+          <button>
+            <CSVLink data={arr} >Download Data as CSV</CSVLink>
+          </button>
           {this.showJSONData()}
         </div>
       )
     } else {
       return (
-        <div>hello</div>
+        <div>
+          <br/>
+          Please wait, grabbing data ... 
+        </div>
       )
     }
   }
