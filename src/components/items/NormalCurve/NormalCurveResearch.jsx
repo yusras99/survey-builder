@@ -28,7 +28,8 @@ class NormalCurveResearch extends Component {
       dataReceived: false,
       fileNames: [],
       setFileNames: [],
-      fileChosen: ''
+      fileChosen: '',
+      key: this.props.key
     };
   }
 

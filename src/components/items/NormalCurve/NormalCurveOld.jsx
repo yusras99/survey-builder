@@ -31,22 +31,14 @@ class NormalCurve extends Component {
     this.onChange = this.onChange.bind(this);
     this.svgColReturn = this.svgColReturn.bind(this);
     this.svgColReturn = this.svgColReturn.bind(this);
-    this.establishStateData = this.establishStateData.bind(this);
-    this.updateRadius = this.updateRadius.bind(this);
-
-    this.state = this.establishStateData(this.props.data);
-  }
-
-  establishStateData(data) {
-    // console.log("establishStateData()", new Date());
-    const unitHeight = data["max-height"];
-    const circRad = data["circle-radius"];
-    const len1 = data["len1"];
-    const len2 = data["len2"];
+    const unitHeight = this.props.data["max-height"];
+    const circRad = this.props.data["circle-radius"];
+    const len1 = this.props.data["len1"];
+    const len2 = this.props.data["len2"];
     const distancing = circRad * 4 - 1;
     const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
 
-    const colNumInit = data["axis-length"];
+    const colNumInit = this.props.data["axis-length"];
     const internalLength = colNumInit * distancing;
     const edgeCol = Math.ceil(Math.max(len1, len2) / 2);
     const edgeLength = Math.max(len1, len2) * distancing;
@@ -54,6 +46,7 @@ class NormalCurve extends Component {
     const ceilDist = height - 50;
     const length = edgeLength + internalLength;
     const colNum = Math.ceil(length / distancing);
+    console.log(height, distancing, ceilDist, colNum);
 
     const axisStart = Math.ceil(edgeLength / 2);
     const axisStartCol = edgeCol;
@@ -69,7 +62,7 @@ class NormalCurve extends Component {
     const variance1 = Math.abs(Math.ceil(len1 / 2) - axisStartCol);
     const variance2 = Math.abs(Math.ceil(len2 / 2) - axisStartCol);
 
-    const startPos1 = data["startPos1"];
+    const startPos1 = this.props.data["startPos1"];
     let distancing1 = startPos1 + variance1 - 1;
     let col11 = startPos1;
     let col12 = startPos1 + len1 - 1;
@@ -84,7 +77,7 @@ class NormalCurve extends Component {
       col12 = axisEndCol + len1 - 1;
     }
 
-    let startPos2 = data["startPos2"];
+    let startPos2 = this.props.data["startPos2"];
     let distancing2 = startPos2 + variance2 - 1;
     let col21 = startPos2;
     let col22 = startPos2 + len2 - 1;
@@ -100,17 +93,17 @@ class NormalCurve extends Component {
     }
 
     let colNumVal;
-    if ("colNumVal" in data) {
+    if ("colNumVal" in this.props.data) {
       colNumVal = this.props.data["colNumVal"];
     }
     else {
       colNumVal = 1;
     }
 
-    return {
-      axisLength: data["axis-length"],
-      startPos1: data["startPos1"],
-      startPos2: data["startPos2"],
+    this.state = {
+      axisLength: this.props.data["axis-length"],
+      startPos1: this.props.data["startPos1"],
+      startPos2: this.props.data["startPos2"],
       x: 0, y: 0, isDown: false,
       rectX: 12.5,
       down: false,
@@ -118,9 +111,9 @@ class NormalCurve extends Component {
       svgHeight: height,
       svgX: 6,
       len1: len1,
-      colValHeiS: data["colValHeiS"],
+      colValHeiS: this.props.data["colValHeiS"],
       len2: len2,
-      colValHeiS2: data["colValHeiS2"],
+      colValHeiS2: this.props.data["colValHeiS2"],
       distancing: distancing,
       distancing1 : distancing1 * distancing,
       distancing2: distancing2 * distancing,
@@ -136,7 +129,7 @@ class NormalCurve extends Component {
       col22: col22,
       colLim1: Math.round((length - (len1 * distancing)) / distancing),
       colLim2: Math.round((length - (len2 * distancing)) / distancing),
-      overlapVals: data["overlapVals"],
+      overlapVals: this.props.data["overlapVals"],
       circRad: circRad,
       ceilDist: ceilDist,
       axisStart: axisStart,
@@ -378,25 +371,13 @@ class NormalCurve extends Component {
       col22: col22
     });
   }
-  
-  updateRadius(radius) {
-    // console.log("updateRadius", radius);
-    this.changeJSON("circle-radius", radius);
-    let newData = this.props.data;
-    newData["circle-radius"] = radius;
-    this.setState(this.establishStateData(newData));
-  }
-
-  updateColVal(colVal) {
-    this.changeJSON("colNumVal", colVal);
-    this.setState({ colNumVal : colVal });
-  }
 
   render() {
     return (
       <div
         onMouseMove={e => this.triDrag(e)}
-        onMouseUp={e => this.triUp(e)}>
+        onMouseUp={e => this.triUp(e)}
+        key={this.props.key}>
         <svg width={this.state.svgWidth} height={this.state.svgHeight + 10} ref={this.svgRef}>
           {/* <rect opacity="0.2" width="100%" height="100%" fill="red"/> */}
           {[...Array(this.state.len1).keys()].map(
@@ -481,12 +462,12 @@ class NormalCurve extends Component {
 
           <span>Enter your preferred value for the width of each unit in the curve</span>
           <input type="text" ref={this.colNumValRef}></input>
-          <button onClick={() => this.updateColVal(this.colNumValRef.current.value)}>Change Unit Value</button>
+          <button onClick={() => this.changeJSON("colNumVal", this.colNumValRef.current.value)}>Change Unit Value</button>
           <br />
           
           <span>Enter your preferred value for the radius of each unit in the curve (2 - 5, inclusive)</span>
           <input type="text" ref={this.radiusRef}></input>
-          <button onClick={() => this.updateRadius(this.radiusRef.current.value)}>Change Radius</button>
+          <button onClick={() => this.changeJSON("circle-radius", this.radiusRef.current.value)}>Change Radius</button>
           <br />
 
           <span>Enter your preferred starting position for curve 1, 
