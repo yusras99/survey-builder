@@ -152,8 +152,13 @@ class ExptConfigs extends Component {
     } else {
       return (
         <div>
-          <br/>
-          Please wait, grabbing data ... 
+          <h2>Experiment: {this.props.match.params.exptName}</h2>
+          Back to <p> </p>
+          <Link to={studyLink}>
+            {studyName}
+          </Link>
+          <br/><br/>
+          It seems like there's no participant data yet...
         </div>
       )
     }

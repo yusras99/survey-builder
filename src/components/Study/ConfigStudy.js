@@ -9,7 +9,7 @@ import {
   getStudyInfo,
   createExptCol,
   getColNames,
-  saveLink
+  saveAddInfo
 } from "../../actions/dataActions"
 
 class ConfigStudy extends Component {
@@ -20,7 +20,7 @@ class ConfigStudy extends Component {
     };
 
     this.deployExpts = this.deployExpts.bind(this);
-    this.recordLink = this.recordLink.bind(this);
+    this.changeState = this.changeState.bind(this);
     this.onDeploy = this.onDeploy.bind(this);
   }
   // note: using params to get studyName is probably not good practice. 
@@ -51,6 +51,9 @@ class ConfigStudy extends Component {
     // check if the experiments are deployed 
     return this.props.experiments.map(expt => {
       const exptName = expt.exptName;
+      const condition = expt.condition;
+      const surveyLink = expt.link;
+
       const exptDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/configs";
       const partDataLink = "/" + username + "/" + studyName + "/" +
@@ -65,6 +68,7 @@ class ConfigStudy extends Component {
         "/" + studyName + "-" + exptName
       const dbLink = "https://test-api-615.herokuapp.com/api/feedback/" + 
         username + "/" + studyName + "-" + exptName
+
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
@@ -82,7 +86,10 @@ class ConfigStudy extends Component {
                 <button type="button">
                   View Participants Data
                 </button>
-              </Link> <p> </p> <br/><br/>
+              </Link> <p> </p> 
+              <br/><br/>
+              Condition: <b>{condition}</b>
+              <br/><br/>
               <b>Database Link:</b><br/>
               {dbLink} <br/>
               <CopyToClipboard text={dbLink}>
@@ -100,6 +107,17 @@ class ConfigStudy extends Component {
                 <button 
                   onClick={() => 
                     alert("Experiment link has been copied to clipboard. " + 
+                      "Paste it into your Qualtrics survey :)")}>
+                  Copy experiment link to clipboard
+                </button>
+              </CopyToClipboard>
+              <br/><br/>
+              <b>Qualtrics Survey Link:</b> <br/>
+              {surveyLink} <br/>
+              <CopyToClipboard text={surveyLink}>
+                <button 
+                  onClick={() => 
+                    alert("Qualtrics Survey link has been copied to clipboard. " + 
                       "Paste it into your Qualtrics survey :)")}>
                   Copy experiment link to clipboard
                 </button>
@@ -138,21 +156,29 @@ class ConfigStudy extends Component {
               </button>
             </CopyToClipboard>
             <br/><br/>
-            <b>TODO</b>: Paste the link to demographics qualtrics survey below: <br/>
-            <textarea cols="60" rows="1" id={exptName}
-              onInput={this.recordLink} value={this.state.exptName}></textarea>
+            <b>TODO</b> <br/>
+            Paste the link to demographics qualtrics survey below: <br/>
+            <textarea cols="60" rows="1" id={exptName + "link"}
+              onInput={this.changeState} value={this.state.exptName}></textarea>
+            <br/><br/>
+            <b>TODO</b> <br/>
+            Name the condition of this experiment: <br/>
+            <textarea cols="60" rows="1" id={exptName + "condition"}
+              onInput={this.changeState} value={this.state.condition}></textarea>
             <br/><br/>
             {/* <button onClick={() => console.log(this.state)}>Show State</button><br/> */}
             <button id={expt.exptName} onClick={this.onDeploy}> 
               <b>DEPLOY</b>
             </button>
+            <br/>
+            
           </div>
         )
       };
     })
   }
 
-  recordLink(e) {
+  changeState(e) {
     this.setState({ [e.target.id]: e.target.value });
   }
 
@@ -160,11 +186,17 @@ class ConfigStudy extends Component {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     const exptName = e.currentTarget.id;
-    const link = this.state[exptName];
 
-    const dataToPUT = { link : link };
-    console.log(dataToPUT);
-    this.props.saveLink(username, studyName, exptName, dataToPUT);
+    const link = this.state[exptName + "link"];
+    const condition = this.state[exptName + "condition"]
+
+    // process condition first
+    const conditionInfo = { "condition": condition };
+    this.props.saveAddInfo(username, studyName, exptName, "condition", conditionInfo);
+
+    const linkToSend = link + "?condition=" + condition
+    const linkInfo = { "link": linkToSend };
+    this.props.saveAddInfo(username, studyName, exptName, "link", linkInfo);
     this.props.createExptCol(username, studyName + "-" + exptName, exptName);
   }
 
@@ -251,6 +283,7 @@ class ConfigStudy extends Component {
           </button> */}
           <br />
         </form>
+        <button onClick={() => console.log(this.state)}>show state</button>
       </div>
     )
   }
@@ -268,7 +301,7 @@ ConfigStudy.propTypes = {
   getColNames: PropTypes.func.isRequired,
   colNames: PropTypes.array.isRequired,
 
-  saveLink: PropTypes.func.isRequired
+  saveAddInfo: PropTypes.func.isRequired
 };
 
 // interaction between reducer and store (state), connect to props 
@@ -284,5 +317,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getStudyInfo, createExptCol, getColNames, saveLink }
+  { getStudyInfo, createExptCol, getColNames, saveAddInfo }
 )(ConfigStudy);

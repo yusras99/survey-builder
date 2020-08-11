@@ -56,13 +56,13 @@ export const getStudyInfo = (which_database, which_study) => dispatch => {
     })
 }
 
-export const saveLink = (which_database, study_name, expt_name, link) => dispatch => {
+export const saveAddInfo = (which_database, study_name, expt_name, infoType, info) => dispatch => {
   axios
     .put('https://test-api-615.herokuapp.com/api/feedback/' + which_database + 
-      '/info/studyName-' + study_name + '/experiments/exptName-' + expt_name,
-      link)
+      '/info/studyName-' + study_name + '/experiments/exptName-' + expt_name + '/' + infoType,
+      info)
     .then(res => {
-      // alert(res);
+      console.log(res.data);
     })
 } 
 
