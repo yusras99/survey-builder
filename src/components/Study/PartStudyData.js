@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { CSVLink } from "react-csv";
+import axios from "axios";
 
 import {
+  getColNames,
   getColsData
 } from "../../actions/dataActions"
 
@@ -21,10 +23,15 @@ class PartStudyData extends Component {
 
   componentWillMount() {
     const username = this.props.match.params.username;
-    const partColNames = this.props.colNames.filter(name => 
-      name != "info" && name != "itemData");
-    console.log(partColNames);
-    partColNames.map(colName => this.props.getColsData(username, colName));
+    axios
+    .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
+    .then(res => {
+      const nameArr = res.data;
+      const partColNames = nameArr.filter(name => 
+        name != "info" && name != "itemData");
+      console.log(partColNames);
+      partColNames.map(colName => this.props.getColsData(username, colName));
+    })
   }
 
   flattenObj(obj) {
@@ -119,6 +126,7 @@ class PartStudyData extends Component {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     const studyLink = "/" + username + "/" + studyName;
+    const file_name = username + "_" + studyName + "_data.csv";
     const arr = this.makeArr();
     if (arr != null) {
       return (
@@ -130,7 +138,9 @@ class PartStudyData extends Component {
           </Link>
           <br /><br />
           <button>
-            <CSVLink data={arr} >Download Data as CSV</CSVLink>
+            <CSVLink data={arr} filename={file_name}>
+              Download Data as CSV
+            </CSVLink>
           </button>
           {this.showJSONData()}
         </div>
@@ -155,6 +165,7 @@ class PartStudyData extends Component {
 PartStudyData.propTypes = {
   // Proptype.type, the type here must match initialState of reducer
   getColsData: PropTypes.func.isRequired,
+  getColNames: PropTypes.func.isRequired,
   colsData: PropTypes.array.isRequired,
   auth: PropTypes.object.isRequired,
   colNames: PropTypes.array.isRequired
@@ -170,5 +181,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getColsData }
+  { getColNames, getColsData }
 )(PartStudyData);

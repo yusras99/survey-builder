@@ -120,12 +120,14 @@ class PartExptData extends Component {
   render() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
+    const exptName = this.props.match.params.exptName;
     const studyLink = "/" + username + "/" + studyName;
+    const file_name = username + "_" + studyName + "_" + exptName + "_data.csv";
     const arr = this.makeArr();
     if (arr != null) {
       return (
         <div>
-          <h2>Experiment: {this.props.match.params.exptName}</h2>
+          <h2>Experiment: {exptName}</h2>
           Back to <p> </p>
           <Link to={studyLink}>
             {studyName}
@@ -134,7 +136,9 @@ class PartExptData extends Component {
           <h4>Participants data: </h4> 
           {/* <button onClick={this.downloadData}>See data as csv</button> */}
           <button>
-            <CSVLink data={arr} >Download Data as CSV</CSVLink>
+            <CSVLink data={arr} filename={file_name}>
+              Download Data as CSV
+            </CSVLink>
           </button>
           {this.showJSONData()}
         </div>
