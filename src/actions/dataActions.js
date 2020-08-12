@@ -4,6 +4,7 @@ import {
   GET_DB_INFO,
   GET_STUDY_INFO,
   GET_COL_DATA,
+  GET_COLS_DATA,
   GET_COL_NAMES,
   STORE_FILENAME,
   SEND_FILE
@@ -87,6 +88,20 @@ export const getColData = (which_database, col_name) => dispatch => {
         payload: res.data
       })
     })
+}
+
+export const getColsData = (which_database, col_name) => dispatch => {
+  axios
+  .get('https://test-api-615.herokuapp.com/api/feedback/' + which_database +
+    "/" + col_name)
+  .then(res => {
+    res.data.forEach(doc => {
+      dispatch({
+        type: GET_COLS_DATA,
+        payload: doc
+      })
+    })
+  })
 }
 
 export const getColNames = (which_database) => dispatch => {

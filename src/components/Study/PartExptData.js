@@ -10,18 +10,15 @@ import {
 
 import "./PartData.css";
 
-const { parse } = require('json2csv');
-
-class ExptConfigs extends Component {
+class PartExptData extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      finalObj: {}
+      // finalObj: {}
     };
 
     this.makeArr = this.makeArr.bind(this);
     this.showJSONData = this.showJSONData.bind(this);
-    this.downloadData = this.downloadData.bind(this);
   }
 
   componentWillMount() {
@@ -119,13 +116,6 @@ class ExptConfigs extends Component {
     }
   }
 
-  downloadData() {
-    const arr = this.makeArr();
-    // if (arr != null) {
-    //   console.log(arr);
-    // }
-  }
-
   // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
@@ -165,7 +155,7 @@ class ExptConfigs extends Component {
   }
 }
 
-ExptConfigs.propTypes = {
+PartExptData.propTypes = {
   // Proptype.type, the type here must match initialState of reducer
   getColData: PropTypes.func.isRequired,
   colData: PropTypes.array.isRequired,
@@ -182,4 +172,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getColData }
-)(ExptConfigs);
+)(PartExptData);

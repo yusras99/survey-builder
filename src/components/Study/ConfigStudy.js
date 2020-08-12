@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import {
   getStudyInfo,
@@ -56,10 +56,10 @@ class ConfigStudy extends Component {
 
       const exptDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/configs";
-      const partDataLink = "/" + username + "/" + studyName + "/" +
-        exptName + "/participantsData";
-      const partJSONDataLink = "/" + username + "/" + studyName + "/" +
-        exptName + "/participantsJSONData";
+      // const partDataLink = "/" + username + "/" + studyName + "/" +
+      //   exptName + "/participantsData";
+      const partExptDataLink = "/" + username + "/" + studyName + "/" +
+        exptName + "/participantsExptData";
       const exptPartLink = "https://statistical-perceptions.github.io/" + 
         "participant-app/#/participant-app/expt/" + username + 
           "/" + studyName + "-" + exptName
@@ -82,7 +82,7 @@ class ConfigStudy extends Component {
                   Experiment Configs
                 </button>
               </Link> <p> </p>
-              <Link to={partJSONDataLink}>
+              <Link to={partExptDataLink}>
                 <button type="button">
                   View Participants Data
                 </button>
@@ -112,7 +112,7 @@ class ConfigStudy extends Component {
                 </button>
               </CopyToClipboard>
               <br/><br/>
-              <b>Qualtrics Survey Link:</b> <br/>
+              <b>Qualtrics Demographics Survey Link:</b> <br/>
               {surveyLink} <br/>
               <CopyToClipboard text={surveyLink}>
                 <button 
@@ -235,18 +235,6 @@ class ConfigStudy extends Component {
         </div>
       )
     } 
-    // else {
-    //   return (
-    //     <div className="container">
-    //       <button
-    //         class="btn"
-    //         onClick={this.deployExpts}>
-    //         Deploy: <p></p>
-    //           {difference.map(name => { return (<b>[{name}] </b>) })}
-    //       </button>
-    //     </div>
-    //   )
-    // }
   }
 
   // an action to fetch userData from APi for componentWillMount
@@ -255,13 +243,11 @@ class ConfigStudy extends Component {
     const studyName = this.props.match.params.studyName;
     const exptBuilderLink = "/" + username + "/" +
       studyName + "/exptBuilder";
-    const normalCurvesLink = "/" + username + "/" +
-      studyName + "/normalCurves";
-    const buildExptLink = "/" + username + "/" + studyName + "/newExpt";
 
     const deployed = this.processColNames();
     const exptNames = this.props.experiments.map(item => item.exptName);
-    const difference = exptNames.filter(name => !deployed.includes(name));
+
+    const partStudyDataLink = "/" + username + "/" + studyName + "/participantsStudyData";
     return (
       <div className="container">
         <h2>Study: {this.props.match.params.studyName}</h2>
@@ -270,7 +256,12 @@ class ConfigStudy extends Component {
             Build an Experiment
           </button>
         </Link>
-        <br/>
+        <br/><br/>
+        <Link to={partStudyDataLink}>
+          <button>
+            View All Participant Data
+          </button>
+        </Link>
         <form>
           <h3>
             Your Experiments
@@ -278,12 +269,9 @@ class ConfigStudy extends Component {
           {this.getExptNames()}
           <br /><br />
           {this.deploy()}
-          {/* <button onClick={() => console.log(this.state)}>
-            Show State
-          </button> */}
           <br />
         </form>
-        <button onClick={() => console.log(this.state)}>show state</button>
+        <button onClick={() => console.log(this.props.experiments)}>show state</button>
       </div>
     )
   }
