@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
+import HistogramResearch from '../items/Threshold/HistogramResearch';
 
 import { sendFile } from '../../actions/dataActions'
 
@@ -81,6 +82,16 @@ class TabList extends Component {
                   key={this.state.count.toString()}/> 
         })
         break;  
+      case "threshold":
+        arr.push({
+          id: this.state.count,
+          tab: <HistogramResearch getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/>
+        })
+        break;
       default:
         arr = <div>Unknown Element</div>
     }

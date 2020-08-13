@@ -271,7 +271,7 @@ class ConfigStudy extends Component {
           {this.deploy()}
           <br />
         </form>
-        <button onClick={() => console.log(this.props.experiments)}>show state</button>
+        {/* <button onClick={() => console.log(this.props.experiments)}>show state</button> */}
       </div>
     )
   }

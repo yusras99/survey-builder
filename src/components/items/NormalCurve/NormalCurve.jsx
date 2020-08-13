@@ -489,7 +489,7 @@ class NormalCurve extends Component {
           </button>
         </div>
         <br />
-        <h1>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h1>
+        <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>
         {/* <h1>{this.props.data["startPos1"]} | {this.props.data["startPos2"]}</h1> */}
       </div>
     )
