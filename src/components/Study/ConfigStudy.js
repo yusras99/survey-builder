@@ -12,6 +12,8 @@ import {
   saveAddInfo
 } from "../../actions/dataActions"
 
+import axios from "axios";
+
 class ConfigStudy extends Component {
   constructor(props) {
     super(props);
@@ -167,7 +169,7 @@ class ConfigStudy extends Component {
               onInput={this.changeState} value={this.state.condition}></textarea>
             <br/><br/>
             {/* <button onClick={() => console.log(this.state)}>Show State</button><br/> */}
-            <button id={expt.exptName} onClick={this.onDeploy}> 
+            <button id={exptName} onClick={this.onDeploy}> 
               <b>DEPLOY</b>
             </button>
             <br/>
@@ -188,16 +190,35 @@ class ConfigStudy extends Component {
     const exptName = e.currentTarget.id;
 
     const link = this.state[exptName + "link"];
-    const condition = this.state[exptName + "condition"]
+    const condition = this.state[exptName + "condition"];
 
     // process condition first
     const conditionInfo = { "condition": condition };
-    this.props.saveAddInfo(username, studyName, exptName, "condition", conditionInfo);
+    // this.props.saveAddInfo(username, studyName, exptName, "condition", conditionInfo);
 
-    const linkToSend = link + "?condition=" + condition
-    const linkInfo = { "link": linkToSend };
-    this.props.saveAddInfo(username, studyName, exptName, "link", linkInfo);
-    this.props.createExptCol(username, studyName + "-" + exptName, exptName);
+    axios
+      .put('https://test-api-615.herokuapp.com/api/feedback/' + username + 
+           '/info/studyName-' + studyName + '/experiments/exptName-' + exptName + '/' + 'condition',
+           conditionInfo)
+      .then(res => {
+        console.log(res.data);
+        const linkToSend = link + "?condition=" + condition
+        const linkInfo = { "link": linkToSend };
+        axios
+          .put('https://test-api-615.herokuapp.com/api/feedback/' + username + 
+               '/info/studyName-' + studyName + '/experiments/exptName-' + exptName + '/' + 'link',
+               linkInfo)
+          .then(res => {
+            console.log(res.data);
+            this.props.createExptCol(username, studyName + "-" + exptName, exptName);
+          })
+      })
+
+
+    // const linkToSend = link + "?condition=" + condition
+    // const linkInfo = { "link": linkToSend };
+    // this.props.saveAddInfo(username, studyName, exptName, "link", linkInfo);
+    // this.props.createExptCol(username, studyName + "-" + exptName, exptName);
   }
 
   // for now deployment simply creates a collection for each experiment 

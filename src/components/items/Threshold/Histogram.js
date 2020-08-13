@@ -16,7 +16,8 @@ class Histogram extends Component {
     this.state = {
       checked: false,
       minVal: Number,
-      maxVal: Number
+      maxVal: Number,
+      sliderPos: Number
     }
 
     this.onChange = this.onChange.bind(this);
@@ -41,7 +42,6 @@ class Histogram extends Component {
 
   drawChart() {
     const data = this.props.data;
-    console.log(this.props.width);
 
     const svg = d3.select(this.graphRef.current).append("svg")
       .attr("width", this.props.width)
@@ -68,17 +68,33 @@ class Histogram extends Component {
   }
 
   render() {
+    const vertAlign = this.props.height / 2;
+    // const step_size = this.props.width / this.props.data.length;
     return (
       <div>
-        <div ref={this.graphRef}></div>
-
+        <div ref={this.graphRef}
+          style={{ 
+            position: "relative", 
+            width: this.props.width, 
+            margin: "auto" }}>
+          <div 
+            style={{ 
+              position: "absolute",
+              top: vertAlign}}>
+            <input type="range" min={this.state.minVal} max={this.state.maxVal} 
+              className="hist-slider" onChange={this.onChange}
+              name="sliderPos" value={this.state.sliderPos}
+              step={this.props.step} ref={this.sliderRef}
+              style={{ width: this.props.width }}/>
+          </div>
+        </div>
         {this.state.minVal}
-        <input type="range" min={this.state.minVal} max={this.state.maxVal} 
-          className="hist-slider" name="myRange" id="myRange" 
-          step={this.props.step} ref={this.sliderRef}
-          style={{ width: "700px" }}/>
+        <input type="range" class="dummy-slider" 
+          style={{ width: this.props.width }}
+          value={this.state.sliderPos} 
+          min={this.state.minVal} max={this.state.maxVal} />
         {this.state.maxVal}
-
+        
         <br/><br/>
         <div className="boxed">
           Question: <br/>
@@ -95,8 +111,9 @@ class Histogram extends Component {
           <br/>
           <p>Maximum: <input onInput={() => this.handleChange("highRange", this.maxRef.current.value, this.props.count)} 
             ref={this.maxRef} type="text" 
-            name="maxVal" value={this.state.maxVal} onChange={this.onChange}/></p><br/>
+            name="maxVal" value={this.state.maxVal} onChange={this.onChange}/></p>
 
+          <br/>
           <button onClick={this.delete.bind(this)}>Delete</button>
         </div>
       </div>

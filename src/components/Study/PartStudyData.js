@@ -23,12 +23,13 @@ class PartStudyData extends Component {
 
   componentWillMount() {
     const username = this.props.match.params.username;
+    const studyName = this.props.match.params.studyName;
     axios
     .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
     .then(res => {
       const nameArr = res.data;
       const partColNames = nameArr.filter(name => 
-        name != "info" && name != "itemData");
+        name != "info" && name != "itemData" && name.includes(studyName));
       console.log(partColNames);
       partColNames.map(colName => this.props.getColsData(username, colName));
     })

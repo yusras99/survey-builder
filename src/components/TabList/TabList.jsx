@@ -192,6 +192,8 @@ class TabList extends Component {
         int++;
       }
       finalObj["count"] = int;
+      finalObj["link"] = "PUT request will modify this";
+      finalObj["condition"] = "PUT request will modify this";
 
       const username = this.props.auth.user.username;
       const studyName = this.props.match.params.studyName;
@@ -247,7 +249,6 @@ class TabList extends Component {
         <div className="extraPad">
           <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
         </div>
-        <button onClick={() => console.log(this.state.output)}>show final output</button>
         <br/>
       </div>
     )
