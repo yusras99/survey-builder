@@ -192,8 +192,6 @@ class TabList extends Component {
         int++;
       }
       finalObj["count"] = int;
-      finalObj["link"] = "PUT request will modify this";
-      finalObj["condition"] = "PUT request will modify this";
 
       const username = this.props.auth.user.username;
       const studyName = this.props.match.params.studyName;
@@ -224,6 +222,21 @@ class TabList extends Component {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     const studyLink = "/" + username + "/" + studyName;
+
+    var obj = {};
+    this.state.children
+      .filter(item => this.state.deleted.indexOf(item.id) === -1)
+      .map((item) => { obj[item.id.toString()] = this.state.output[item.id.toString()] });
+    var finalObj = {};
+    // finalObj["exptName"] = this.nameRef.current.value;
+    var int = 0;
+    while (int < this.state.count) {
+      if ((int.toString()) in obj) {
+        finalObj["q" + int.toString()] = obj[int.toString()];
+      }
+      int++;
+    }
+    finalObj["count"] = int;
     return (
       <div ref={this.myRef}>
         <h2>Experiment Builder</h2>
@@ -250,6 +263,7 @@ class TabList extends Component {
           <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
         </div>
         <br/>
+        <button onClick={() => console.log(finalObj)}>Show finalObj</button>
       </div>
     )
   }
