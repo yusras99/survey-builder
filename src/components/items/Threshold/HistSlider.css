@@ -43,9 +43,9 @@ input.dummy-slider {
 .dummy-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 2px;
+  width: 10px;
   background: black;
   cursor: pointer;
   opacity: 1;
-  height: 5px;
+  height: 15px;
 }

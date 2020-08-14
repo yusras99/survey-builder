@@ -90,8 +90,8 @@ class Histogram extends Component {
         </div>
         {this.state.minVal}
         <input type="range" class="dummy-slider" 
-          style={{ width: this.props.width }}
-          value={this.state.sliderPos} 
+          style={{ width: this.props.width }} onChange={this.onChange}
+          name="sliderPos" value={this.state.sliderPos} step={this.props.step}
           min={this.state.minVal} max={this.state.maxVal} />
         {this.state.maxVal}
         
