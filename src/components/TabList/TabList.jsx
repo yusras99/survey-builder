@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
+import HistogramResearch from '../items/Threshold/HistogramResearch';
 
 import { sendFile } from '../../actions/dataActions'
 
@@ -42,6 +43,7 @@ class TabList extends Component {
     this.saveFile = this.saveFile.bind(this);
 
     this.onChange = this.onChange.bind(this);
+    this.appendToKeysArr = this.appendToKeysArr.bind(this);
   }
 
   onChange(e) {
@@ -59,7 +61,8 @@ class TabList extends Component {
           tab: <SliderTab getCount={this.getCount} 
                   delete={this.delete} count={this.state.count} 
                   handleChange={this.handleChange} 
-                  key={this.state.count.toString()} /> 
+                  key={this.state.count.toString()}
+                  appendToKeysArr={this.appendToKeysArr} /> 
         })
         break;
       case "static-text": 
@@ -81,6 +84,16 @@ class TabList extends Component {
                   key={this.state.count.toString()}/> 
         })
         break;  
+      case "threshold":
+        arr.push({
+          id: this.state.count,
+          tab: <HistogramResearch getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/>
+        })
+        break;
       default:
         arr = <div>Unknown Element</div>
     }
@@ -100,6 +113,20 @@ class TabList extends Component {
     var curOutput = this.state.output;
     curOutput[count.toString()][key] = value;
     this.setState({ output: curOutput });
+  }
+
+  appendToKeysArr(objType, nameType, csvColName, count) {
+    var curOutput = this.state.output;
+    const objKeys = Object.keys(curOutput[count.toString()]);
+    // console.log(objKeys);
+    if (objKeys.includes(objType)) {
+      curOutput[count.toString()][objType][nameType] = csvColName;
+    } else {
+      curOutput[count.toString()][objType] = {};
+      curOutput[count.toString()][objType][nameType] = csvColName;
+    }
+    console.log(curOutput);
+    // curOutput[count.toString()]["csvColNames"]
   }
 
   delete(id) {
@@ -162,12 +189,25 @@ class TabList extends Component {
 
   outputCreate() {
     var obj = {};
+    var index = {};
     this.state.children
       .filter(item => this.state.deleted.indexOf(item.id) === -1)
-      .map((item) => { obj[item.id.toString()] = this.state.output[item.id.toString()] });
+      .map((item) => { 
+        obj[item.id.toString()] = this.state.output[item.id.toString()];
+        const exptItem = this.state.output[item.id.toString()];
+        switch (exptItem["Type"]) {
+          case "normal-curve":
+            index[exptItem["normal-curve-question-key"]] = exptItem["Question"];
+            index[exptItem["normal-curve-question-key"] + "." + exptItem["normal-curve-legend-key1"]] = exptItem["graph1key"];
+            index[exptItem["normal-curve-question-key"] + "." + exptItem["normal-curve-legend-key2"]] = exptItem["graph2key"];
+          case "threshold":
+            index[exptItem["threshold-key"]] = exptItem["Question"];
+        }
+      });
     var validName = this.nameRef.current.value.length > 0;
     // if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
-    if (!validName) {
+    // if (!validName) {
+    if (false) {
       alert("You have not filled out all fields, or have entered an invalid value!");
     }
     else {
@@ -181,6 +221,10 @@ class TabList extends Component {
         int++;
       }
       finalObj["count"] = int;
+      delete index["undefined"];
+      finalObj["index"] = index;
+
+      console.log(finalObj);
 
       const username = this.props.auth.user.username;
       const studyName = this.props.match.params.studyName;
@@ -211,6 +255,21 @@ class TabList extends Component {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     const studyLink = "/" + username + "/" + studyName;
+
+    var obj = {};
+    this.state.children
+      .filter(item => this.state.deleted.indexOf(item.id) === -1)
+      .map((item) => { obj[item.id.toString()] = this.state.output[item.id.toString()] });
+    var finalObj = {};
+    // finalObj["exptName"] = this.nameRef.current.value;
+    var int = 0;
+    while (int < this.state.count) {
+      if ((int.toString()) in obj) {
+        finalObj["q" + int.toString()] = obj[int.toString()];
+      }
+      int++;
+    }
+    finalObj["count"] = int;
     return (
       <div ref={this.myRef}>
         <h2>Experiment Builder</h2>
@@ -236,8 +295,8 @@ class TabList extends Component {
         <div className="extraPad">
           <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
         </div>
-        <button onClick={() => console.log(this.state.output)}>show final output</button>
         <br/>
+        <button onClick={() => console.log(finalObj)}>Show finalObj</button>
       </div>
     )
   }

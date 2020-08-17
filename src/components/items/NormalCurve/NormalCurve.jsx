@@ -19,6 +19,9 @@ class NormalCurve extends Component {
     this.radiusRef = React.createRef();
     this.ticksRef = React.createRef();
     this.checkBoxRef = React.createRef();
+    this.questionKeyRef = React.createRef();
+    this.legendKey1Ref = React.createRef();
+    this.legendKey2Ref = React.createRef();
 
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
@@ -491,6 +494,7 @@ class NormalCurve extends Component {
   }
 
   render() {
+    const qNum = this.props.count + 1;
     return (
       <div
         onMouseMove={e => this.triDrag(e)}
@@ -569,76 +573,108 @@ class NormalCurve extends Component {
                 </svg>
         <br />
         <div class="boxed">
-          Question: <br/>
-          <textarea cols="60" rows="10" ref={this.qRef} 
-            onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
-          </textarea><br/>
+          <div class="flex-container">
+            <div class="flex-child-one">
+              Question: <br/>
+              <textarea class="normal-curve-text" cols="60" rows="11" ref={this.qRef}
+                onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
+              </textarea>
 
-          <div className="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
-          <input type="text" 
-            ref={this.graph1keyRef}
-            onInput={() => this.handleChange("graph1key", this.graph1keyRef.current.value, this.props.count)}></input>
-          <br />
+              <br/><br/>
+              <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
+              <input type="text" 
+                ref={this.graph1keyRef}
+                onInput={() => this.handleChange("graph1key", this.graph1keyRef.current.value, this.props.count)}></input>
+              <br />
 
-          <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
-          <input type="text" 
-            ref={this.graph2keyRef}
-            onInput={() => this.handleChange("graph2key", this.graph2keyRef.current.value, this.props.count)}></input>
-          <br />
+              <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
+              <input type="text" 
+                ref={this.graph2keyRef}
+                onInput={() => this.handleChange("graph2key", this.graph2keyRef.current.value, this.props.count)}></input>
+            </div>
 
-          <span>Enter the width of the graph (each point in the curves is 
-            equivalent to 1 unit of width) </span>
-          <input ref={this.lengthRef} type="text" 
-            name="axisLength" value={this.state.axisLength} 
-            onChange={this.onChange}/>
-          <button onClick={() => {this.lengthSubmit(this.state.axisLength)}}>
-            Change Width
-          </button>
-          <br/>
+            <div class="flex-child-two">
+              <br/>
+              What csv column name do you want to assign to this question?
+              <br/>
+              <input type="text" ref={this.questionKeyRef} 
+                onInput={() => this.handleChange("normal-curve-question-key", this.questionKeyRef.current.value, this.props.count)}/>
+              <br/>
+              <b>Use letters only, and the name must be unique.</b> <br/>
+              Recommedation: include your experiment name, this question number 
+              ({qNum}), and the question type (normalCurve)
 
-          <span>Enter your preferred value for the width of each unit in the curve</span>
-          <input type="text" ref={this.colNumValRef}></input>
-          <button onClick={() => this.updateColVal(this.colNumValRef.current.value)}>Change Unit Value</button>
-          <br />
-          
-          <span>Enter your preferred value for the radius of each unit in the curve (2 - 5, inclusive)</span>
-          <input type="text" ref={this.radiusRef}></input>
-          <button onClick={() => this.updateRadius(this.radiusRef.current.value)}>Change Radius</button>
-          <br />
+              <br/><br/>
+              Please enter the csv column names for the graph key: <br/>
+              (the same rule applies) <br/>
+              <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
+              <input type="text" 
+                ref={this.legendKey1Ref}
+                onInput={() => this.handleChange("normal-curve-legend-key1", this.legendKey1Ref.current.value, this.props.count)}></input>
+              
+              <br/>
+              <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
+              <input type="text" 
+                ref={this.legendKey2Ref}
+                onInput={() => this.handleChange("normal-curve-legend-key2", this.legendKey2Ref.current.value, this.props.count)}></input>
+            </div>
+          </div>
 
-          <span>Enter your preferred number of ticks on the graph (must be divisible by the range of the x-axis)</span>
-          <input type="text" ref={this.ticksRef}></input>
-          <button onClick={() => this.updateTicks(this.ticksRef.current.value)}>Change Tick Count</button>
-          <br />
+          <div className="flex-child-three">
+            <span>Enter the width of the graph (each point in the curves is 
+              equivalent to 1 unit of width) </span>
+            <input ref={this.lengthRef} type="text" 
+              name="axisLength" value={this.state.axisLength} 
+              onChange={this.onChange}/>
+            <button onClick={() => {this.lengthSubmit(this.state.axisLength)}}>
+              Change Width
+            </button>
+            <br/>
 
-          <span>Enter your preferred starting position for curve 1, 
-            if you want to change it </span>
-          <input ref={this.startPos1Ref} 
-            type="text" name="startPos1" value={this.state.startPos1} 
+            <span>Enter your preferred value for the width of each unit in the curve</span>
+            <input type="text" ref={this.colNumValRef}></input>
+            <button onClick={() => this.updateColVal(this.colNumValRef.current.value)}>Change Unit Value</button>
+            <br />
+
+            <span>Enter your preferred value for the radius of each unit in the curve (2 - 5, inclusive)</span>
+            <input type="text" ref={this.radiusRef}></input>
+            <button onClick={() => this.updateRadius(this.radiusRef.current.value)}>Change Radius</button>
+            <br />
+
+            <span>Enter your preferred number of ticks on the graph (must be divisible by the range of the x-axis)</span>
+            <input type="text" ref={this.ticksRef}></input>
+            <button onClick={() => this.updateTicks(this.ticksRef.current.value)}>Change Tick Count</button>
+            <br />
+
+            <span>Enter your preferred starting position for curve 1, 
+              if you want to change it </span>
+            <input ref={this.startPos1Ref} 
+              type="text" name="startPos1" value={this.state.startPos1} 
+              onChange={this.onChange}></input>
+            <button onClick={() => this.alterStartPos1(this.state.startPos1)}>
+              Change Curve 1
+            </button>
+            <br/>
+
+            <span>Enter your preferred starting position for curve 2, 
+              if you want to change it </span>
+            <input ref={this.startPos2Ref} type="text" 
+            name="startPos2" value={this.state.startPos2} 
             onChange={this.onChange}></input>
-          <button onClick={() => this.alterStartPos1(this.state.startPos1)}>
-            Change Curve 1
-          </button>
-          <br/>
+            <button onClick={() => this.alterStartPos2(this.state.startPos2)}>
+              Change Curve 2
+            </button>
+            <br />
 
-          <span>Enter your preferred starting position for curve 2, 
-            if you want to change it </span>
-          <input ref={this.startPos2Ref} type="text" 
-          name="startPos2" value={this.state.startPos2} 
-          onChange={this.onChange}></input>
-          <button onClick={() => this.alterStartPos2(this.state.startPos2)}>
-            Change Curve 2
-          </button>
-          <br />
-
-          <input 
-          type="checkbox" 
-          id="vehicle1" 
-          name="vehicle1" 
-          value="Bike" 
-          ref={this.checkBoxRef}
-          onChange={this.checkChange} />
-          <label for="vehicle1"> Turn edge limiting on/off</label>
+            <input 
+            type="checkbox" 
+            id="vehicle1" 
+            name="vehicle1" 
+            value="Bike" 
+            ref={this.checkBoxRef}
+            onChange={this.checkChange} />
+            <label for="vehicle1"> Turn edge limiting on/off</label>
+          </div>
         </div>
         <br />
         <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>

@@ -15,6 +15,7 @@ class TabBuilder extends Component {
           <option value="slider">Slider</option>
           <option value="static-text">Static Text</option>
           <option value="normal-curve">Normal Curve</option>
+          <option value="threshold">Threshold</option>
         </select>
         <button onClick={() => this.props.build(this.selectRef.current.value)}>+</button>
       </div>

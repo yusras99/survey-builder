@@ -3,6 +3,7 @@ import {
   GET_DB_INFO,
   GET_STUDY_INFO,
   GET_COL_DATA,
+  GET_COLS_DATA,
   GET_COL_NAMES,
   STORE_FILENAME
 } from "../actions/types";
@@ -12,6 +13,7 @@ const initialState = {
   dbInfo: [],
   studyInfo: [],
   colData: [],
+  colsData: [],
   colNames: [],
   // files: []
   fileName: ''
@@ -38,6 +40,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         colData: action.payload
+      };
+    case GET_COLS_DATA:
+      return {
+        ...state,
+        colsData: [...state.colsData, action.payload]
       };
     case GET_COL_NAMES:
       return {

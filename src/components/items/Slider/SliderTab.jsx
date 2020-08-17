@@ -10,6 +10,7 @@ class SliderTab extends Component {
     this.minRef = React.createRef();
     this.maxRef = React.createRef();
     this.state = { min: 1, max: 100 }
+    this.keyRef = React.createRef();
 
     // console.log(this.props);
 
@@ -21,6 +22,7 @@ class SliderTab extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.appendToKeysArr = this.appendToKeysArr.bind(this);
   }
 
   delete() {
@@ -42,10 +44,20 @@ class SliderTab extends Component {
   componentDidMount() {
   }
 
+  appendToKeysArr(objType, nameType, csvColName, count) {
+    this.props.appendToKeysArr(objType, nameType, csvColName, count);
+  }
+
   render() {
+    const qNum = this.props.count + 1;
     return (
       <form className="unit">
-        <p>Question: <input onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)} ref={this.qRef} type="text" /></p><br/>
+        <br/>
+        Question #{qNum} 
+        <br/><br/>
+        <p>Enter your question below:
+        <br/>
+        <input onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)} ref={this.qRef} type="text" /></p><br/>
         {this.state.minVal}
         <input type="range" min="1" max="100" defaultValue="50" className="slider" name="myRange" id="myRange" ref={this.sliderRef} />
         {this.state.maxVal} <br/>
@@ -56,7 +68,27 @@ class SliderTab extends Component {
         {/* <p>Value: <span id="slider1" ref={this.outputRef}></span></p> */}
         <p>Maximum: <input onInput={() => this.handleChange("highRange", this.maxRef.current.value, this.props.count)} 
           ref={this.maxRef} type="text" 
-          name="maxVal" value={this.state.maxVal} onChange={this.onChange}/></p><br/>
+          name="maxVal" value={this.state.maxVal} onChange={this.onChange}/></p>
+        <br/><br/>
+        What csv column name do you want to assign to this question? <br/>
+        <b>Please use letters only, and the name must be unique.</b> <br/>
+        Recommedation: include your experiment name, this question number 
+        ({qNum}), and the question type (slider)
+        <br/>
+        <input type="text" ref={this.keyRef} 
+          onInput={() => {
+            // this.appendToKeysArr(
+            //   "csvColNames", 
+            //   "slider-question-key", 
+            //   this.keyRef.current.value, 
+            //   this.props.count);
+            this.handleChange("slider-question-key", this.keyRef.current.value, this.props.count)
+            // this.appendToKeysArr(
+            //   "keyValuePairs",
+              
+            // )
+          }}/>
+        <br/><br/>
         <button onClick={this.delete.bind(this)}>Delete</button>
       </form>
     )
