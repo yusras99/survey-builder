@@ -43,6 +43,7 @@ class TabList extends Component {
     this.saveFile = this.saveFile.bind(this);
 
     this.onChange = this.onChange.bind(this);
+    this.appendToKeysArr = this.appendToKeysArr.bind(this);
   }
 
   onChange(e) {
@@ -60,7 +61,8 @@ class TabList extends Component {
           tab: <SliderTab getCount={this.getCount} 
                   delete={this.delete} count={this.state.count} 
                   handleChange={this.handleChange} 
-                  key={this.state.count.toString()} /> 
+                  key={this.state.count.toString()}
+                  appendToKeysArr={this.appendToKeysArr} /> 
         })
         break;
       case "static-text": 
@@ -111,6 +113,20 @@ class TabList extends Component {
     var curOutput = this.state.output;
     curOutput[count.toString()][key] = value;
     this.setState({ output: curOutput });
+  }
+
+  appendToKeysArr(objType, nameType, csvColName, count) {
+    var curOutput = this.state.output;
+    const objKeys = Object.keys(curOutput[count.toString()]);
+    // console.log(objKeys);
+    if (objKeys.includes(objType)) {
+      curOutput[count.toString()][objType][nameType] = csvColName;
+    } else {
+      curOutput[count.toString()][objType] = {};
+      curOutput[count.toString()][objType][nameType] = csvColName;
+    }
+    console.log(curOutput);
+    // curOutput[count.toString()]["csvColNames"]
   }
 
   delete(id) {
@@ -173,12 +189,25 @@ class TabList extends Component {
 
   outputCreate() {
     var obj = {};
+    var index = {};
     this.state.children
       .filter(item => this.state.deleted.indexOf(item.id) === -1)
-      .map((item) => { obj[item.id.toString()] = this.state.output[item.id.toString()] });
+      .map((item) => { 
+        obj[item.id.toString()] = this.state.output[item.id.toString()];
+        const exptItem = this.state.output[item.id.toString()];
+        switch (exptItem["Type"]) {
+          case "normal-curve":
+            index[exptItem["normal-curve-question-key"]] = exptItem["Question"];
+            index[exptItem["normal-curve-question-key"] + "." + exptItem["normal-curve-legend-key1"]] = exptItem["graph1key"];
+            index[exptItem["normal-curve-question-key"] + "." + exptItem["normal-curve-legend-key2"]] = exptItem["graph2key"];
+          case "threshold":
+            index[exptItem["threshold-key"]] = exptItem["Question"];
+        }
+      });
     var validName = this.nameRef.current.value.length > 0;
     // if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
-    if (!validName) {
+    // if (!validName) {
+    if (false) {
       alert("You have not filled out all fields, or have entered an invalid value!");
     }
     else {
@@ -192,6 +221,10 @@ class TabList extends Component {
         int++;
       }
       finalObj["count"] = int;
+      delete index["undefined"];
+      finalObj["index"] = index;
+
+      console.log(finalObj);
 
       const username = this.props.auth.user.username;
       const studyName = this.props.match.params.studyName;

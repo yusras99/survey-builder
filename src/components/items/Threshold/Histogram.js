@@ -12,6 +12,7 @@ class Histogram extends Component {
     this.qRef = React.createRef();
     this.minRef = React.createRef();
     this.maxRef = React.createRef();
+    this.questionKeyRef = React.createRef();
 
     this.state = {
       checked: false,
@@ -68,6 +69,7 @@ class Histogram extends Component {
   }
 
   render() {
+    const qNum = this.props.count + 1;
     const vertAlign = this.props.height / 2;
     // const step_size = this.props.width / this.props.data.length;
     return (
@@ -97,7 +99,7 @@ class Histogram extends Component {
         
         <br/><br/>
         <div className="boxed">
-          Question: <br/>
+          Question #{qNum} <br/>
           <textarea cols="60" rows="10" ref={this.qRef} 
             onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
           </textarea>
@@ -113,8 +115,17 @@ class Histogram extends Component {
             ref={this.maxRef} type="text" 
             name="maxVal" value={this.state.maxVal} onChange={this.onChange}/></p>
 
+          <br/><br/>
+          What csv column name do you want to assign to this question? <br/>
+          <b>Please use letters only, and the name must be unique.</b> <br/>
+          Recommedation: include your experiment name, this question number 
+          ({qNum}), and the question type (threshold)
           <br/>
-          <button onClick={this.delete.bind(this)}>Delete</button>
+          <input type="text" ref={this.questionKeyRef} 
+            onInput={() => this.handleChange("threshold-key", this.questionKeyRef.current.value, this.props.count)}/>
+          
+          <br/><br/>
+          <button onClick={this.delete.bind(this)}>Delete Question</button>
         </div>
       </div>
     )

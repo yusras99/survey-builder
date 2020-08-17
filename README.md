@@ -16,10 +16,17 @@ Resources used for the project:
 
 # Table of Contents
 
+- [Getting Started](#start)
 - [Components](#components)
 - [Explanation for src/actions, src/reducers, src/store.js](#redux)
 - [How to run this project on localhost](#localhost)
 - [survey-builder Dev Tutorial ](#tutorial)
+
+---
+
+<a name="start"/>
+
+If you wish to use the Redux store while developing (recommended), please uncommnet the line in **src/store.js** and install chrome extensions **React Developer Tools** and **Redux DevTools**. Please make sure to comment the line again before deploying your app. 
 
 ---
 

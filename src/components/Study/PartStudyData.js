@@ -7,7 +7,8 @@ import axios from "axios";
 
 import {
   getColNames,
-  getColsData
+  getColsData,
+  getStudyInfo
 } from "../../actions/dataActions"
 
 import "./PartData.css";
@@ -19,6 +20,7 @@ class PartStudyData extends Component {
 
     this.makeArr = this.makeArr.bind(this);
     this.showJSONData = this.showJSONData.bind(this);
+    this.getIndex = this.getIndex.bind(this);
   }
 
   componentWillMount() {
@@ -32,6 +34,7 @@ class PartStudyData extends Component {
         name != "info" && name != "itemData" && name.includes(studyName));
       console.log(partColNames);
       partColNames.map(colName => this.props.getColsData(username, colName));
+      this.props.getStudyInfo(username, studyName);
     })
   }
 
@@ -122,6 +125,33 @@ class PartStudyData extends Component {
     }
   }
 
+  getIndex() {
+    const studyName = this.props.match.params.studyName;
+    if (!this.props.experiments.length == 0) {
+      var allIndex = [];
+      this.props.experiments.map(item => {
+        allIndex.push(item["index"]);
+      });
+
+      let str = "";
+      allIndex.map(item => {
+        const objKeys = Object.keys(item);
+        objKeys.map(key => {
+          const line = key.toString() + ": " + item[key].toString() + "\n"
+          str += line;
+        });
+      });
+
+      const element = document.createElement("a");
+      const file = new Blob([str], {type: 'text/plain'});
+      element.href = URL.createObjectURL(file);
+      element.download = studyName + "Legend.txt";
+      document.body.appendChild(element); 
+      element.click();
+      console.log(file);
+    }
+  }
+
   // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
@@ -143,6 +173,8 @@ class PartStudyData extends Component {
               Download Data as CSV
             </CSVLink>
           </button>
+          <br/><br/>
+          <button onClick={this.getIndex}>Download Legend</button>
           {this.showJSONData()}
         </div>
       )
@@ -169,7 +201,9 @@ PartStudyData.propTypes = {
   getColNames: PropTypes.func.isRequired,
   colsData: PropTypes.array.isRequired,
   auth: PropTypes.object.isRequired,
-  colNames: PropTypes.array.isRequired
+  colNames: PropTypes.array.isRequired,
+  getStudyInfo: PropTypes.func.isRequired,
+  experiments: PropTypes.array.isRequired
 };
 
 // interaction between reducer and store (state), connect to props 
@@ -178,9 +212,10 @@ const mapStateToProps = state => ({
   auth: state.auth,
   colsData: state.dataFlow.colsData,
   colNames: state.dataFlow.colNames,
+  experiments: state.dataFlow.studyInfo
 });
 
 export default connect(
   mapStateToProps,
-  { getColNames, getColsData }
+  { getColNames, getColsData, getStudyInfo }
 )(PartStudyData);

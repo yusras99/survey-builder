@@ -22,6 +22,7 @@ class SliderTab extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.appendToKeysArr = this.appendToKeysArr.bind(this);
   }
 
   delete() {
@@ -41,6 +42,10 @@ class SliderTab extends Component {
   }
 
   componentDidMount() {
+  }
+
+  appendToKeysArr(objType, nameType, csvColName, count) {
+    this.props.appendToKeysArr(objType, nameType, csvColName, count);
   }
 
   render() {
@@ -71,7 +76,18 @@ class SliderTab extends Component {
         ({qNum}), and the question type (slider)
         <br/>
         <input type="text" ref={this.keyRef} 
-          onInput={() => this.handleChange("slider-key", this.keyRef.current.value, this.props.count)}/>
+          onInput={() => {
+            // this.appendToKeysArr(
+            //   "csvColNames", 
+            //   "slider-question-key", 
+            //   this.keyRef.current.value, 
+            //   this.props.count);
+            this.handleChange("slider-question-key", this.keyRef.current.value, this.props.count)
+            // this.appendToKeysArr(
+            //   "keyValuePairs",
+              
+            // )
+          }}/>
         <br/><br/>
         <button onClick={this.delete.bind(this)}>Delete</button>
       </form>

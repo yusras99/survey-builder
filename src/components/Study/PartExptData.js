@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import { CSVLink } from "react-csv";
 
 import {
-  getColData
+  getColData,
+  getStudyInfo
 } from "../../actions/dataActions"
 
 import "./PartData.css";
@@ -19,6 +20,7 @@ class PartExptData extends Component {
 
     this.makeArr = this.makeArr.bind(this);
     this.showJSONData = this.showJSONData.bind(this);
+    this.getIndex = this.getIndex.bind(this);
   }
 
   componentWillMount() {
@@ -27,6 +29,7 @@ class PartExptData extends Component {
     const exptName = this.props.match.params.exptName;
     const colName = studyName + "-" + exptName;
     this.props.getColData(username, colName);
+    this.props.getStudyInfo(username, studyName);
   }
 
   flattenObj(obj) {
@@ -65,10 +68,11 @@ class PartExptData extends Component {
       var arr = [];
       var ids = [];
       const arrToProcess = this.props.colData;
-      // console.log(arrToProcess);
+      console.log(arrToProcess);
       arrToProcess.forEach(item => {
         const id = item.participantID;
         const keysInItem = Object.keys(item);
+        // switch statement here
         const qKeys = 
           keysInItem.filter(k => k != "participantID" && k != "_id");
         
@@ -116,6 +120,31 @@ class PartExptData extends Component {
     }
   }
 
+  getIndex() {
+    const exptName = this.props.match.params.exptName;
+    if (!this.props.experiments.length == 0) {
+      const thisExpt = 
+      this.props.experiments
+        .filter(item => item["exptName"] == this.props.match.params.exptName)[0]
+      const index = thisExpt["index"];
+
+      let str = ""
+      const objKeys = Object.keys(index);
+      objKeys.map(key => {
+        const line = key.toString() + ": " + index[key].toString() + "\n"
+        str += line;
+      });
+
+      const element = document.createElement("a");
+      const file = new Blob([str], {type: 'text/plain'});
+      element.href = URL.createObjectURL(file);
+      element.download = exptName + "Legend.txt";
+      document.body.appendChild(element); 
+      element.click();
+      console.log(file);
+    }
+  }
+
   // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
@@ -125,6 +154,7 @@ class PartExptData extends Component {
     const file_name = username + "_" + studyName + "_" + exptName + "_data.csv";
     const arr = this.makeArr();
     if (arr != null) {
+      console.log(arr);
       return (
         <div>
           <h2>Experiment: {exptName}</h2>
@@ -140,7 +170,12 @@ class PartExptData extends Component {
               Download Data as CSV
             </CSVLink>
           </button>
-          {this.showJSONData()}
+          <br/><br/>
+          <button onClick={this.getIndex}>Download Legend</button><br/>
+          
+          <div>
+            {this.showJSONData()}
+          </div>
         </div>
       )
     } else {
@@ -163,6 +198,10 @@ PartExptData.propTypes = {
   // Proptype.type, the type here must match initialState of reducer
   getColData: PropTypes.func.isRequired,
   colData: PropTypes.array.isRequired,
+
+  getStudyInfo: PropTypes.array.isRequired,
+  experiments: PropTypes.array.isRequired,
+
   auth: PropTypes.object.isRequired
 };
 
@@ -170,10 +209,11 @@ PartExptData.propTypes = {
 // for components to use
 const mapStateToProps = state => ({
   auth: state.auth,
-  colData: state.dataFlow.colData
+  colData: state.dataFlow.colData,
+  experiments: state.dataFlow.studyInfo
 });
 
 export default connect(
   mapStateToProps,
-  { getColData }
+  { getColData, getStudyInfo }
 )(PartExptData);
