@@ -17,11 +17,6 @@ class NormalCurve extends Component {
     this.qRef = React.createRef();
     this.colNumValRef = React.createRef();
     this.radiusRef = React.createRef();
-    this.ticksRef = React.createRef();
-    this.checkBoxRef = React.createRef();
-    this.questionKeyRef = React.createRef();
-    this.legendKey1Ref = React.createRef();
-    this.legendKey2Ref = React.createRef();
 
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
@@ -36,24 +31,14 @@ class NormalCurve extends Component {
     this.onChange = this.onChange.bind(this);
     this.svgColReturn = this.svgColReturn.bind(this);
     this.svgColReturn = this.svgColReturn.bind(this);
-    this.establishStateData = this.establishStateData.bind(this);
-    this.updateRadius = this.updateRadius.bind(this);
-    this.updateTicks = this.updateTicks.bind(this);
-    this.checkChange = this.checkChange.bind(this);
-
-    this.state = this.establishStateData(this.props.data);
-  }
-
-  establishStateData(data) {
-    // console.log("establishStateData()", new Date());
-    const unitHeight = data["max-height"];
-    const circRad = data["circle-radius"];
-    const len1 = data["len1"];
-    const len2 = data["len2"];
+    const unitHeight = this.props.data["max-height"];
+    const circRad = this.props.data["circle-radius"];
+    const len1 = this.props.data["len1"];
+    const len2 = this.props.data["len2"];
     const distancing = circRad * 4 - 1;
     const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
 
-    const colNumInit = data["axis-length"];
+    const colNumInit = this.props.data["axis-length"];
     const internalLength = colNumInit * distancing;
     const edgeCol = Math.ceil(Math.max(len1, len2) / 2);
     const edgeLength = Math.max(len1, len2) * distancing;
@@ -61,6 +46,7 @@ class NormalCurve extends Component {
     const ceilDist = height - 50;
     const length = edgeLength + internalLength;
     const colNum = Math.ceil(length / distancing);
+    console.log(height, distancing, ceilDist, colNum);
 
     const axisStart = Math.ceil(edgeLength / 2);
     const axisStartCol = edgeCol;
@@ -76,7 +62,7 @@ class NormalCurve extends Component {
     const variance1 = Math.abs(Math.ceil(len1 / 2) - axisStartCol);
     const variance2 = Math.abs(Math.ceil(len2 / 2) - axisStartCol);
 
-    const startPos1 = data["startPos1"];
+    const startPos1 = this.props.data["startPos1"];
     let distancing1 = startPos1 + variance1 - 1;
     let col11 = startPos1;
     let col12 = startPos1 + len1 - 1;
@@ -91,7 +77,7 @@ class NormalCurve extends Component {
       col12 = axisEndCol + len1 - 1;
     }
 
-    let startPos2 = data["startPos2"];
+    let startPos2 = this.props.data["startPos2"];
     let distancing2 = startPos2 + variance2 - 1;
     let col21 = startPos2;
     let col22 = startPos2 + len2 - 1;
@@ -107,40 +93,17 @@ class NormalCurve extends Component {
     }
 
     let colNumVal;
-    if ("colNumVal" in data) {
+    if ("colNumVal" in this.props.data) {
       colNumVal = this.props.data["colNumVal"];
     }
     else {
       colNumVal = 1;
     }
 
-    let tickNum;
-    let tickDist;
-    let rangeVal;
-    const axisLength = colNumInit * colNumVal;
-    if ("tickNum" in data && axisLength % (parseInt(data["tickNum"]) + 1) === 0) {
-      tickNum = parseInt(data["tickNum"]);
-      tickDist = colNumInit * distancing / (tickNum + 1);
-      rangeVal = axisLength / (tickNum + 1);
-    }
-    else {
-      tickNum = 0;
-      tickDist = axisLength;
-      rangeVal = axisLength;
-    }
-
-    let edgeLim;
-    if ("edgeLim" in data) {
-      edgeLim = data["edgeLim"];
-    }
-    else {
-      edgeLim = true;
-    }
-
-    return {
-      axisLength: data["axis-length"],
-      startPos1: data["startPos1"],
-      startPos2: data["startPos2"],
+    this.state = {
+      axisLength: this.props.data["axis-length"],
+      startPos1: this.props.data["startPos1"],
+      startPos2: this.props.data["startPos2"],
       x: 0, y: 0, isDown: false,
       rectX: 12.5,
       down: false,
@@ -148,15 +111,15 @@ class NormalCurve extends Component {
       svgHeight: height,
       svgX: 6,
       len1: len1,
-      colValHeiS: data["colValHeiS"],
+      colValHeiS: this.props.data["colValHeiS"],
       len2: len2,
-      colValHeiS2: data["colValHeiS2"],
+      colValHeiS2: this.props.data["colValHeiS2"],
       distancing: distancing,
       distancing1 : distancing1 * distancing,
       distancing2: distancing2 * distancing,
-      triCent1: triCentCol1 * distancing,
+      triCent1: triCent1,
       triCentCol1: triCentCol1,
-      triCent2: triCentCol2 * distancing,
+      triCent2: triCent2,
       triCentCol2: triCentCol2,
       mousePointerRange: 0,
       triDown: false,
@@ -166,7 +129,7 @@ class NormalCurve extends Component {
       col22: col22,
       colLim1: Math.round((length - (len1 * distancing)) / distancing),
       colLim2: Math.round((length - (len2 * distancing)) / distancing),
-      overlapVals: data["overlapVals"],
+      overlapVals: this.props.data["overlapVals"],
       circRad: circRad,
       ceilDist: ceilDist,
       axisStart: axisStart,
@@ -181,11 +144,7 @@ class NormalCurve extends Component {
       variance2: variance2,
       lowVal: this.props.data["lowVal"],
       showCoors: true,
-      colNumVal: colNumVal,
-      tickNum: tickNum,
-      tickDist: tickDist,
-      rangeVal: rangeVal,
-      edgeLim: edgeLim
+      colNumVal: colNumVal
     };
   }
 
@@ -237,67 +196,30 @@ class NormalCurve extends Component {
   }
 
   svgColPlacement(col, colRelative, dragger) {
-    // console.log(col);
-    // console.log(this.state.axisStartCol);
-    // console.log(this.state.axisStart);
-    if (this.state.edgeLim) {
-      if (dragger === 2) {
-        const variance = this.state.axisStartCol - this.state.variance2;
-        if (col < this.state.axisStartCol - 1) {
-          // console.log("edge");
-          this.setState({ distancing2: (this.state.axisStartCol - 1) * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
-        }
-        else if (col + this.state.len2 + 1 > this.state.axisStartCol + this.state.axisEndCol) {
-          const endCol = this.state.axisEndCol - this.state.len2;
-          this.setState({ distancing2: this.state.distancing * (this.state.axisStartCol + endCol - 1), col21: endCol, col22: endCol + this.state.len2 - 1 })
-        }
-        else {
-          this.setState({ distancing2: this.state.distancing * col, col21: colRelative - variance, col22: colRelative - variance + this.state.len2 - 1 });
-        }
-        this.curveArea();
+    if (dragger === 2) {
+      if (col + this.state.triCentCol2 < this.state.axisStartCol) {
+        this.setState({ distancing2: (this.state.variance2 - 1) * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
       }
-      else if (dragger === 1) {
-        const variance = this.state.axisStartCol - this.state.variance1;
-        if (col < this.state.axisStartCol - 1) {
-          this.setState({ distancing1: (this.state.axisStartCol - 1) * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
-        }
-        else if (col + this.state.len1 + 1 > this.state.axisStartCol + this.state.axisEndCol) {
-          const endCol = this.state.axisEndCol - this.state.len1;
-          this.setState({ distancing1: this.state.distancing * (this.state.axisStartCol + endCol - 1), col11: endCol, col12: endCol + this.state.len1 - 1 })
-        }
-        else {
-          this.setState({ distancing1: this.state.distancing * col, col11: colRelative - variance, col12: colRelative - variance + this.state.len1 - 1 });
-        }
-        this.curveArea();
-        // this.setState({ distancing2 : x })
+      else if (col + this.state.triCentCol2 > this.state.axisStartCol + this.state.axisEndCol) {
+        this.setState({ distancing2: this.state.distancing * (this.state.variance2 + this.state.axisEndCol - 1), col21: this.state.axisEndCol, col22: this.state.axisEndCol + this.state.len2 - 1 })
       }
+      else {
+        this.setState({ distancing2: this.state.distancing * col, col21: colRelative, col22: colRelative + this.state.len2 - 1 });
+      }
+      this.curveArea();
     }
-    else {
-      if (dragger === 2) {
-        if (col + this.state.triCentCol2 < this.state.axisStartCol) {
-          this.setState({ distancing2: (this.state.variance2 - 1) * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
-        }
-        else if (col + this.state.triCentCol2 > this.state.axisStartCol + this.state.axisEndCol) {
-          this.setState({ distancing2: this.state.distancing * (this.state.variance2 + this.state.axisEndCol - 1), col21: this.state.axisEndCol, col22: this.state.axisEndCol + this.state.len2 - 1 })
-        }
-        else {
-          this.setState({ distancing2: this.state.distancing * col, col21: colRelative, col22: colRelative + this.state.len2 - 1 });
-        }
-        this.curveArea();
+    else if (dragger === 1) {
+      if (col + this.state.triCentCol1 < this.state.axisStartCol) {
+        this.setState({ distancing1: (this.state.variance1 - 1) * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
       }
-      else if (dragger === 1) {
-        if (col + this.state.triCentCol1 < this.state.axisStartCol) {
-          this.setState({ distancing1: (this.state.variance1 - 1) * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
-        }
-        else if (col + this.state.triCentCol1 > this.state.axisStartCol + this.state.axisEndCol) {
-          this.setState({ distancing1: this.state.distancing * (this.state.variance1 + this.state.axisEndCol - 1), col11: this.state.axisEndCol, col12: this.state.axisEndCol + this.state.len1 - 1 })
-        }
-        else {
-          this.setState({ distancing1: this.state.distancing * col, col11: colRelative, col12: colRelative + this.state.len1 - 1 });
-        }
-        this.curveArea();
-        // this.setState({ distancing2 : x })
+      else if (col + this.state.triCentCol1 > this.state.axisStartCol + this.state.axisEndCol) {
+        this.setState({ distancing1: this.state.distancing * (this.state.variance1 + this.state.axisEndCol - 1), col11: this.state.axisEndCol, col12: this.state.axisEndCol + this.state.len1 - 1 })
       }
+      else {
+        this.setState({ distancing1: this.state.distancing * col, col11: colRelative, col12: colRelative + this.state.len1 - 1 });
+      }
+      this.curveArea();
+      // this.setState({ distancing2 : x })
     }
   }
 
@@ -349,23 +271,10 @@ class NormalCurve extends Component {
   }
 
   curveArea() {
-    let col11;
-    let col12;
-    let col21;
-    let col22;
-
-    if (this.state.edgeLim) {
-      col11 = this.state.col11;
-      col12 = this.state.col12;
-      col21 = this.state.col21;
-      col22 = this.state.col22;
-    }
-    else {
-      col11 = this.state.col11 + this.state.variance1;
-      col12 = this.state.col12 + this.state.variance1;
-      col21 = this.state.col21 + this.state.variance2;
-      col22 = this.state.col22 + this.state.variance2;
-    }
+    const col11 = this.state.col11 + this.state.variance1;
+    const col12 = this.state.col12 + this.state.variance1;
+    const col21 = this.state.col21 + this.state.variance2;
+    const col22 = this.state.col22 + this.state.variance2;
 
     if (col11 > col22 || col12 < col21) {
       this.areaRef.current.innerHTML = 0;
@@ -462,43 +371,13 @@ class NormalCurve extends Component {
       col22: col22
     });
   }
-  
-  updateRadius(radius) {
-    // console.log("updateRadius", radius);
-    this.changeJSON("circle-radius", radius);
-    let newData = this.props.data;
-    newData["circle-radius"] = radius;
-    this.setState(this.establishStateData(newData));
-  }
-
-  updateTicks(newTickCount) {
-    this.changeJSON("tickNum", newTickCount);
-    let newData = this.props.data;
-    newData["tickNum"] = newTickCount;
-    this.setState(this.establishStateData(newData));
-  }
-
-  updateColVal(colVal) {
-    this.changeJSON("colNumVal", colVal);
-    this.setState({ colNumVal : colVal });
-  }
-
-  checkChange() {
-    this.setState(prevState => {
-      this.changeJSON("edgeLim", !prevState.edgeLim);
-      return {
-        edgeLim: !prevState.edgeLim
-      }
-    })
-    console.log(this.state.edgeLim);
-  }
 
   render() {
-    const qNum = this.props.count + 1;
     return (
       <div
         onMouseMove={e => this.triDrag(e)}
-        onMouseUp={e => this.triUp(e)}>
+        onMouseUp={e => this.triUp(e)}
+        key={this.props.key}>
         <svg width={this.state.svgWidth} height={this.state.svgHeight + 10} ref={this.svgRef}>
           {/* <rect opacity="0.2" width="100%" height="100%" fill="red"/> */}
           {[...Array(this.state.len1).keys()].map(
@@ -528,25 +407,6 @@ class NormalCurve extends Component {
             fill="black"
             x={this.state.axisEnd + this.state.axisStart - 1}
             y={this.state.ceilDist + 20} />
-          {[...Array(this.state.tickNum).keys()].map(
-            (tick) =>
-              <rect
-                width="2"
-                height="20"
-                fill="black"
-                x={this.state.axisStart + (this.state.tickDist * (tick + 1)) - 1} 
-                y={this.state.ceilDist + 20}
-              />
-          )}
-          {[...Array(this.state.tickNum).keys()].map(
-            (tick) =>
-            <text 
-            textAnchor="middle" 
-            x={this.state.axisStart + (this.state.tickDist * (tick + 1)) - 1} 
-            y={this.state.ceilDist + 55}>
-              {this.state.lowVal + (this.state.rangeVal * (tick + 1))}
-            </text>
-          )}
           <polygon
             points={
               [
@@ -567,117 +427,70 @@ class NormalCurve extends Component {
             }
             onMouseDown={(e, num) => this.triMouseDown(e, 2)}
           />
-          <text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
-          <text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
+          <text text-anchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
+          <text text-anchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
                     Sorry, please use a different browser.
                 </svg>
         <br />
         <div class="boxed">
-          <div class="flex-container">
-            <div class="flex-child-one">
-              Question: <br/>
-              <textarea class="normal-curve-text" cols="60" rows="11" ref={this.qRef}
-                onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
-              </textarea>
+          Question: <br/>
+          <textarea cols="60" rows="10" ref={this.qRef} 
+            onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
+          </textarea><br/>
 
-              <br/><br/>
-              <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
-              <input type="text" 
-                ref={this.graph1keyRef}
-                onInput={() => this.handleChange("graph1key", this.graph1keyRef.current.value, this.props.count)}></input>
-              <br />
+          <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
+          <input type="text" 
+            ref={this.graph1keyRef}
+            onInput={() => this.handleChange("graph1key", this.graph1keyRef.current.value, this.props.count)}></input>
+          <br />
 
-              <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
-              <input type="text" 
-                ref={this.graph2keyRef}
-                onInput={() => this.handleChange("graph2key", this.graph2keyRef.current.value, this.props.count)}></input>
-            </div>
+          <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
+          <input type="text" 
+            ref={this.graph2keyRef}
+            onInput={() => this.handleChange("graph2key", this.graph2keyRef.current.value, this.props.count)}></input>
+          <br />
 
-            <div class="flex-child-two">
-              <br/>
-              What csv column name do you want to assign to this question?
-              <br/>
-              <input type="text" ref={this.questionKeyRef} 
-                onInput={() => this.handleChange("normal-curve-question-key", this.questionKeyRef.current.value, this.props.count)}/>
-              <br/>
-              <b>Use letters only, and the name must be unique.</b> <br/>
-              Recommedation: include your experiment name, this question number 
-              ({qNum}), and the question type (normalCurve)
+          <span>Enter the width of the graph (each point in the curves is 
+            equivalent to 1 unit of width) </span>
+          <input ref={this.lengthRef} type="text" 
+            name="axisLength" value={this.state.axisLength} 
+            onChange={this.onChange}/>
+          <button onClick={() => {this.lengthSubmit(this.state.axisLength)}}>
+            Change Width
+          </button>
+          <br/>
 
-              <br/><br/>
-              Please enter the csv column names for the graph key: <br/>
-              (the same rule applies) <br/>
-              <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
-              <input type="text" 
-                ref={this.legendKey1Ref}
-                onInput={() => this.handleChange("normal-curve-legend-key1", this.legendKey1Ref.current.value, this.props.count)}></input>
-              
-              <br/>
-              <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
-              <input type="text" 
-                ref={this.legendKey2Ref}
-                onInput={() => this.handleChange("normal-curve-legend-key2", this.legendKey2Ref.current.value, this.props.count)}></input>
-            </div>
-          </div>
+          <span>Enter your preferred value for the width of each unit in the curve</span>
+          <input type="text" ref={this.colNumValRef}></input>
+          <button onClick={() => this.changeJSON("colNumVal", this.colNumValRef.current.value)}>Change Unit Value</button>
+          <br />
+          
+          <span>Enter your preferred value for the radius of each unit in the curve (2 - 5, inclusive)</span>
+          <input type="text" ref={this.radiusRef}></input>
+          <button onClick={() => this.changeJSON("circle-radius", this.radiusRef.current.value)}>Change Radius</button>
+          <br />
 
-          <div className="flex-child-three">
-            <span>Enter the width of the graph (each point in the curves is 
-              equivalent to 1 unit of width) </span>
-            <input ref={this.lengthRef} type="text" 
-              name="axisLength" value={this.state.axisLength} 
-              onChange={this.onChange}/>
-            <button onClick={() => {this.lengthSubmit(this.state.axisLength)}}>
-              Change Width
-            </button>
-            <br/>
-
-            <span>Enter your preferred value for the width of each unit in the curve</span>
-            <input type="text" ref={this.colNumValRef}></input>
-            <button onClick={() => this.updateColVal(this.colNumValRef.current.value)}>Change Unit Value</button>
-            <br />
-
-            <span>Enter your preferred value for the radius of each unit in the curve (2 - 5, inclusive)</span>
-            <input type="text" ref={this.radiusRef}></input>
-            <button onClick={() => this.updateRadius(this.radiusRef.current.value)}>Change Radius</button>
-            <br />
-
-            <span>Enter your preferred number of ticks on the graph (must be divisible by the range of the x-axis)</span>
-            <input type="text" ref={this.ticksRef}></input>
-            <button onClick={() => this.updateTicks(this.ticksRef.current.value)}>Change Tick Count</button>
-            <br />
-
-            <span>Enter your preferred starting position for curve 1, 
-              if you want to change it </span>
-            <input ref={this.startPos1Ref} 
-              type="text" name="startPos1" value={this.state.startPos1} 
-              onChange={this.onChange}></input>
-            <button onClick={() => this.alterStartPos1(this.state.startPos1)}>
-              Change Curve 1
-            </button>
-            <br/>
-
-            <span>Enter your preferred starting position for curve 2, 
-              if you want to change it </span>
-            <input ref={this.startPos2Ref} type="text" 
-            name="startPos2" value={this.state.startPos2} 
+          <span>Enter your preferred starting position for curve 1, 
+            if you want to change it </span>
+          <input ref={this.startPos1Ref} 
+            type="text" name="startPos1" value={this.state.startPos1} 
             onChange={this.onChange}></input>
-            <button onClick={() => this.alterStartPos2(this.state.startPos2)}>
-              Change Curve 2
-            </button>
-            <br />
+          <button onClick={() => this.alterStartPos1(this.state.startPos1)}>
+            Change Curve 1
+          </button>
+          <br/>
 
-            <input 
-            type="checkbox" 
-            id="vehicle1" 
-            name="vehicle1" 
-            value="Bike" 
-            ref={this.checkBoxRef}
-            onChange={this.checkChange} />
-            <label for="vehicle1"> Turn edge limiting on/off</label>
-          </div>
+          <span>Enter your preferred starting position for curve 2, 
+            if you want to change it </span>
+          <input ref={this.startPos2Ref} type="text" 
+          name="startPos2" value={this.state.startPos2} 
+          onChange={this.onChange}></input>
+          <button onClick={() => this.alterStartPos2(this.state.startPos2)}>
+            Change Curve 2
+          </button>
         </div>
         <br />
-        <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>
+        <h1>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h1>
         {/* <h1>{this.props.data["startPos1"]} | {this.props.data["startPos2"]}</h1> */}
       </div>
     )
