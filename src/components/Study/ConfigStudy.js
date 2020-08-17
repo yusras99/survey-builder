@@ -283,15 +283,13 @@ class ConfigStudy extends Component {
             View All Participant Data
           </button>
         </Link>
-        <form>
-          <h3>
-            Your Experiments
-          </h3>
-          {this.getExptNames()}
-          <br /><br />
-          {this.deploy()}
-          <br />
-        </form>
+        <h3>
+          Your Experiments
+        </h3>
+        {this.getExptNames()}
+        <br /><br />
+        {this.deploy()}
+        <br />
         {/* <button onClick={() => console.log(this.props.experiments)}>show state</button> */}
       </div>
     )

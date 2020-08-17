@@ -465,16 +465,16 @@ class NormalCurve extends Component {
   
   updateRadius(radius) {
     // console.log("updateRadius", radius);
-    this.changeJSON("circle-radius", radius);
+    this.changeJSON("circle-radius", parseInt(radius));
     let newData = this.props.data;
-    newData["circle-radius"] = radius;
+    newData["circle-radius"] = parseInt(radius);
     this.setState(this.establishStateData(newData));
   }
 
   updateTicks(newTickCount) {
-    this.changeJSON("tickNum", newTickCount);
+    this.changeJSON("tickNum", parseInt(newTickCount));
     let newData = this.props.data;
-    newData["tickNum"] = newTickCount;
+    newData["tickNum"] = parseInt(newTickCount);
     this.setState(this.establishStateData(newData));
   }
 

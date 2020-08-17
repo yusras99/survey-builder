@@ -75,20 +75,19 @@ class Dashboard extends Component {
         <h2>Dashboard</h2>
 
         <form>
-          Click on this <p></p>
-          <b>
-          <a href="https://colab.research.google.com/drive/1yleVQB_CrNJ5Z3v-YPatW2XqAD7yS8yp?usp=sharing" target="_blank">link</a>
-          </b> <p></p>
-          to configure a <b>normal curve</b> item.
+          <br/>
+          <b>Configure Experiment Types:</b> <br/>
+          <a href="https://colab.research.google.com/drive/1yleVQB_CrNJ5Z3v-YPatW2XqAD7yS8yp?usp=sharing" target="_blank">Normal Curves</a>
+          <div><br/></div>
         </form>
 
-        <form onSubmit={this.onAddStudy}>
-          <b>Enter a name for your study:</b> <br/>
-          <input type="text" name="studyName"
-            value={this.state.studyName} onChange={this.onChange} />
-          <input type="submit" value="Add Study" /> <br/>
-          Please do <b>not</b> use "-" in the name
-        </form>
+        <h3>Add a Study</h3>
+        Enter a name for your study: <br/>
+        <input type="text" name="studyName"
+          value={this.state.studyName} onChange={this.onChange} />
+        <button onClick={this.onAddStudy}>Add Study</button>
+        <br/>
+        Please do <b>not</b> use "-" in the name
 
         <form>
           <br />
@@ -100,7 +99,8 @@ class Dashboard extends Component {
           onClick={this.onLogoutClick}
           className="btn">
           Logout
-                </button>
+        </button>
+        <div><br/><br/></div>
       </div>
     )
   };
