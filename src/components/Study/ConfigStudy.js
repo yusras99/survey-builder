@@ -18,12 +18,13 @@ class ConfigStudy extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      checked: true
     };
 
     this.deployExpts = this.deployExpts.bind(this);
     this.changeState = this.changeState.bind(this);
     this.onDeploy = this.onDeploy.bind(this);
+    this.onChecked = this.onChecked.bind(this);
   }
   // note: using params to get studyName is probably not good practice. 
   // figure out a better way to get info from previous page later, might
@@ -45,6 +46,11 @@ class ConfigStudy extends Component {
     return deployedExpts;
   }
 
+  
+  onChecked() {
+    this.setState({ checked: !this.state.checked });
+  }
+
   getExptNames() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
@@ -53,8 +59,14 @@ class ConfigStudy extends Component {
     // check if the experiments are deployed 
     return this.props.experiments.map(expt => {
       const exptName = expt.exptName;
-      const condition = expt.condition;
       const surveyLink = expt.link;
+
+      var condition;
+      if (expt.condition == null) {
+        condition = "N/A";
+      } else {
+        condition = expt.condition;
+      }
 
       const exptDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/configs";
@@ -91,6 +103,10 @@ class ConfigStudy extends Component {
               </Link> <p> </p> 
               <br/><br/>
               Condition: <b>{condition}</b>
+
+              {/* <br/>
+              <button onClick={() => console.log(condition)}></button> */}
+
               <br/><br/>
               <b>Database Link:</b><br/>
               {dbLink} <br/>
@@ -163,10 +179,25 @@ class ConfigStudy extends Component {
             <textarea cols="60" rows="1" id={exptName + "link"}
               onInput={this.changeState} value={this.state.exptName}></textarea>
             <br/><br/>
-            <b>TODO</b> <br/>
-            Name the condition of this experiment: <br/>
-            <textarea cols="60" rows="1" id={exptName + "condition"}
-              onInput={this.changeState} value={this.state.condition}></textarea>
+
+            <input type="checkbox" onChange={this.onChecked} defaultChecked/>
+            I want to randomize this experiment.
+
+            {
+              this.state.checked 
+              ? 
+              <div>
+                <br/>
+                <b>TODO</b> <br/>
+                Name the condition of this experiment: <br/>
+                <textarea cols="60" rows="1" id={exptName + "condition"}
+                  onInput={this.changeState} value={this.state.condition}></textarea>
+              </div>
+              :
+              <div>
+              </div>
+            }
+            
             <br/><br/>
             {/* <button onClick={() => console.log(this.state)}>Show State</button><br/> */}
             <button id={exptName} onClick={this.onDeploy}> 
@@ -196,13 +227,20 @@ class ConfigStudy extends Component {
     const conditionInfo = { "condition": condition };
     // this.props.saveAddInfo(username, studyName, exptName, "condition", conditionInfo);
 
+    // NEED TO CLEAN THIS UP
+    // i only used axios here for debugging
     axios
       .put('https://test-api-615.herokuapp.com/api/feedback/' + username + 
            '/info/studyName-' + studyName + '/experiments/exptName-' + exptName + '/' + 'condition',
            conditionInfo)
       .then(res => {
         console.log(res.data);
-        const linkToSend = link + "?condition=" + condition
+        var linkToSend;
+        if (this.state.checked) {
+          linkToSend = link + "?condition=" + condition
+        } else {
+          linkToSend = link;
+        }
         const linkInfo = { "link": linkToSend };
         axios
           .put('https://test-api-615.herokuapp.com/api/feedback/' + username + 

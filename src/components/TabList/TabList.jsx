@@ -137,7 +137,7 @@ class TabList extends Component {
     const thisExpt = this.props.experiments.filter(item => 
       item["exptName"] == exptName)[0];
     const thisExptQKeys = Object.keys(thisExpt).filter(k => 
-      k != "count" && k != "exptName" && k != "index");
+      k.charAt(0) == "q");
     // the question key (e.g. q1) that user has selected
     const thisQKey = thisExptQKeys.filter(k => {
       const key = this.mapQTypetoQKey(thisExpt[k]["Type"]);

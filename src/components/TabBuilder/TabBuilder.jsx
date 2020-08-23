@@ -42,22 +42,23 @@ class TabBuilder extends Component {
     var qSelectedToExptname = {};
     if (!this.props.experiments.length == 0) {
       const allExpts = this.props.experiments;
+      console.log(allExpts);
       const renderOption = item => <option value={item}>{item}</option>
       // per experiment
       // input: item represents a JSON object containing the configuration data
       //        of a specific experiment 
       const renderGroup = item => {
         const qKeys = Object.keys(item).filter(
-          k => k != "count" && k != "exptname" && k != "index");
+          k => k.charAt(0) == "q");
         // qArr contains all csvColNames of all questions in an experiment
         var qArr = [];
         qKeys.forEach(k => {
-          const question = item[k];
+          const question = item[k]; 
           const qKey = this.mapQTypetoQKey(question["Type"]);
           const csvColName = question[qKey];
           qArr.push(csvColName);
         })
-        qArr.shift();
+        // qArr.shift();
         qArr.map(q => qSelectedToExptname[q] = item.exptName);
         const qOptions = qArr.map(renderOption);
         return (
