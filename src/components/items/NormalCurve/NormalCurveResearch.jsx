@@ -34,6 +34,11 @@ class NormalCurveResearch extends Component {
   }
 
   componentDidMount() {
+    // importing component
+    if (this.props.imported) {
+      this.handleChange("FileName", this.props.qToDisplay["FileName"], this.props.count);
+      this.handleChange("FileContent", this.props.qToDisplay["FileContent"], this.props.count);
+    }
     const username = this.props.auth.user.username;
     this.props.getColData(username, "itemData");
   }
@@ -191,8 +196,20 @@ class NormalCurveResearch extends Component {
           <br/>
         </div>
       )
-    }
-    else {
+    // importing component
+    } else if (this.props.imported) {
+      return (
+        <div>
+          <NormalCurve 
+            imported={true}
+            data={this.props.qToDisplay["FileContent"]} 
+            qToDisplay={this.props.qToDisplay}
+            count={this.props.count}
+            changeJSON={this.changeJSON} 
+            handleChange={this.handleChange} />
+        </div>
+      )
+    } else {
       const normalCurveFiles = this.props.dataFlowColData.filter(
         item => item.itemType == "normal-curve");
       var fileNames = normalCurveFiles.map(item => item.fileName);

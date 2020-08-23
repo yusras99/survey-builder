@@ -29,6 +29,12 @@ class StaticText extends Component {
     this.props.handleChange(type, q, count);
   }
 
+  componentDidMount() {
+    if (this.props.imported) {
+      this.handleChange("Static Text", this.props.defaultText, this.props.count);
+    }
+  }
+
   render() {
     const qNum = this.props.count + 1;
     return (
@@ -37,7 +43,7 @@ class StaticText extends Component {
         Question #{qNum} 
         <br/>
         Enter your static text below: <br/>
-        <textarea cols="60" rows="10" ref={this.qRef}
+        <textarea cols="60" rows="10" ref={this.qRef} defaultValue={this.props.defaultText}
           onInput={() => this.handleChange("Static Text", this.qRef.current.value, this.props.count)}>
         </textarea>
         <br/><br/>

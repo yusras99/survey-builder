@@ -12,7 +12,10 @@ import StaticText from '../items/StaticText/StaticText';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
 import HistogramResearch from '../items/Threshold/HistogramResearch';
 
-import { sendFile } from '../../actions/dataActions'
+import { 
+  sendFile,
+  getStudyInfo
+} from '../../actions/dataActions'
 
 const axios = require('axios');
 
@@ -34,6 +37,7 @@ class TabList extends Component {
     this.nameRef = React.createRef();
 
     this.builderFunction = this.builderFunction.bind(this);
+    this.importQuestion = this.importQuestion.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.delete = this.delete.bind(this);
     this.getCount = this.getCount.bind(this);
@@ -44,6 +48,13 @@ class TabList extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.appendToKeysArr = this.appendToKeysArr.bind(this);
+  }
+
+  componentDidMount() {
+    const username = this.props.match.params.username;
+    const studyName = this.props.match.params.studyName;
+    this.props.getStudyInfo(username, studyName);
+    // console.log(username.toString() + ' ' + studyName.toString());
   }
 
   onChange(e) {
@@ -102,6 +113,98 @@ class TabList extends Component {
     curOutput[this.state.count.toString()] = { "Type": tabDefine };
     var newCount = this.state.count + 1;
     this.setState({ children: arr, count: newCount, output: curOutput, complete: false });
+  }
+
+  mapQTypetoQKey(qType) {
+    switch(qType) {
+      case "slider":
+        return "slider-question-key"
+      case "static-text":
+        return "static-text-key"
+      case "normal-curve":
+        return "normal-curve-question-key"
+      case "threshold":
+        return "threshold-key"
+      default:
+        return ""
+    }
+  }
+
+  importQuestion(exptName, questionKey) {
+    // questions will show up once an expt type is pushed to this.state.children
+    var arr = this.state.children;
+
+    const thisExpt = this.props.experiments.filter(item => 
+      item["exptName"] == exptName)[0];
+    const thisExptQKeys = Object.keys(thisExpt).filter(k => 
+      k != "count" && k != "exptName" && k != "index");
+    // the question key (e.g. q1) that user has selected
+    const thisQKey = thisExptQKeys.filter(k => {
+      const key = this.mapQTypetoQKey(thisExpt[k]["Type"]);
+      return thisExpt[k][key] == questionKey;
+    })[0];
+    const questionToDisplay = thisExpt[thisQKey];
+    console.log(questionToDisplay);
+
+    switch (questionToDisplay["Type"]) {
+      case "slider":
+        arr.push({ 
+          id: this.state.count, 
+          tab: <SliderTab 
+                  defaultQ={questionToDisplay["Question"]}
+                  defaultMin={questionToDisplay["lowRange"]}
+                  defaultMax={questionToDisplay["highRange"]}
+                  imported={true}
+                  getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count} 
+                  handleChange={this.handleChange} 
+                  key={this.state.count.toString()}
+                  appendToKeysArr={this.appendToKeysArr} /> 
+        })
+        break;
+      case "static-text": 
+        arr.push({
+          id: this.state.count,
+          tab: <StaticText 
+                  defaultText={questionToDisplay["Static Text"]}
+                  imported={true}
+                  getCount={this.getCount}
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange}
+                  key={this.state.count.toString()}/>
+        })
+        break;
+      case "normal-curve": 
+        arr.push({
+          id: this.state.count,
+          tab: <NormalCurveResearch 
+                  qToDisplay={questionToDisplay}
+                  imported={true}
+                  getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count} 
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/> 
+        })
+        break;  
+      case "threshold":
+        arr.push({
+          id: this.state.count,
+          tab: <HistogramResearch getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/>
+        })
+        break;
+      default:
+        arr = <div>Unknown Element</div>
+    }
+
+    var curOutput = this.state.output;
+    curOutput[this.state.count.toString()] = { "Type": questionToDisplay["Type"] };
+    var newCount = this.state.count + 1;
+    this.setState({ children: arr, count: newCount, output: curOutput, complete: false });    
   }
 
   // Input: 
@@ -282,7 +385,8 @@ class TabList extends Component {
           <input ref={this.nameRef}
             value={this.state.exptName}
             onChange={this.onChange}
-            type="text" id="userid" name="exptName" /><br /><br />
+            type="text" id="userid" name="exptName" /><br />
+          <b>all experiments in a study must have unique names</b>
         </form>
         {
           this.state.children
@@ -291,7 +395,11 @@ class TabList extends Component {
               return item.tab;
             })
         }
-        <TabBuilder build={this.builderFunction} />
+        <TabBuilder 
+          build={this.builderFunction} 
+          importQuestion={this.importQuestion}
+          username={this.props.match.params.username}
+          studyName={this.props.match.params.studyName} />
         <div className="extraPad">
           <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
         </div>
@@ -306,17 +414,20 @@ TabList.propTypes = {
   auth: PropTypes.object.isRequired,
   dataFlowDBInfo: PropTypes.array.isRequired,
   sendFile: PropTypes.func.isRequired,
-  dataFlowFileName: PropTypes.string.isRequired
+  dataFlowFileName: PropTypes.string.isRequired,
+  getStudyInfo: PropTypes.func.isRequired,
+  experiments: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
   dataFlowDBInfo: state.dataFlow.dbInfo,
-  dataFlowFileName: state.dataFlow.fileName
+  dataFlowFileName: state.dataFlow.fileName,
+  experiments: state.dataFlow.studyInfo
 });
 
 // export default TabList;
 export default connect(
   mapStateToProps,
-  { sendFile }
+  { sendFile, getStudyInfo }
 )(TabList);
