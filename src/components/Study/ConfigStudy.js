@@ -32,6 +32,19 @@ class ConfigStudy extends Component {
   componentDidMount() {
     const username = this.props.auth.user.username;
     const studyName = this.props.match.params.studyName;
+    axios
+      .get('https://test-api-615.herokuapp.com/api/feedback/' + username +
+        '/info/studyName-' + studyName)
+      .then(res => {
+        const dataToPut = {
+          "randomize": true
+        }
+        if (!Object.keys(res.data).includes("randomize")) {
+          this.putRandomize(username, studyName, dataToPut);
+        } else {
+          this.setState({ checked: res.data.randomize });
+        }
+      });
     this.props.getStudyInfo(username, studyName);
     this.props.getColNames(username);
   }
@@ -46,9 +59,20 @@ class ConfigStudy extends Component {
     return deployedExpts;
   }
 
-  
+  putRandomize(database_name, study_name, data) {
+    axios.put('https://test-api-615.herokuapp.com/api/feedback/' + 
+      database_name + '/info/studyName-' + study_name, data);
+  }
+
   onChecked() {
+    const nowState = !this.state.checked;
     this.setState({ checked: !this.state.checked });
+    const username = this.props.auth.user.username;
+    const studyName = this.props.match.params.studyName;
+    const dataToPut = {
+      "randomize": nowState
+    }
+    this.putRandomize(username, studyName, dataToPut);
   }
 
   getExptNames() {
@@ -86,6 +110,16 @@ class ConfigStudy extends Component {
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
+            {
+              this.state.checked 
+              ? <div>
+                You have chosen to randomize experiments in this study.
+              </div>
+              : <div>
+                You have chosen not to randomize experiments in this study. 
+              </div>
+            }
+            <br/>
             <div className="boxed">
               <b>{expt.exptName}</b> <br/>
               <a target="_blank" href={previewLink}>
@@ -145,7 +179,11 @@ class ConfigStudy extends Component {
         )
       } else {
         return (
-          <div className="boxed">
+          <div>
+            <input type="checkbox" onChange={this.onChecked} checked={this.state.checked}/>
+            I want to randomize experiments in this study
+            <br/><br/>
+            <div className="boxed">
             Experiment: <b>{expt.exptName}</b><br/>
             <Link to={exptDataLink}>
               <button type="button">
@@ -179,33 +217,26 @@ class ConfigStudy extends Component {
             <textarea cols="60" rows="1" id={exptName + "link"}
               onInput={this.changeState} value={this.state.exptName}></textarea>
             <br/><br/>
-
-            <input type="checkbox" onChange={this.onChecked} defaultChecked/>
-            I want to randomize this experiment.
-
             {
-              this.state.checked 
-              ? 
-              <div>
-                <br/>
+              this.state.checked
+              ? <div>
                 <b>TODO</b> <br/>
                 Name the condition of this experiment: <br/>
                 <textarea cols="60" rows="1" id={exptName + "condition"}
                   onInput={this.changeState} value={this.state.condition}></textarea>
+                <br/>
               </div>
-              :
-              <div>
-              </div>
+              : <div></div>
             }
-            
-            <br/><br/>
+            <br/>
             {/* <button onClick={() => console.log(this.state)}>Show State</button><br/> */}
             <button id={exptName} onClick={this.onDeploy}> 
               <b>DEPLOY</b>
             </button>
             <br/>
-            
           </div>
+          </div>
+          
         )
       };
     })
