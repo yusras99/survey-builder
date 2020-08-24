@@ -118,15 +118,6 @@ class ConfigStudy extends Component {
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
-            {
-              this.state.checked 
-              ? <div>
-                You have chosen to randomize experiments in this study.
-              </div>
-              : <div>
-                You have chosen not to randomize experiments in this study. 
-              </div>
-            }
             <br/>
             <div className="boxed">
               <b>{expt.exptName}</b> <br/>
@@ -367,6 +358,16 @@ class ConfigStudy extends Component {
               <input type="checkbox" onChange={this.onChecked} checked={this.state.checked}/>
                 I want to randomize experiments in this study
               <br/><br/>
+          </div>
+        }
+        {
+          this.state.checked 
+          ? <div>
+            You have chosen to randomize experiments in this study.
+          </div>
+          : <div>
+            You have chosen not to randomize experiments in this study. 
+            <br/>
           </div>
         }
         {this.getExptNames()}
