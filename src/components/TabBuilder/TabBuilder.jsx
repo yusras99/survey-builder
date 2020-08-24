@@ -74,7 +74,7 @@ class TabBuilder extends Component {
       <div className="unit">
         <span>Choose what element to add next</span><br />
         <select name="tabType" id="tabType" ref={this.selectRef}>
-          <option value="slider">Slider</option>
+          {/* <option value="slider">Slider</option> */}
           <option value="static-text">Static Text</option>
           <option value="normal-curve">Normal Curve</option>
           <option value="threshold">Threshold</option>

@@ -18,7 +18,8 @@ class ConfigStudy extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      checked: true
+      checked: true,
+      deployed: Boolean
     };
 
     this.deployExpts = this.deployExpts.bind(this);
@@ -38,15 +39,22 @@ class ConfigStudy extends Component {
       .then(res => {
         const dataToPut = {
           "randomize": true
-        }
+        };
         if (!Object.keys(res.data).includes("randomize")) {
           this.putRandomize(username, studyName, dataToPut);
         } else {
           this.setState({ checked: res.data.randomize });
-        }
+        };
       });
     this.props.getStudyInfo(username, studyName);
     this.props.getColNames(username);
+    axios
+    .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
+    .then(res => {
+      const thisSudyDeployedExpt = res.data.filter(name => name.includes(studyName));
+      console.log(thisSudyDeployedExpt);
+      this.setState({ deployed: thisSudyDeployedExpt.length >= 1 });
+    })
   }
 
   processColNames() {
@@ -180,9 +188,6 @@ class ConfigStudy extends Component {
       } else {
         return (
           <div>
-            <input type="checkbox" onChange={this.onChecked} checked={this.state.checked}/>
-            I want to randomize experiments in this study
-            <br/><br/>
             <div className="boxed">
             Experiment: <b>{expt.exptName}</b><br/>
             <Link to={exptDataLink}>
@@ -355,6 +360,15 @@ class ConfigStudy extends Component {
         <h3>
           Your Experiments
         </h3>
+        {
+          this.state.deployed
+          ? <div></div>
+          : <div>
+              <input type="checkbox" onChange={this.onChecked} checked={this.state.checked}/>
+                I want to randomize experiments in this study
+              <br/><br/>
+          </div>
+        }
         {this.getExptNames()}
         <br /><br />
         {this.deploy()}
