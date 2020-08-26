@@ -26,6 +26,7 @@ class ConfigStudy extends Component {
     this.changeState = this.changeState.bind(this);
     this.onDeploy = this.onDeploy.bind(this);
     this.onChecked = this.onChecked.bind(this);
+    this.onDeleteExperiment = this.onDeleteExperiment.bind(this);
   }
   // note: using params to get studyName is probably not good practice. 
   // figure out a better way to get info from previous page later, might
@@ -40,6 +41,7 @@ class ConfigStudy extends Component {
         const dataToPut = {
           "randomize": true
         };
+        console.log(res.data);
         if (!Object.keys(res.data).includes("randomize")) {
           this.putRandomize(username, studyName, dataToPut);
         } else {
@@ -49,12 +51,12 @@ class ConfigStudy extends Component {
     this.props.getStudyInfo(username, studyName);
     this.props.getColNames(username);
     axios
-    .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
-    .then(res => {
-      const thisSudyDeployedExpt = res.data.filter(name => name.includes(studyName));
-      console.log(thisSudyDeployedExpt);
-      this.setState({ deployed: thisSudyDeployedExpt.length >= 1 });
-    })
+      .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
+      .then(res => {
+        const thisSudyDeployedExpt = res.data.filter(name => 
+          name.split("-")[0] == studyName);
+        this.setState({ deployed: thisSudyDeployedExpt.length >= 1 });
+      });
   }
 
   processColNames() {
@@ -135,6 +137,10 @@ class ConfigStudy extends Component {
                 </button>
               </Link> <p> </p> 
               <br/><br/>
+              <button id={expt.exptName} onClick={this.onDeleteExperiment}>
+              Delete this Experiment
+              </button>
+              <br/><br/>
               Condition: <b>{condition}</b>
 
               {/* <br/>
@@ -186,6 +192,10 @@ class ConfigStudy extends Component {
                 Configurations
               </button>
             </Link><br/><br/>
+            <button id={expt.exptName} onClick={this.onDeleteExperiment}>
+            Delete this Experiment
+            </button>
+            <br/><br/>
             <b>Experiment Link:</b><br/>
             {exptPartLink} <br/>
             <CopyToClipboard text={exptPartLink}>
@@ -242,6 +252,36 @@ class ConfigStudy extends Component {
     this.setState({ [e.target.id]: e.target.value });
   }
 
+  onDeleteExperiment(e) {
+    const username = this.props.match.params.username;
+    const studyName = this.props.match.params.studyName;
+    const exptName = e.target.id;
+    var confirm = window.confirm("Are you sure you want to delete this" +
+      " experiment [" + exptName + "] (and all its participant data)?");
+    if (confirm) {
+      // first delete expt config from /info
+      axios
+      .delete('https://test-api-615.herokuapp.com/api/feedback/' + 
+        username + '/info/studyName-' + studyName + '/experiments/exptName-' +
+        exptName)
+      .then(res => {
+        // then delete participant data collection
+        axios
+          .delete('https://test-api-615.herokuapp.com/api/feedback/' + 
+            username + "/one", {data: {colName: studyName + "-" + exptName}})
+          .then(res => {
+            alert("You have successfully deleted [" + exptName + 
+              "] and all its data!");
+            window.location.reload(true);
+          })
+      });
+    } else {
+      alert("Deletion cancelled!");
+      window.location.reload(true);
+    }
+    
+  }
+
   onDeploy(e) {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
@@ -261,7 +301,6 @@ class ConfigStudy extends Component {
            '/info/studyName-' + studyName + '/experiments/exptName-' + exptName + '/' + 'condition',
            conditionInfo)
       .then(res => {
-        console.log(res.data);
         var linkToSend;
         if (this.state.checked) {
           linkToSend = link + "?condition=" + condition
@@ -274,7 +313,6 @@ class ConfigStudy extends Component {
                '/info/studyName-' + studyName + '/experiments/exptName-' + exptName + '/' + 'link',
                linkInfo)
           .then(res => {
-            console.log(res.data);
             this.props.createExptCol(username, studyName + "-" + exptName, exptName);
           })
       })

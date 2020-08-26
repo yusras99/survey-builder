@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import { logoutUser } from "../../actions/authActions";
 
@@ -21,6 +22,7 @@ class Dashboard extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onAddStudy = this.onAddStudy.bind(this);
+    this.onDeleteStudy = this.onDeleteStudy.bind(this);
   }
 
   onChange(e) {
@@ -44,11 +46,14 @@ class Dashboard extends Component {
         const link = "/" + username + "/" + item.studyName;
         return (
           <div className="container">
-            <p>
-              {item.studyName} <p> </p>
+            <p id={item.studyName}>
+              {item.studyName} <p> </p> 
               <Link to={link}>
                 View
-              </Link>
+              </Link> <p> </p>
+              <button id={item.studyName} onClick={this.onDeleteStudy}>
+                Delete
+              </button>
             </p>
           </div>
         )
@@ -63,6 +68,31 @@ class Dashboard extends Component {
     // window.location.reload(false);
   };
 
+  onDeleteStudy(e) {
+    const username = this.props.auth.user.username;
+    const studyName = e.target.id;
+    var confirm = window.confirm("Are you sure you want to delete this" + 
+      " study [" + studyName + "] and all its experiment data?");
+    if (confirm) {
+      // delete the study doc in /info collection
+      axios
+        .delete('https://test-api-615.herokuapp.com/api/feedback/' + 
+          username + '/info/studyName-' + studyName);
+      // delete all deployed experiment collections in user's database
+      axios
+        .delete('https://test-api-615.herokuapp.com/api/feedback/' + 
+          username + "/all", { data: { studyName: studyName }})
+        .then(res => {
+          alert("You have succesfully deleted [" + studyName + "] and all" + 
+            " its experiment data!");
+          window.location.reload(true);
+        })
+    } else {
+      alert("Deletion cancelled!");
+      window.location.reload(true);
+    }
+  }
+
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logoutUser();
@@ -74,12 +104,12 @@ class Dashboard extends Component {
       <div className="container">
         <h2>Dashboard</h2>
 
-        <form>
+        <div className="boxed" style={{ width: "60%", margin: "auto" }}>
           <br/>
           <b>Configure Experiment Types:</b> <br/>
           <a href="https://colab.research.google.com/drive/1yleVQB_CrNJ5Z3v-YPatW2XqAD7yS8yp?usp=sharing" target="_blank">Normal Curves</a>
           <div><br/></div>
-        </form>
+        </div>
 
         <h3>Add a Study</h3>
         Enter a name for your study: <br/>
@@ -89,12 +119,14 @@ class Dashboard extends Component {
         <br/>
         Please do <b>not</b> use "-" in the name
 
-        <form>
+        <br/><br/>
+        <div className="boxed" style={{ width: "60%", margin: "auto" }}>
           <br />
           {this.getStudyNames()}
           <br />
-        </form>
+        </div>
 
+        <br/><br/>
         <button
           onClick={this.onLogoutClick}
           className="btn">
