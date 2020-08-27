@@ -47,3 +47,17 @@ td {
   color: #bdbdbd;
   margin: 20px;
 }
+
+.tag1 {
+  display: none;
+}
+.triangle1:hover + .tag1 {
+  display: absolute;
+}
+
+.tag2 {
+  display: none;
+}
+.triangle2:hover + .tag2 {
+  display: absolute;
+}

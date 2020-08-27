@@ -19,6 +19,8 @@ class NormalCurve extends Component {
     this.radiusRef = React.createRef();
     this.ticksRef = React.createRef();
     this.checkBoxRef = React.createRef();
+    this.toggleTriRef1 = React.createRef();
+    this.toggleTriRef2 = React.createRef();
 
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
@@ -37,8 +39,16 @@ class NormalCurve extends Component {
     this.updateRadius = this.updateRadius.bind(this);
     this.updateTicks = this.updateTicks.bind(this);
     this.checkChange = this.checkChange.bind(this);
+    this.toggleTri1 = this.toggleTri1.bind(this);
+    this.toggleTri2 = this.toggleTri2.bind(this);
+    this.returnTri1 = this.returnTri1.bind(this);
+    this.returnTri2 = this.returnTri2.bind(this);
 
     this.state = this.establishStateData(this.props.data);
+  }
+
+  componentDidMount() {
+    this.curveArea();
   }
 
   establishStateData(data) {
@@ -65,8 +75,8 @@ class NormalCurve extends Component {
     const axisEndCol = internalLength / distancing;
     const axisEnd = axisEndCol * distancing;
 
-    const triCent1 = (0.5 * len1 + 1) * distancing;
-    const triCent2 = (0.5 * len2 + 1) * distancing;
+    const triCent1 = Math.ceil(0.5 * len1) * distancing;
+    const triCent2 = Math.ceil(0.5 * len2) * distancing;
     const triCentCol1 = Math.ceil(triCent1 / distancing);
     const triCentCol2 = Math.ceil(triCent2 / distancing);
 
@@ -75,32 +85,50 @@ class NormalCurve extends Component {
 
     const startPos1 = data["startPos1"];
     let distancing1 = startPos1 + variance1 - 1;
-    let col11 = startPos1;
+    let col11 = startPos1 + variance1;
     let col12 = startPos1 + len1 - 1;
-    if (col11 + triCentCol1 < axisStartCol) {
-      distancing1 = variance1 - 1;
+    let col11Rel = startPos1 + 1;
+
+    let variance = axisStartCol - variance1;
+    if (col11 < axisStartCol - 1) {
+      distancing1 = (axisStartCol - 1) * distancing;
       col11 = 0;
       col12 = len1 - 1;
     }
-    else if (col11 + triCentCol1 > axisStartCol + axisEndCol) {
-      distancing1 = variance1 + axisEndCol - 1;
-      col11 = axisEndCol;
-      col12 = axisEndCol + len1 - 1;
+    else if (col11 + len1 + 1 > axisStartCol + axisEndCol) {
+      const endCol = axisEndCol - len1;
+      distancing1 = distancing * (axisStartCol + endCol - 1);
+      col11 = endCol;
+      col12 = endCol + len2 - 1;
+    }
+    else {
+      distancing1 = distancing * col11;
+      col11 = col11Rel - variance;
+      col12 = col11Rel - variance + len1 - 1;
     }
 
-    let startPos2 = data["startPos2"];
+    const startPos2 = data["startPos2"];
     let distancing2 = startPos2 + variance2 - 1;
-    let col21 = startPos2;
+    let col21 = startPos2 + variance2;
     let col22 = startPos2 + len2 - 1;
-    if (col21 + triCentCol2 < axisStartCol) {
-      distancing2 = variance2 - 1;
+    let col21Rel = startPos2 + 1;
+
+    variance = axisStartCol - variance2;
+    if (col21 < axisStartCol - 1) {
+      distancing2 = (axisStartCol - 1) * distancing;
       col21 = 0;
       col22 = len2 - 1;
     }
-    else if (col21 + triCentCol2 > axisStartCol + axisEndCol) {
-      distancing2 = variance2 + axisEndCol - 1;
-      col21 = axisEndCol;
-      col22 = axisEndCol + len2 - 1;
+    else if (col21 + len2 + 1 > axisStartCol + axisEndCol) {
+      const endCol = axisEndCol - len2;
+      distancing2 = distancing * (axisStartCol + endCol - 1);
+      col21 = endCol;
+      col22 = endCol + len2 - 1;
+    }
+    else {
+      distancing2 = distancing * col21;
+      col21 = col21Rel - variance;
+      col22 = col21Rel - variance + len2 - 1;
     }
 
     let colNumVal;
@@ -134,6 +162,22 @@ class NormalCurve extends Component {
       edgeLim = true;
     }
 
+    let fixCurve1;
+    if ("fixCurve1" in data) {
+      fixCurve1 = data["fixCurve1"];
+    }
+    else {
+      fixCurve1 = false;
+    }
+
+    let fixCurve2;
+    if ("fixCurve2" in data) {
+      fixCurve2 = data["fixCurve2"];
+    }
+    else {
+      fixCurve2 = false;
+    }
+
     return {
       axisLength: data["axis-length"],
       startPos1: data["startPos1"],
@@ -149,8 +193,8 @@ class NormalCurve extends Component {
       len2: len2,
       colValHeiS2: data["colValHeiS2"],
       distancing: distancing,
-      distancing1 : distancing1 * distancing,
-      distancing2: distancing2 * distancing,
+      distancing1 : distancing1,
+      distancing2: distancing2,
       triCent1: triCentCol1 * distancing,
       triCentCol1: triCentCol1,
       triCent2: triCentCol2 * distancing,
@@ -182,7 +226,9 @@ class NormalCurve extends Component {
       tickNum: tickNum,
       tickDist: tickDist,
       rangeVal: rangeVal,
-      edgeLim: edgeLim
+      edgeLim: edgeLim,
+      fixCurve1: fixCurve1,
+      fixCurve2: fixCurve2
     };
   }
 
@@ -208,6 +254,46 @@ class NormalCurve extends Component {
     var hard = <circle className="icon" stroke="Crimson" fill="Crimson" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}></circle>;
 
     return hard;
+  }
+
+  returnTri1() {
+    if (this.state.fixCurve1) {
+      return (null);
+    }
+    else {
+      return (
+        <polygon
+            points={
+              [
+                [this.state.triCent1 + this.state.distancing1 - 15, this.state.ceilDist + 35],
+                [this.state.triCent1 + this.state.distancing1 + 15, this.state.ceilDist + 35],
+                [this.state.triCent1 + this.state.distancing1, this.state.ceilDist + 20]
+              ]
+            }
+            onMouseDown={(e, num) => this.triMouseDown(e, 1)}
+          />
+      )
+    }
+  }
+
+  returnTri2() {
+    if (this.state.fixCurve2) {
+      return (null);
+    }
+    else {
+      return (
+        <polygon
+            points={
+              [
+                [this.state.triCent2 + this.state.distancing2 - 15, this.state.ceilDist + 35],
+                [this.state.triCent2 + this.state.distancing2 + 15, this.state.ceilDist + 35],
+                [this.state.triCent2 + this.state.distancing2, this.state.ceilDist + 20]
+              ]
+            }
+            onMouseDown={(e, num) => this.triMouseDown(e, 2)}
+          />
+      )
+    }
   }
 
   svgColReturn(e, dragger) {
@@ -265,16 +351,17 @@ class NormalCurve extends Component {
         else {
           this.setState({ distancing1: this.state.distancing * col, col11: colRelative - variance, col12: colRelative - variance + this.state.len1 - 1 });
         }
-        this.curveArea();
         // this.setState({ distancing2 : x })
       }
     }
     else {
+      col = col - 1;
       if (dragger === 2) {
+        // colRelative = colRelative - this.state.axisStartCol + this.state.variance2;
         if (col + this.state.triCentCol2 < this.state.axisStartCol) {
-          this.setState({ distancing2: (this.state.variance2 - 1) * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
+          this.setState({ distancing2: (this.state.variance2) * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
         }
-        else if (col + this.state.triCentCol2 > this.state.axisStartCol + this.state.axisEndCol) {
+        else if (col + this.state.triCentCol2 + 1 > this.state.axisStartCol + this.state.axisEndCol) {
           this.setState({ distancing2: this.state.distancing * (this.state.variance2 + this.state.axisEndCol - 1), col21: this.state.axisEndCol, col22: this.state.axisEndCol + this.state.len2 - 1 })
         }
         else {
@@ -283,17 +370,17 @@ class NormalCurve extends Component {
         this.curveArea();
       }
       else if (dragger === 1) {
+        // colRelative = colRelative - this.state.axisStartCol + this.state.variance1;
         if (col + this.state.triCentCol1 < this.state.axisStartCol) {
-          this.setState({ distancing1: (this.state.variance1 - 1) * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
+          this.setState({ distancing1: (this.state.variance1) * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
         }
-        else if (col + this.state.triCentCol1 > this.state.axisStartCol + this.state.axisEndCol) {
+        else if (col + this.state.triCentCol1 + 1 > this.state.axisStartCol + this.state.axisEndCol) {
           this.setState({ distancing1: this.state.distancing * (this.state.variance1 + this.state.axisEndCol - 1), col11: this.state.axisEndCol, col12: this.state.axisEndCol + this.state.len1 - 1 })
         }
         else {
           this.setState({ distancing1: this.state.distancing * col, col11: colRelative, col12: colRelative + this.state.len1 - 1 });
         }
         this.curveArea();
-        // this.setState({ distancing2 : x })
       }
     }
   }
@@ -334,7 +421,7 @@ class NormalCurve extends Component {
       var col = cols[0];
       var colRelative = cols[1]
       // console.log(col);
-      this.svgColPlacement(col, colRelative, dragger);
+      this.setState(this.svgColPlacement(col, colRelative, dragger));
       this.curveArea();
   }
 
@@ -385,14 +472,14 @@ class NormalCurve extends Component {
     this.props.handleChange(key, value, count);
   }
 
-  lengthSubmit(newLength) {
-    var newLength = this.lengthRef.current.value;
+  lengthSubmit() {
+    const newLength = this.lengthRef.current.value;
     const internalLength = newLength * this.state.distancing;
     const length = this.state.edgeLength + internalLength;
 
     const axisEndCol = internalLength / this.state.distancing;
     const axisEnd = axisEndCol * this.state.distancing;
-    console.log(axisEndCol);
+    // console.log(axisEndCol);
 
     this.changeJSON("axis-length", newLength);
 
@@ -402,6 +489,12 @@ class NormalCurve extends Component {
       axisEndCol: axisEndCol,
       axisEnd: axisEnd
     });
+
+    const col1 = this.state.col11 - 1 + this.state.variance1;
+    this.svgColPlacement(col1, this.state.col11, 1);
+
+    const col2 = this.state.col21 - 1 + this.state.variance2;
+    this.svgColPlacement(col2, this.state.col21, 2);
   }
 
   toggleXVals() {
@@ -490,6 +583,28 @@ class NormalCurve extends Component {
     console.log(this.state.edgeLim);
   }
 
+  toggleTri1() {
+    if (!this.state.fixCurve1) {
+      this.setState({startPos1 : this.state.distancing1})
+    }
+    this.setState(prevState => {
+      this.changeJSON("fixCurve1", !prevState.fixCurve1);
+      return {
+        fixCurve1 : !prevState.fixCurve1
+      }});
+  }
+
+  toggleTri2() {
+    if (!this.state.fixCurve2) {
+      this.setState({startPos2 : this.state.distancing2})
+    }
+    this.setState(prevState => {
+      this.changeJSON("fixCurve2", !prevState.fixCurve2);
+      return {
+        fixCurve2 : !prevState.fixCurve2
+      }});
+  }
+
   render() {
     return (
       <div
@@ -509,20 +624,20 @@ class NormalCurve extends Component {
                 (row) => this.dotReturn2(col, row)
               )
           )}
-          <rect width={this.state.axisEnd}
+          <rect width={this.state.axisEnd - this.state.distancing}
             height="2"
             fill="black"
-            x={this.state.axisStart - 1}
+            x={this.state.axisStartCol * this.state.distancing - 1}
             y={this.state.ceilDist + 20} />
           <rect width="2"
             height="20"
             fill="black"
-            x={this.state.axisStart - 1}
+            x={this.state.axisStartCol * this.state.distancing - 1}
             y={this.state.ceilDist + 20} />
           <rect width="2"
             height="20"
             fill="black"
-            x={this.state.axisEnd + this.state.axisStart - 1}
+            x={this.state.axisEnd - this.state.distancing + this.state.axisStartCol * this.state.distancing - 1}
             y={this.state.ceilDist + 20} />
           {[...Array(this.state.tickNum).keys()].map(
             (tick) =>
@@ -543,26 +658,9 @@ class NormalCurve extends Component {
               {this.state.lowVal + (this.state.rangeVal * (tick + 1))}
             </text>
           )}
-          <polygon
-            points={
-              [
-                [this.state.triCent1 + this.state.distancing1 - 15, this.state.ceilDist + 35],
-                [this.state.triCent1 + this.state.distancing1 + 15, this.state.ceilDist + 35],
-                [this.state.triCent1 + this.state.distancing1, this.state.ceilDist + 20]
-              ]
-            }
-            onMouseDown={(e, num) => this.triMouseDown(e, 1)}
-          />
-          <polygon
-            points={
-              [
-                [this.state.triCent2 + this.state.distancing2 - 15, this.state.ceilDist + 35],
-                [this.state.triCent2 + this.state.distancing2 + 15, this.state.ceilDist + 35],
-                [this.state.triCent2 + this.state.distancing2, this.state.ceilDist + 20]
-              ]
-            }
-            onMouseDown={(e, num) => this.triMouseDown(e, 2)}
-          />
+          {/* triangle rendering below */}
+          {this.returnTri1()}
+          {this.returnTri2()}
           <text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
           <text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
                     Sorry, please use a different browser.
@@ -591,7 +689,7 @@ class NormalCurve extends Component {
           <input ref={this.lengthRef} type="text" 
             name="axisLength" value={this.state.axisLength} 
             onChange={this.onChange}/>
-          <button onClick={() => {this.lengthSubmit(this.state.axisLength)}}>
+          <button onClick={() => {this.lengthSubmit()}}>
             Change Width
           </button>
           <br/>
@@ -621,6 +719,13 @@ class NormalCurve extends Component {
           </button>
           <br/>
 
+          <input 
+          type="checkbox"
+          ref={this.toggleTriRef1}
+          onChange={this.toggleTri1} />
+          <label for="toggle1"> Check to lock the position of the curve</label>
+          <br/>
+
           <span>Enter your preferred starting position for curve 2, 
             if you want to change it </span>
           <input ref={this.startPos2Ref} type="text" 
@@ -632,16 +737,21 @@ class NormalCurve extends Component {
           <br />
 
           <input 
-          type="checkbox" 
-          id="vehicle1" 
-          name="vehicle1" 
-          value="Bike" 
+          type="checkbox"
+          ref={this.toggleTriRef2}
+          onChange={this.toggleTri2} />
+          <label for="toggle2"> Check to lock the position of the curve</label>
+          <br/>
+
+          <input 
+          type="checkbox"
           ref={this.checkBoxRef}
           onChange={this.checkChange} />
           <label for="vehicle1"> Turn edge limiting on/off</label>
         </div>
         <br />
         <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>
+        
         {/* <h1>{this.props.data["startPos1"]} | {this.props.data["startPos2"]}</h1> */}
       </div>
     )
