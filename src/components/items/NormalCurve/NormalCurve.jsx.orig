@@ -19,11 +19,14 @@ class NormalCurve extends Component {
     this.radiusRef = React.createRef();
     this.ticksRef = React.createRef();
     this.checkBoxRef = React.createRef();
+<<<<<<< HEAD
     this.toggleTriRef1 = React.createRef();
     this.toggleTriRef2 = React.createRef();
+=======
     this.questionKeyRef = React.createRef();
     this.legendKey1Ref = React.createRef();
     this.legendKey2Ref = React.createRef();
+>>>>>>> 3c2ed02d6b2452dc6b6364e62ac8f1e989244301
 
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
@@ -671,6 +674,7 @@ class NormalCurve extends Component {
                 </svg>
         <br />
         <div class="boxed">
+<<<<<<< HEAD
           Question: <br/>
           <textarea cols="60" rows="10" ref={this.qRef} 
             onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
@@ -752,6 +756,7 @@ class NormalCurve extends Component {
           ref={this.checkBoxRef}
           onChange={this.checkChange} />
           <label for="vehicle1"> Turn edge limiting on/off</label>
+=======
           <div class="flex-container">
             <div class="flex-child-one">
               Question: <br/>
@@ -854,6 +859,7 @@ class NormalCurve extends Component {
             onChange={this.checkChange} />
             <label for="vehicle1"> Turn edge limiting on/off</label>
           </div>
+>>>>>>> 3c2ed02d6b2452dc6b6364e62ac8f1e989244301
         </div>
         <br />
         <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>

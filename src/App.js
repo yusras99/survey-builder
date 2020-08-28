@@ -11,7 +11,6 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 import TabList from './components/TabList/TabList';
-import NormalCurveResearch from './components/items/NormalCurve/NormalCurveResearch';
 
 import NavBar from './components/layout/NavBar';
 import Landing from './components/layout/Landing';
@@ -23,8 +22,8 @@ import Login from './components/auth/Login'
 import Dashboard from "./components/dashboard/Dashboard";
 import ConfigStudy from './components/Study/ConfigStudy';
 import ExptConfigs from './components/Study/ExptConfigs';
-import PartData from './components/Study/PartData';
-import PartJSONData from './components/Study/PartJSONData';
+import PartStudyData from './components/Study/PartStudyData';
+import PartExptData from './components/Study/PartExptData';
 import BuildExpt from './components/Study/BuildExpt.jsx';
 
 // Check for token to keep user logged in
@@ -59,22 +58,18 @@ function App() {
           < Route exact path="/login" component={Login} />
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
-            <PrivateRoute exact path="/:expt/participantsData"
-              component={PartData} />
             <PrivateRoute exact path="/:username/:studyName"
               component={ConfigStudy} />
             <PrivateRoute exact path="/:username/:studyName/exptBuilder"
               component={TabList} />
             <PrivateRoute exact path="/:username/:studyName/newExpt" 
               component={BuildExpt} />
-            {/* <PrivateRoute exact path="/:username/:studyName/normalCurves"
-              component={NormalCurveResearch} /> */}
             <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
               component={ExptConfigs}/>
-            <PrivateRoute exact path="/:username/:studyName/:exptName/participantsData"
-              component={PartData}/>
-            <PrivateRoute exact path="/:username/:studyName/:exptName/participantsJSONData"
-              component={PartJSONData}/>
+            <PrivateRoute exact path="/:username/:studyName/participantsStudyData"
+              component={PartStudyData}/>
+            <PrivateRoute exact path="/:username/:studyName/:exptName/participantsExptData"
+              component={PartExptData}/>
           </Switch>
         </div>
       </HashRouter>
