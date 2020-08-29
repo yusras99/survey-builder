@@ -90,48 +90,88 @@ class NormalCurve extends Component {
     let distancing1 = startPos1 + variance1 - 1;
     let col11 = startPos1 + variance1;
     let col12 = startPos1 + len1 - 1;
-    let col11Rel = startPos1 + 1;
+    let col11Rel = startPos1;
 
     let variance = axisStartCol - variance1;
-    if (col11 < axisStartCol - 1) {
-      distancing1 = (axisStartCol - 1) * distancing;
-      col11 = 0;
-      col12 = len1 - 1;
-    }
-    else if (col11 + len1 + 1 > axisStartCol + axisEndCol) {
-      const endCol = axisEndCol - len1;
-      distancing1 = distancing * (axisStartCol + endCol - 1);
-      col11 = endCol;
-      col12 = endCol + len2 - 1;
+    if (edgeLim) {
+      if (col11 < axisStartCol - 1) {
+        distancing1 = (axisStartCol - 1) * distancing;
+        col11 = 0;
+        col12 = len1 - 1;
+      }
+      else if (col11 + len1 + 1 > axisStartCol + axisEndCol) {
+        const endCol = axisEndCol - len1;
+        distancing1 = distancing * (axisStartCol + endCol - 1);
+        col11 = endCol;
+        col12 = endCol + len2 - 1;
+      }
+      else {
+        distancing1 = distancing * col11;
+        col11 = col11Rel - variance;
+        col12 = col11Rel - variance + len1 - 1;
+      }
     }
     else {
-      distancing1 = distancing * col11;
-      col11 = col11Rel - variance;
-      col12 = col11Rel - variance + len1 - 1;
+      // col11 = col11 - 1;
+      if (col11 + triCentCol1 < axisStartCol) {
+        distancing1 = (variance1) * distancing;
+        col11 = 0;
+        col12 = len1 - 1;
+      }
+      else if (col11 + triCentCol1 > axisStartCol + axisEndCol) {
+        distancing1 = distancing * (variance1 + axisEndCol);
+        col11 = axisEndCol;
+        col12 = axisEndCol + len1 - 1;
+      }
+      else {
+        distancing1 = distancing * (col11);
+        col11 = col11Rel;
+        col12 = col11Rel + len1 - 1;
+      }
     }
 
     const startPos2 = data["startPos2"];
     let distancing2 = startPos2 + variance2 - 1;
     let col21 = startPos2 + variance2;
     let col22 = startPos2 + len2 - 1;
-    let col21Rel = startPos2 + 1;
+    let col21Rel = startPos2;
 
     variance = axisStartCol - variance2;
-    if (col21 < axisStartCol - 1) {
-      distancing2 = (axisStartCol - 1) * distancing;
-      col21 = 0;
-      col22 = len2 - 1;
-    }
-    else if (col21 + len2 + 1 > axisStartCol + axisEndCol) {
-      const endCol = axisEndCol - len2;
-      distancing2 = distancing * (axisStartCol + endCol - 1);
-      col21 = endCol;
-      col22 = endCol + len2 - 1;
+    if (edgeLim) {
+      if (col21 < axisStartCol - 1) {
+        distancing2 = (axisStartCol - 1) * distancing;
+        col21 = 0;
+        col22 = len2 - 1;
+      }
+      else if (col21 + len2 + 1 > axisStartCol + axisEndCol) {
+        const endCol = axisEndCol - len2;
+        distancing2 = distancing * (axisStartCol + endCol);
+        col21 = endCol;
+        col22 = endCol + len2 - 1;
+      }
+      else {
+        distancing2 = distancing * col21;
+        col21 = col21Rel - variance;
+        col22 = col21Rel - variance + len2 - 1;
+      }
     }
     else {
-      distancing2 = distancing * col21;
-      col21 = col21Rel - variance;
-      col22 = col21Rel - variance + len2 - 1;
+      // col21 = col21 - 1;
+      if (col21 + triCentCol2 < axisStartCol) {
+        distancing2 = (variance2) * distancing;
+        col21 = 0;
+        col22 = len2 - 1;
+      }
+      else if (col21 + triCentCol2 > axisStartCol + axisEndCol) {
+        distancing2 = distancing * (variance2 + axisEndCol - 1);
+        col21 = axisEndCol;
+        col22 = axisEndCol + len2 - 1;
+      }
+      else {
+        distancing2 = distancing * (col21);
+        col21 = col21Rel;
+        col22 = col21Rel + len2 - 1;
+      }
     }
 
     let colNumVal;
@@ -179,6 +219,11 @@ class NormalCurve extends Component {
     }
     else {
       fixCurve2 = false;
+    }
+
+    let maxLength = len1;
+    if (len2 > len1) {
+      maxLength = len2;
     }
 
     return {
@@ -231,18 +276,28 @@ class NormalCurve extends Component {
       rangeVal: rangeVal,
       edgeLim: edgeLim,
       fixCurve1: fixCurve1,
-      fixCurve2: fixCurve2
+      fixCurve2: fixCurve2,
+      maxLength: maxLength
     };
   }
 
   dotReturn(xPos, yPos) {
     const xPosOrig = xPos;
 
-    const CX = this.state.distancing1 + this.state.distancing * xPosOrig + 10;
+    const CX = this.state.distancing1 + this.state.distancing * (xPosOrig + 1) + this.state.circRad - this.state.maxLength + 10;
     const CY = this.state.ceilDist - this.state.distancing * yPos + 10;
 
-    // const soft = <circle className="icon" stroke="#555" fill="#555" fillOpacity="0.3" strokeOpacity="0.4" cx={CX} cy={CY} r="2"></circle>;
-    var hard = <circle className="icon" stroke="DarkCyan" fill="DarkCyan" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}></circle>;
+    var hard = 
+    <circle 
+    // onMouseEnter={e => this.displayTag1(e)}
+    // onMouseLeave={e => this.hideTag1(e)}
+    // onMouseMove={e => this.updateTag1(e)} 
+    className="icon" 
+    stroke="DarkCyan" 
+    fill="DarkCyan" 
+    fillOpacity="0.3" 
+    strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}>
+    </circle>;
 
     return hard;
   }
@@ -250,11 +305,21 @@ class NormalCurve extends Component {
   dotReturn2(xPos, yPos) {
     const xPosOrig = xPos;
 
-    const CX = this.state.distancing2 + this.state.distancing * xPosOrig + 10;
+    const CX = this.state.distancing2 + this.state.distancing * (xPosOrig + 1) + this.state.circRad - this.state.maxLength + 10;
     const CY = this.state.ceilDist - this.state.distancing * yPos + 10;
 
-    // const soft = <circle className="icon" stroke="#555" fill="#555" fillOpacity="0.3" strokeOpacity="0.4" cx={CX} cy={CY} r="2"></circle>;
-    var hard = <circle className="icon" stroke="Crimson" fill="Crimson" fillOpacity="0.3" strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}></circle>;
+    var hard = 
+    <circle 
+    // onMouseEnter={e => this.displayTag2(e)}
+    // onMouseLeave={e => this.hideTag2(e)}
+    // onMouseMove={e => this.updateTag2(e)} 
+    className="icon" 
+    stroke="Crimson" 
+    fill="Crimson" 
+    fillOpacity="0.3" 
+    strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}>
+
+    </circle>;
 
     return hard;
   }
