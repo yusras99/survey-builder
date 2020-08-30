@@ -40,6 +40,7 @@ class NormalCurve extends Component {
     this.updateRadius = this.updateRadius.bind(this);
     this.updateTicks = this.updateTicks.bind(this);
     this.checkChange = this.checkChange.bind(this);
+    this.changeJSON = this.changeJSON.bind(this);
 
     this.state = this.establishStateData(this.props.data);
   }
@@ -394,7 +395,7 @@ class NormalCurve extends Component {
     if (this.props.imported) {
       this.handleChange("Question", this.props.qToDisplay["Question"], this.props.count);
       this.handleChange("graph1key", this.props.qToDisplay["graph1key"], this.props.count);
-      this.handleChange("grpah2key", this.props.qToDisplay["graph2key"], this.props.count);
+      this.handleChange("graph2key", this.props.qToDisplay["graph2key"], this.props.count);
     }
   }
 
@@ -687,7 +688,7 @@ class NormalCurve extends Component {
             <input ref={this.startPos1Ref} type="text" 
               // name="startPos1" value={this.state.startPos1} onChange={this.onChange}
               defaultValue={defaultCurveVal("startPos1")}></input>
-            <button onClick={() => this.alterStartPos1(this.state.startPos1)}>
+            <button onClick={() => this.alterStartPos1(this.startPos1Ref.current.value)}>
               Change Curve 1
             </button>
             <br/>
@@ -697,7 +698,7 @@ class NormalCurve extends Component {
             <input ref={this.startPos2Ref} type="text" 
               // name="startPos2" value={this.state.startPos2} onChange={this.onChange}
               defaultValue={defaultCurveVal("startPos2")}></input>
-            <button onClick={() => this.alterStartPos2(this.state.startPos2)}>
+            <button onClick={() => this.alterStartPos2(this.startPos2Ref.current.value)}>
               Change Curve 2
             </button>
             <br />

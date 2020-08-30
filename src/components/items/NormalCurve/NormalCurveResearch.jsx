@@ -37,7 +37,41 @@ class NormalCurveResearch extends Component {
     // importing component
     if (this.props.imported) {
       this.handleChange("FileName", this.props.qToDisplay["FileName"], this.props.count);
-      this.handleChange("FileContent", this.props.qToDisplay["FileContent"], this.props.count);
+      const jsonData = this.props.qToDisplay["FileContent"];
+      this.handleChange("FileContent", jsonData, this.props.count);
+      const unitHeight = jsonData["max-height"];
+      const circRad = jsonData["circle-radius"];
+      const distancing = circRad * 4 - 1;
+      const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
+      const ceilDist = height - 50;
+      const length = Math.ceil((distancing * jsonData["len1"] * 2 + distancing * jsonData["len2"] * 2) / 100) * 100;
+      const colNum = Math.round(length / distancing);
+      this.setState({
+        dataReceived: true,
+        // fileText: fileText,
+        jsonData: jsonData,
+        svgWidth: length,
+        svgHeight: height,
+        distancing: distancing,
+        dataReceived: true,
+        len1: jsonData["len1"],
+        colValHeiS: jsonData["colValHeiS"],
+        len2: jsonData["len2"],
+        colValHeiS2: jsonData["colValHeiS2"],
+        distancing1: (jsonData["len2"] + 1) * distancing,
+        distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * distancing,
+        triCent1: Math.round((0.5 * jsonData["len1"]) * distancing) + distancing,
+        triCent2: Math.round((0.5 * jsonData["len2"]) * distancing) + distancing,
+        col11: jsonData["len2"] + 1,
+        col12: jsonData["len1"] + jsonData["len2"] + 1,
+        col21: jsonData["len1"] + jsonData["len2"] + 3,
+        col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
+        colLim1: Math.round((length - (jsonData["len1"] * distancing)) / distancing),
+        colLim2: Math.round((length - (jsonData["len2"] * distancing)) / distancing),
+        overlapVals: jsonData["overlapVals"],
+        circRad: circRad,
+        ceilDist: ceilDist
+      });
     }
     const username = this.props.auth.user.username;
     this.props.getColData(username, "itemData");
