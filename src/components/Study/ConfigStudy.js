@@ -120,7 +120,6 @@ class ConfigStudy extends Component {
       if (deployed.includes(exptName)) {
         return (
           <div className="container">
-            <br/>
             <div className="boxed">
               <b>{expt.exptName}</b> <br/>
               <a target="_blank" href={previewLink}>
@@ -186,12 +185,12 @@ class ConfigStudy extends Component {
         return (
           <div>
             <div className="boxed">
-            Experiment: <b>{expt.exptName}</b><br/>
+            Experiment: <b>{expt.exptName}</b><br/><br/>
             <Link to={exptDataLink}>
               <button type="button">
                 Configurations
               </button>
-            </Link><br/><br/>
+            </Link> <p></p>
             <button id={expt.exptName} onClick={this.onDeleteExperiment}>
             Delete this Experiment
             </button>
@@ -242,7 +241,6 @@ class ConfigStudy extends Component {
             <br/>
           </div>
           </div>
-          
         )
       };
     })
@@ -279,13 +277,19 @@ class ConfigStudy extends Component {
       alert("Deletion cancelled!");
       window.location.reload(true);
     }
-    
   }
 
   onDeploy(e) {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
-    const exptName = e.currentTarget.id;
+
+    var exptName;
+    if (e.currentTarget != null) {
+      exptName = e.currentTarget.id;
+    } else {
+      exptName = e;
+    };
+    console.log(exptName);
 
     const link = this.state[exptName + "link"];
     const condition = this.state[exptName + "condition"];
@@ -316,12 +320,6 @@ class ConfigStudy extends Component {
             this.props.createExptCol(username, studyName + "-" + exptName, exptName);
           })
       })
-
-
-    // const linkToSend = link + "?condition=" + condition
-    // const linkInfo = { "link": linkToSend };
-    // this.props.saveAddInfo(username, studyName, exptName, "link", linkInfo);
-    // this.props.createExptCol(username, studyName + "-" + exptName, exptName);
   }
 
   // for now deployment simply creates a collection for each experiment 
@@ -358,7 +356,17 @@ class ConfigStudy extends Component {
           </p>
         </div>
       )
-    } 
+    } else if (difference.length >= 0) {
+      return (
+        <div className="container">
+          <button onClick={() => difference.forEach(name => this.onDeploy(name))}>
+            <b>Deploy All Experiments</b>
+          </button>
+          <br/>
+          <br/>
+        </div>
+      )
+    }
   }
 
   // an action to fetch userData from APi for componentWillMount
@@ -395,7 +403,7 @@ class ConfigStudy extends Component {
           : <div>
               <input type="checkbox" onChange={this.onChecked} checked={this.state.checked}/>
                 I want to randomize experiments in this study
-              <br/><br/>
+              <br/>
           </div>
         }
         {
@@ -408,6 +416,7 @@ class ConfigStudy extends Component {
             <br/>
           </div>
         }
+        <br/>
         {this.getExptNames()}
         <br /><br />
         {this.deploy()}
