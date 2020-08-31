@@ -24,6 +24,8 @@ class NormalCurve extends Component {
     this.questionKeyRef = React.createRef();
     this.legendKey1Ref = React.createRef();
     this.legendKey2Ref = React.createRef();
+    this.color1Ref = React.createRef();
+    this.color2Ref = React.createRef();
 
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
@@ -46,6 +48,8 @@ class NormalCurve extends Component {
     this.toggleTri2 = this.toggleTri2.bind(this);
     this.returnTri1 = this.returnTri1.bind(this);
     this.returnTri2 = this.returnTri2.bind(this);
+    this.changeColor1 = this.changeColor1.bind(this);
+    this.changeColor2 = this.changeColor2.bind(this);
 
     this.state = this.establishStateData(this.props.data);
   }
@@ -85,6 +89,14 @@ class NormalCurve extends Component {
 
     const variance1 = Math.abs(Math.ceil(len1 / 2) - axisStartCol);
     const variance2 = Math.abs(Math.ceil(len2 / 2) - axisStartCol);
+
+    let edgeLim;
+    if ("edgeLim" in data) {
+      edgeLim = data["edgeLim"];
+    }
+    else {
+      edgeLim = true;
+    }
 
     const startPos1 = data["startPos1"];
     let distancing1 = startPos1 + variance1 - 1;
@@ -197,14 +209,6 @@ class NormalCurve extends Component {
       rangeVal = axisLength;
     }
 
-    let edgeLim;
-    if ("edgeLim" in data) {
-      edgeLim = data["edgeLim"];
-    }
-    else {
-      edgeLim = true;
-    }
-
     let fixCurve1;
     if ("fixCurve1" in data) {
       fixCurve1 = data["fixCurve1"];
@@ -224,6 +228,22 @@ class NormalCurve extends Component {
     let maxLength = len1;
     if (len2 > len1) {
       maxLength = len2;
+    }
+
+    let color1;
+    if ("color1" in data) {
+      color1 = data["color1"];
+    }
+    else {
+      color1 = "DarkCyan";
+    }
+
+    let color2;
+    if ("color2" in data) {
+      color2 = data["color2"];
+    }
+    else {
+      color2 = "Crimson";
     }
 
     return {
@@ -277,7 +297,9 @@ class NormalCurve extends Component {
       edgeLim: edgeLim,
       fixCurve1: fixCurve1,
       fixCurve2: fixCurve2,
-      maxLength: maxLength
+      maxLength: maxLength,
+      color1: color1,
+      color2: color2
     };
   }
 
@@ -293,8 +315,8 @@ class NormalCurve extends Component {
     // onMouseLeave={e => this.hideTag1(e)}
     // onMouseMove={e => this.updateTag1(e)} 
     className="icon" 
-    stroke="DarkCyan" 
-    fill="DarkCyan" 
+    stroke={this.state.color1} 
+    fill={this.state.color1}
     fillOpacity="0.3" 
     strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}>
     </circle>;
@@ -314,8 +336,8 @@ class NormalCurve extends Component {
     // onMouseLeave={e => this.hideTag2(e)}
     // onMouseMove={e => this.updateTag2(e)} 
     className="icon" 
-    stroke="Crimson" 
-    fill="Crimson" 
+    stroke={this.state.color2}
+    fill={this.state.color2}
     fillOpacity="0.3" 
     strokeOpacity="0.3" cx={CX} cy={CY} r={this.state.circRad}>
 
@@ -673,6 +695,18 @@ class NormalCurve extends Component {
       }});
   }
 
+  changeColor1() {
+    const newColor = this.color1Ref.current.value;
+    this.changeJSON("color1", newColor);
+    this.setState({ color1 : newColor });
+  }
+
+  changeColor2() {
+    const newColor = this.color2Ref.current.value;
+    this.changeJSON("color2", newColor);
+    this.setState({ color2 : newColor });
+  }
+
   render() {
     const qNum = this.props.count + 1;
     return (
@@ -795,6 +829,16 @@ class NormalCurve extends Component {
           <label for="toggle1"> Check to lock the position of the curve</label>
           <br/>
 
+          <label for="color1">Choose a color for curve 1:</label>
+          <select name="color1" id="color1" ref={this.color1Ref}>
+            <option value="DarkCyan">Blue</option>
+            <option value="Crimson">Red</option>
+            <option value="MediumSeaGreen">Green</option>
+            <option value="LightGray">Gray</option>
+          </select>
+          <input onClick={() => this.changeColor1()} type="submit" value="Submit"></input>
+          <br />
+
           <span>Enter your preferred starting position for curve 2, 
             if you want to change it </span>
           <input ref={this.startPos2Ref} type="text" 
@@ -811,6 +855,16 @@ class NormalCurve extends Component {
           onChange={this.toggleTri2} />
           <label for="toggle2"> Check to lock the position of the curve</label>
           <br/>
+
+          <label for="color2">Choose a color for curve 2:</label>
+          <select name="color2" id="color2" ref={this.color2Ref}>
+            <option value="DarkCyan">Blue</option>
+            <option value="Crimson">Red</option>
+            <option value="MediumSeaGreen">Green</option>
+            <option value="LightGray">Gray</option>
+          </select>
+          <input onClick={() => this.changeColor2()} type="submit" value="Submit"></input>
+          <br />
 
           <input 
           type="checkbox"
