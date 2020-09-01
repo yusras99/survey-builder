@@ -376,6 +376,10 @@ class NormalCurve extends Component {
       this.areaRef.current.innerHTML = this.state.overlapVals[Math.abs(col22 - col11)];
     }
   }
+
+  delete() {
+    this.props.delete(this.props.count);
+  }
   
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
@@ -735,6 +739,7 @@ class NormalCurve extends Component {
         <br />
         <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>
         {/* <h1>{this.props.data["startPos1"]} | {this.props.data["startPos2"]}</h1> */}
+        <button onClick={this.delete.bind(this)}>Delete</button>
       </div>
     )
   }

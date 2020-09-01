@@ -23,6 +23,7 @@ class NormalCurveResearch extends Component {
     this.onChange = this.onChange.bind(this);
     this.changeJSON = this.changeJSON.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.delete = this.delete.bind(this);
 
     this.state = {
       dataReceived: false,
@@ -226,7 +227,8 @@ class NormalCurveResearch extends Component {
           <NormalCurve 
             data={this.state.jsonData} count={this.props.count}
             changeJSON={this.changeJSON} 
-            handleChange={this.handleChange} />
+            handleChange={this.handleChange} 
+            delete={this.delete} />
           <br/>
         </div>
       )
@@ -240,7 +242,8 @@ class NormalCurveResearch extends Component {
             qToDisplay={this.props.qToDisplay}
             count={this.props.count}
             changeJSON={this.changeJSON} 
-            handleChange={this.handleChange} />
+            handleChange={this.handleChange} 
+            delete={this.delete} />
         </div>
       )
     } else {
@@ -271,6 +274,8 @@ class NormalCurveResearch extends Component {
               </div>
             )}
           </Dropzone>
+          <br/>
+          <button onClick={this.delete.bind(this)}>Delete</button>
         </div>
       )
     }

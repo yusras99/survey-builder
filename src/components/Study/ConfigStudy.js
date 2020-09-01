@@ -250,6 +250,10 @@ class ConfigStudy extends Component {
     this.setState({ [e.target.id]: e.target.value });
   }
 
+  onEditExperiment(e) {
+    
+  }
+
   onDeleteExperiment(e) {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;

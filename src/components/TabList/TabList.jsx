@@ -404,7 +404,7 @@ class TabList extends Component {
           <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
         </div>
         <br/>
-        {/* <button onClick={() => console.log(finalObj)}>Show finalObj</button> */}
+        <button onClick={() => console.log(finalObj)}>Show finalObj</button>
       </div>
     )
   }

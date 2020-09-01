@@ -71,7 +71,8 @@ class TabBuilder extends Component {
     }
 
     return (
-      <div className="unit">
+      <div>
+        <br/>
         <span>Choose what element to add next</span><br />
         <select name="tabType" id="tabType" ref={this.selectRef}>
           {/* <option value="slider">Slider</option> */}
