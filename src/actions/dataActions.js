@@ -3,6 +3,7 @@ import {
   ADD_STUDY_NAME,
   GET_DB_INFO,
   GET_STUDY_INFO,
+  GET_STUDY_INFO_RANDOMIZE,
   GET_COL_DATA,
   GET_COLS_DATA,
   GET_COL_NAMES,
@@ -53,7 +54,7 @@ export const getStudyInfo = (which_database, which_study) => dispatch => {
       dispatch({
         type: GET_STUDY_INFO,
         payload: res.data.experiments
-      })
+      });
     })
 }
 

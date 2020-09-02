@@ -23,6 +23,7 @@ class NormalCurveResearch extends Component {
     this.onChange = this.onChange.bind(this);
     this.changeJSON = this.changeJSON.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.delete = this.delete.bind(this);
 
     this.state = {
       dataReceived: false,
@@ -34,6 +35,45 @@ class NormalCurveResearch extends Component {
   }
 
   componentDidMount() {
+    // importing component
+    if (this.props.imported) {
+      this.handleChange("FileName", this.props.qToDisplay["FileName"], this.props.count);
+      const jsonData = this.props.qToDisplay["FileContent"];
+      this.handleChange("FileContent", jsonData, this.props.count);
+      const unitHeight = jsonData["max-height"];
+      const circRad = jsonData["circle-radius"];
+      const distancing = circRad * 4 - 1;
+      const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
+      const ceilDist = height - 50;
+      const length = Math.ceil((distancing * jsonData["len1"] * 2 + distancing * jsonData["len2"] * 2) / 100) * 100;
+      const colNum = Math.round(length / distancing);
+      this.setState({
+        dataReceived: true,
+        // fileText: fileText,
+        jsonData: jsonData,
+        svgWidth: length,
+        svgHeight: height,
+        distancing: distancing,
+        dataReceived: true,
+        len1: jsonData["len1"],
+        colValHeiS: jsonData["colValHeiS"],
+        len2: jsonData["len2"],
+        colValHeiS2: jsonData["colValHeiS2"],
+        distancing1: (jsonData["len2"] + 1) * distancing,
+        distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * distancing,
+        triCent1: Math.round((0.5 * jsonData["len1"]) * distancing) + distancing,
+        triCent2: Math.round((0.5 * jsonData["len2"]) * distancing) + distancing,
+        col11: jsonData["len2"] + 1,
+        col12: jsonData["len1"] + jsonData["len2"] + 1,
+        col21: jsonData["len1"] + jsonData["len2"] + 3,
+        col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
+        colLim1: Math.round((length - (jsonData["len1"] * distancing)) / distancing),
+        colLim2: Math.round((length - (jsonData["len2"] * distancing)) / distancing),
+        overlapVals: jsonData["overlapVals"],
+        circRad: circRad,
+        ceilDist: ceilDist
+      });
+    }
     const username = this.props.auth.user.username;
     this.props.getColData(username, "itemData");
   }
@@ -187,12 +227,27 @@ class NormalCurveResearch extends Component {
           <NormalCurve 
             data={this.state.jsonData} count={this.props.count}
             changeJSON={this.changeJSON} 
-            handleChange={this.handleChange} />
+            handleChange={this.handleChange} 
+            delete={this.delete} />
           <br/>
         </div>
       )
-    }
-    else {
+    // importing component
+    } else if (this.props.imported) {
+      return (
+        <div>
+          <NormalCurve 
+            imported={true}
+            editing={this.props.editing}
+            data={this.props.qToDisplay["FileContent"]} 
+            qToDisplay={this.props.qToDisplay}
+            count={this.props.count}
+            changeJSON={this.changeJSON} 
+            handleChange={this.handleChange} 
+            delete={this.delete} />
+        </div>
+      )
+    } else {
       const normalCurveFiles = this.props.dataFlowColData.filter(
         item => item.itemType == "normal-curve");
       var fileNames = normalCurveFiles.map(item => item.fileName);
@@ -220,6 +275,8 @@ class NormalCurveResearch extends Component {
               </div>
             )}
           </Dropzone>
+          <br/>
+          <button onClick={this.delete.bind(this)}>Delete</button>
         </div>
       )
     }

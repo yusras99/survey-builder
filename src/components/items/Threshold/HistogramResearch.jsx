@@ -172,7 +172,9 @@ class HistogramResearch extends Component {
                 <p>Drag'n'drop files, or click to select files (must be valid JSON file)</p>
               </div>
             )}
-          </Dropzone> 
+          </Dropzone>
+          <br/>
+          <button onClick={this.delete.bind(this)}>Delete</button>
         </div>
       )
     }

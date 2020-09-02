@@ -9,10 +9,14 @@ import { Link } from "react-router-dom";
 // ###TODO###: import your component here
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
+import NormalCurve from '../items/NormalCurve/NormalCurve';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
 import HistogramResearch from '../items/Threshold/HistogramResearch';
 
-import { sendFile } from '../../actions/dataActions'
+import { 
+  sendFile,
+  getStudyInfo
+} from '../../actions/dataActions'
 
 const axios = require('axios');
 
@@ -27,23 +31,48 @@ class TabList extends Component {
       deleted: [],
       complete: false,
       exptName: '',
-      files: []
+      files: [],
+      expt: {}
     }
     this.myRef = React.createRef();
     this.submitRef = React.createRef();
     this.nameRef = React.createRef();
 
     this.builderFunction = this.builderFunction.bind(this);
+    this.importQuestion = this.importQuestion.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.delete = this.delete.bind(this);
     this.getCount = this.getCount.bind(this);
     this.outputCreate = this.outputCreate.bind(this);
     this.checkOutput = this.checkOutput.bind(this);
-
+    this.configDataToItem = this.configDataToItem.bind(this);
     this.saveFile = this.saveFile.bind(this);
-
     this.onChange = this.onChange.bind(this);
     this.appendToKeysArr = this.appendToKeysArr.bind(this);
+  }
+
+  componentDidMount() {
+    const username = this.props.match.params.username;
+    const studyName = this.props.match.params.studyName;
+    this.props.getStudyInfo(username, studyName);
+    console.log(this.props.location.state);
+    if (this.props.location.state != null) {
+      if (!this.props.location.state.newExpt) {
+        const thisExpt = this.props.location.state.exptName;
+        if (!this.props.experiments.length == 0) {
+          const exptObj =
+            this.props.experiments.find(item => item.exptName == thisExpt);
+          this.setState({ expt: exptObj });
+          const qKeys = Object.keys(exptObj).filter(key => key.charAt(0) == "q");
+          var qArr = [];
+          qKeys.forEach(key => qArr.push(exptObj[key]));
+          qArr.forEach(q => {
+            this.configDataToItem(q, true);
+            this.setState({ count: this.state.count += 1 });
+          });
+        };
+      };
+    };
   }
 
   onChange(e) {
@@ -102,6 +131,108 @@ class TabList extends Component {
     curOutput[this.state.count.toString()] = { "Type": tabDefine };
     var newCount = this.state.count + 1;
     this.setState({ children: arr, count: newCount, output: curOutput, complete: false });
+  }
+
+  mapQTypetoQKey(qType) {
+    switch(qType) {
+      case "slider":
+        return "slider-question-key"
+      case "static-text":
+        return "static-text-key"
+      case "normal-curve":
+        return "normal-curve-question-key"
+      case "threshold":
+        return "threshold-key"
+      default:
+        return ""
+    }
+  }
+
+  importQuestion(exptName, questionKey) {
+    const thisExpt = this.props.experiments.filter(item => 
+      item["exptName"] == exptName)[0];
+    const thisExptQKeys = Object.keys(thisExpt).filter(k => 
+      k.charAt(0) == "q");
+    // the question key (e.g. q1) that user has selected
+    const thisQKey = thisExptQKeys.filter(k => {
+      const key = this.mapQTypetoQKey(thisExpt[k]["Type"]);
+      return thisExpt[k][key] == questionKey;
+    })[0];
+    const questionToDisplay = thisExpt[thisQKey];
+    console.log(questionToDisplay);
+
+    // questions will show up once an expt type is pushed to this.state.children
+    this.configDataToItem(questionToDisplay, false);
+  }
+
+  // input: question, a question in json format
+  //        editing, a boolean indicating whether the component is displayed 
+  //                  as part of "Edit Experiment"
+  // output: a React component
+  configDataToItem(question, editing) {
+    var arr = this.state.children;
+    switch (question["Type"]) {
+      case "slider":
+        arr.push({ 
+          id: this.state.count, 
+          tab: <SliderTab 
+                  defaultQ={question["Question"]}
+                  defaultMin={question["lowRange"]}
+                  defaultMax={question["highRange"]}
+                  imported={true}
+                  editing={editing}
+                  getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count} 
+                  handleChange={this.handleChange} 
+                  key={this.state.count.toString()}
+                  appendToKeysArr={this.appendToKeysArr} /> 
+        })
+        break;
+      case "static-text": 
+        arr.push({
+          id: this.state.count,
+          tab: <StaticText 
+                  qToDisplay={question}
+                  imported={true}
+                  editing={editing}
+                  getCount={this.getCount}
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange}
+                  key={this.state.count.toString()}/>
+        })
+        break;
+      case "normal-curve": 
+        arr.push({
+          id: this.state.count,
+          tab: <NormalCurveResearch 
+                  qToDisplay={question}
+                  imported={true}
+                  editing={editing}
+                  getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count} 
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/> 
+        })
+        break;  
+      case "threshold":
+        arr.push({
+          id: this.state.count,
+          tab: <HistogramResearch getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/>
+        })
+        break;
+      default:
+        arr = <div>Unknown Element</div>
+    };
+
+    var curOutput = this.state.output;
+    curOutput[this.state.count.toString()] = { "Type": question["Type"] };
+    var newCount = this.state.count + 1;
+    this.setState({ children: arr, count: newCount, output: curOutput, complete: false });    
   }
 
   // Input: 
@@ -187,7 +318,8 @@ class TabList extends Component {
     return complete;
   }
 
-  outputCreate() {
+  // input: newExpt, a boolean representing whether this expt is new
+  outputCreate(newExpt) {
     var obj = {};
     var index = {};
     this.state.children
@@ -196,6 +328,8 @@ class TabList extends Component {
         obj[item.id.toString()] = this.state.output[item.id.toString()];
         const exptItem = this.state.output[item.id.toString()];
         switch (exptItem["Type"]) {
+          case "static-text":
+            index[exptItem["static-text-key"]] = exptItem["Static Text"];
           case "normal-curve":
             index[exptItem["normal-curve-question-key"]] = exptItem["Question"];
             index[exptItem["normal-curve-question-key"] + "." + exptItem["normal-curve-legend-key1"]] = exptItem["graph1key"];
@@ -204,7 +338,7 @@ class TabList extends Component {
             index[exptItem["threshold-key"]] = exptItem["Question"];
         }
       });
-    var validName = this.nameRef.current.value.length > 0;
+    // var validName = this.nameRef.current.value.length > 0;
     // if (!(0 in obj) || !this.checkOutput(obj) || !validName) {
     // if (!validName) {
     if (false) {
@@ -233,11 +367,13 @@ class TabList extends Component {
         this.state.files.map(item => this.props.sendFile(username, item))
       };
 
-      axios.put(
-        'https://test-api-615.herokuapp.com/api/feedback/' + username +
-        '/info/studyName-' + studyName + '/experiments',
-        finalObj
-      )
+      if (newExpt) {
+        axios
+        .put(
+          'https://test-api-615.herokuapp.com/api/feedback/' + username +
+          '/info/studyName-' + studyName + '/experiments',
+          finalObj
+        )
         .then(res => {
           console.log(res)
         })
@@ -248,6 +384,34 @@ class TabList extends Component {
         .catch(function (error) {
           console.log(error);
         });
+      } else {
+        if (this.props.location.state != null) {
+          const exptName = this.props.location.state.exptName;
+          axios
+          .delete('https://test-api-615.herokuapp.com/api/feedback/' + 
+            username + '/info/studyName-' + studyName + '/experiments/exptName-' +
+            exptName)
+          .then(res => {
+            axios
+            .put(
+              'https://test-api-615.herokuapp.com/api/feedback/' + username +
+              '/info/studyName-' + studyName + '/experiments',
+              finalObj
+            )
+            .then(res => {
+              console.log(res)
+            })
+            .then(function (response) {
+              alert("Your experiment has been successfully updated");
+              window.location.reload(false);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          });
+        }
+        
+      }
     }
   }
 
@@ -277,23 +441,51 @@ class TabList extends Component {
         <Link to={studyLink}>
           {studyName}
         </Link>
-        <form action="/submit" method="POST" className="unit">
-          <p>Enter a name for this experiment </p>
-          <input ref={this.nameRef}
-            value={this.state.exptName}
-            onChange={this.onChange}
-            type="text" id="userid" name="exptName" /><br /><br />
-        </form>
-        {
-          this.state.children
-            .filter(item => this.state.deleted.indexOf(item.id) === -1)
-            .map((item) => {
-              return item.tab;
-            })
-        }
-        <TabBuilder build={this.builderFunction} />
-        <div className="extraPad">
-          <button onClick={this.outputCreate} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
+        <div>
+          <button onClick={() => console.log(this.state.children)}>see children</button>
+          <form action="/submit" method="POST" className="unit">
+            <p>Enter a name for this experiment </p>
+            <input ref={this.nameRef}
+              // value={this.state.exptName}
+              // onChange={this.onChange}
+              defaultValue={this.state.expt.exptName}
+              type="text" id="userid" name="exptName" /><br />
+            <b>all experiments in a study must have unique names</b>
+          </form>
+          {
+            this.state.children
+              .filter(item => this.state.deleted.indexOf(item.id) === -1)
+              .map((item) => {
+                return item.tab;
+              })
+          }
+          <TabBuilder 
+            build={this.builderFunction} 
+            importQuestion={this.importQuestion}
+            username={this.props.match.params.username}
+            studyName={this.props.match.params.studyName} />
+          {/* Add condition here. Submit / Update Experiment */}
+          {
+            this.props.location.state != null 
+            ?
+            <div>
+              {
+                this.props.location.state.newExpt
+                ?
+                <div className="extraPad">
+                  <button onClick={() => this.outputCreate(true)} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
+                </div>
+                :
+                <div className="extraPad">
+                  <button onClick={() => this.outputCreate(false)} ref={this.submitRef} type="submit" value="Submit" className="btn">Update Experiment</button>
+                </div>
+              }
+            </div>
+            :
+            <div className="extraPad">
+              <button onClick={() => this.outputCreate(true)} ref={this.submitRef} type="submit" value="Submit" className="btn">Submit</button>
+            </div>
+          }
         </div>
         <br/>
         <button onClick={() => console.log(finalObj)}>Show finalObj</button>
@@ -306,17 +498,20 @@ TabList.propTypes = {
   auth: PropTypes.object.isRequired,
   dataFlowDBInfo: PropTypes.array.isRequired,
   sendFile: PropTypes.func.isRequired,
-  dataFlowFileName: PropTypes.string.isRequired
+  dataFlowFileName: PropTypes.string.isRequired,
+  getStudyInfo: PropTypes.func.isRequired,
+  experiments: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
   dataFlowDBInfo: state.dataFlow.dbInfo,
-  dataFlowFileName: state.dataFlow.fileName
+  dataFlowFileName: state.dataFlow.fileName,
+  experiments: state.dataFlow.studyInfo
 });
 
 // export default TabList;
 export default connect(
   mapStateToProps,
-  { sendFile }
+  { sendFile, getStudyInfo }
 )(TabList);
