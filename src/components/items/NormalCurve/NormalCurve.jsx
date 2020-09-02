@@ -400,7 +400,12 @@ class NormalCurve extends Component {
       this.handleChange("Question", this.props.qToDisplay["Question"], this.props.count);
       this.handleChange("graph1key", this.props.qToDisplay["graph1key"], this.props.count);
       this.handleChange("graph2key", this.props.qToDisplay["graph2key"], this.props.count);
-    }
+    };
+    if (this.props.editing) {
+      this.handleChange("normal-curve-question-key", this.props.qToDisplay["normal-curve-question-key"], this.props.count);
+      this.handleChange("normal-curve-legend-key1", this.props.qToDisplay["normal-curve-legend-key1"], this.props.count);
+      this.handleChange("normal-curve-legend-key2", this.props.qToDisplay["normal-curve-legend-key2"], this.props.count);
+    };
   }
 
   lengthSubmit(newLength) {
@@ -633,26 +638,45 @@ class NormalCurve extends Component {
               <br/>
               What csv column name do you want to assign to this question?
               <br/>
-              <input type="text" ref={this.questionKeyRef} 
+              {
+                this.props.editing
+                ?
+                <input type="text" ref={this.questionKeyRef} 
+                defaultValue={this.props.qToDisplay["normal-curve-question-key"]}
                 onInput={() => this.handleChange("normal-curve-question-key", this.questionKeyRef.current.value, this.props.count)}/>
+                :
+                <input type="text" ref={this.questionKeyRef} 
+                onInput={() => this.handleChange("normal-curve-question-key", this.questionKeyRef.current.value, this.props.count)}/>
+              }
               <br/>
               <b>Use letters only, and the name must be unique.</b> <br/>
               Recommedation: include your experiment name, this question number 
-              ({qNum}), and the question type (normalCurve)
-
+              ({qNum}), and the question type (normalCurve) <br/>
               <br/><br/>
-              Please enter the csv column names for the graph key: <br/>
-              (the same rule applies) <br/>
+              Please enter the csv column names for the graph key: <br/><br/>
               <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
-              <input type="text" 
-                ref={this.legendKey1Ref}
+              {
+                this.props.editing
+                ?
+                <input type="text" ref={this.legendKey1Ref}
+                defaultValue={this.props.qToDisplay["normal-curve-legend-key1"]}
                 onInput={() => this.handleChange("normal-curve-legend-key1", this.legendKey1Ref.current.value, this.props.count)}></input>
-              
+                :
+                <input type="text" ref={this.legendKey1Ref}
+                onInput={() => this.handleChange("normal-curve-legend-key1", this.legendKey1Ref.current.value, this.props.count)}></input>
+              }
               <br/>
               <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
-              <input type="text" 
-                ref={this.legendKey2Ref}
+              {
+                this.props.editing
+                ?
+                <input type="text" ref={this.legendKey2Ref}
+                defaultValue={this.props.qToDisplay["normal-curve-legend-key2"]}
                 onInput={() => this.handleChange("normal-curve-legend-key2", this.legendKey2Ref.current.value, this.props.count)}></input>
+                :
+                <input type="text" ref={this.legendKey2Ref}
+                onInput={() => this.handleChange("normal-curve-legend-key2", this.legendKey2Ref.current.value, this.props.count)}></input>
+              }
             </div>
           </div>
 

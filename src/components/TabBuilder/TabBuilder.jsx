@@ -42,7 +42,7 @@ class TabBuilder extends Component {
     var qSelectedToExptname = {};
     if (!this.props.experiments.length == 0) {
       const allExpts = this.props.experiments;
-      console.log(allExpts);
+      // console.log(allExpts);
       const renderOption = item => <option value={item}>{item}</option>
       // per experiment
       // input: item represents a JSON object containing the configuration data

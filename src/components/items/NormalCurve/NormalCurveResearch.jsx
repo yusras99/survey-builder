@@ -238,6 +238,7 @@ class NormalCurveResearch extends Component {
         <div>
           <NormalCurve 
             imported={true}
+            editing={this.props.editing}
             data={this.props.qToDisplay["FileContent"]} 
             qToDisplay={this.props.qToDisplay}
             count={this.props.count}

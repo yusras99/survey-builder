@@ -116,6 +116,8 @@ class ConfigStudy extends Component {
         "/" + studyName + "-" + exptName
       const dbLink = "https://test-api-615.herokuapp.com/api/feedback/" + 
         username + "/" + studyName + "-" + exptName
+      const exptBuilderLink = "/" + username + "/" +
+        studyName + "/exptBuilder";
 
       if (deployed.includes(exptName)) {
         return (
@@ -190,7 +192,19 @@ class ConfigStudy extends Component {
               <button type="button">
                 Configurations
               </button>
-            </Link> <p></p>
+            </Link> <p> </p>
+            <Link to={{
+                pathname: exptBuilderLink,
+                state: {
+                  newExpt: false,
+                  exptName: exptName  
+                }
+              }}>
+              <button type="button">
+                Edit Experiment
+              </button>
+            </Link>
+            <br/><br/>
             <button id={expt.exptName} onClick={this.onDeleteExperiment}>
             Delete this Experiment
             </button>
@@ -248,10 +262,6 @@ class ConfigStudy extends Component {
 
   changeState(e) {
     this.setState({ [e.target.id]: e.target.value });
-  }
-
-  onEditExperiment(e) {
-    
   }
 
   onDeleteExperiment(e) {
@@ -387,7 +397,12 @@ class ConfigStudy extends Component {
     return (
       <div className="container">
         <h2>Study: {this.props.match.params.studyName}</h2>
-        <Link to={exptBuilderLink}>
+        <Link to={{
+          pathname: exptBuilderLink,
+          state: {
+              newExpt: true
+            }
+          }}>
           <button>
             Build an Experiment
           </button>
