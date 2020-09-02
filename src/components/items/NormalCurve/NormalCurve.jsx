@@ -582,7 +582,7 @@ class NormalCurve extends Component {
     };
   }
 
-  lengthSubmit(newLength) {
+  lengthSubmit() {
     const newLength = this.lengthRef.current.value;
     const internalLength = newLength * this.state.distancing;
     const length = this.state.edgeLength + internalLength;
@@ -745,6 +745,18 @@ class NormalCurve extends Component {
       }
     }
 
+    const defaultColor = (dataType, deCol) => {
+      if (this.props.qToDisplay) {
+        if (this.props.qToDisplay["FileContent"][dataType]) {
+          return this.props.qToDisplay["FileContent"][dataType];
+        } else {
+          return deCol;
+        }
+      } else {
+        return deCol;
+      }
+    }
+
     return (
       <div
         onMouseMove={e => this.triDrag(e)}
@@ -807,107 +819,6 @@ class NormalCurve extends Component {
         <br />
         {/* Use defaultValue to show imported data */}
         <div class="boxed">
-          Question: <br/>
-          <textarea cols="60" rows="10" ref={this.qRef} 
-            onInput={() => this.handleChange("Question", this.qRef.current.value, this.props.count)}>
-          </textarea><br/>
-
-          <div className="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
-          <input type="text" 
-            ref={this.graph1keyRef}
-            onInput={() => this.handleChange("graph1key", this.graph1keyRef.current.value, this.props.count)}></input>
-          <br />
-
-          <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
-          <input type="text" 
-            ref={this.graph2keyRef}
-            onInput={() => this.handleChange("graph2key", this.graph2keyRef.current.value, this.props.count)}></input>
-          <br />
-
-          <span>Enter the width of the graph (each point in the curves is 
-            equivalent to 1 unit of width) </span>
-          <input ref={this.lengthRef} type="text" 
-            name="axisLength" value={this.state.axisLength} 
-            onChange={this.onChange}/>
-          <button onClick={() => {this.lengthSubmit()}}>
-            Change Width
-          </button>
-          <br/>
-
-          <span>Enter your preferred value for the width of each unit in the curve</span>
-          <input type="text" ref={this.colNumValRef}></input>
-          <button onClick={() => this.updateColVal(this.colNumValRef.current.value)}>Change Unit Value</button>
-          <br />
-          
-          <span>Enter your preferred value for the radius of each unit in the curve (2 - 5, inclusive)</span>
-          <input type="text" ref={this.radiusRef}></input>
-          <button onClick={() => this.updateRadius(this.radiusRef.current.value)}>Change Radius</button>
-          <br />
-
-          <span>Enter your preferred number of ticks on the graph (must be divisible by the range of the x-axis)</span>
-          <input type="text" ref={this.ticksRef}></input>
-          <button onClick={() => this.updateTicks(this.ticksRef.current.value)}>Change Tick Count</button>
-          <br />
-
-          <span>Enter your preferred starting position for curve 1, 
-            if you want to change it </span>
-          <input ref={this.startPos1Ref} 
-            type="text" name="startPos1" value={this.state.startPos1} 
-            onChange={this.onChange}></input>
-          <button onClick={() => this.alterStartPos1(this.state.startPos1)}>
-            Change Curve 1
-          </button>
-          <br/>
-
-          <input 
-          type="checkbox"
-          ref={this.toggleTriRef1}
-          onChange={this.toggleTri1} />
-          <label for="toggle1"> Check to lock the position of the curve</label>
-          <br/>
-
-          <label for="color1">Choose a color for curve 1:</label>
-          <select name="color1" id="color1" ref={this.color1Ref}>
-            <option value="DarkCyan">Blue</option>
-            <option value="Crimson">Red</option>
-            <option value="MediumSeaGreen">Green</option>
-            <option value="LightGray">Gray</option>
-          </select>
-          <input onClick={() => this.changeColor1()} type="submit" value="Submit"></input>
-          <br />
-
-          <span>Enter your preferred starting position for curve 2, 
-            if you want to change it </span>
-          <input ref={this.startPos2Ref} type="text" 
-          name="startPos2" value={this.state.startPos2} 
-          onChange={this.onChange}></input>
-          <button onClick={() => this.alterStartPos2(this.state.startPos2)}>
-            Change Curve 2
-          </button>
-          <br />
-
-          <input 
-          type="checkbox"
-          ref={this.toggleTriRef2}
-          onChange={this.toggleTri2} />
-          <label for="toggle2"> Check to lock the position of the curve</label>
-          <br/>
-
-          <label for="color2">Choose a color for curve 2:</label>
-          <select name="color2" id="color2" ref={this.color2Ref}>
-            <option value="DarkCyan">Blue</option>
-            <option value="Crimson">Red</option>
-            <option value="MediumSeaGreen">Green</option>
-            <option value="LightGray">Gray</option>
-          </select>
-          <input onClick={() => this.changeColor2()} type="submit" value="Submit"></input>
-          <br />
-
-          <input 
-          type="checkbox"
-          ref={this.checkBoxRef}
-          onChange={this.checkChange} />
-          <label for="vehicle1"> Turn edge limiting on/off</label>
           <div class="flex-container">
             <div class="flex-child-one">
               Question: <br/>
@@ -918,14 +829,14 @@ class NormalCurve extends Component {
               </textarea>
 
               <br/><br/>
-              <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
+              <div class="color-box" style={{ backgroundColor: this.state.color1 }}></div>
               <input type="text" 
                 ref={this.graph1keyRef} 
                 defaultValue={defaultVal("graph1key")}
                 onInput={() => this.handleChange("graph1key", this.graph1keyRef.current.value, this.props.count)}></input>
               <br />
 
-              <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
+              <div class="color-box" style={{ backgroundColor: this.state.color2 }}></div>
               <input type="text" 
                 ref={this.graph2keyRef} 
                 defaultValue={defaultVal("graph2key")}
@@ -952,7 +863,7 @@ class NormalCurve extends Component {
               ({qNum}), and the question type (normalCurve) <br/>
               <br/><br/>
               Please enter the csv column names for the graph key: <br/><br/>
-              <div class="color-box" style={{ backgroundColor: "DarkCyan" }}></div>
+              <div class="color-box" style={{ backgroundColor: this.state.color1 }}></div>
               {
                 this.props.editing
                 ?
@@ -964,7 +875,7 @@ class NormalCurve extends Component {
                 onInput={() => this.handleChange("normal-curve-legend-key1", this.legendKey1Ref.current.value, this.props.count)}></input>
               }
               <br/>
-              <div class="color-box" style={{ backgroundColor: "Crimson" }}></div>
+              <div class="color-box" style={{ backgroundColor: this.state.color2 }}></div>
               {
                 this.props.editing
                 ?
@@ -1019,6 +930,23 @@ class NormalCurve extends Component {
             </button>
             <br/>
 
+            <input 
+            type="checkbox"
+            ref={this.toggleTriRef1}
+            onChange={this.toggleTri1} />
+            <label for="toggle1"> Check to lock the position of the curve</label>
+            <br/>
+
+            <label for="color1">Choose a color for curve 1:</label>
+            <select name="color1" id="color1" ref={this.color1Ref}>
+              <option value="DarkCyan">Blue</option>
+              <option value="Crimson">Red</option>
+              <option value="MediumSeaGreen">Green</option>
+              <option value="LightGray">Gray</option>
+            </select>
+            <input onClick={() => this.changeColor1()} type="submit" value="Submit"></input>
+            <br />
+
             <span>Enter your preferred starting position for curve 2, 
               if you want to change it </span>
             <input ref={this.startPos2Ref} type="text" 
@@ -1029,8 +957,26 @@ class NormalCurve extends Component {
             </button>
             <br />
 
+            <input 
+            type="checkbox"
+            ref={this.toggleTriRef2}
+            onChange={this.toggleTri2} />
+            <label for="toggle2"> Check to lock the position of the curve</label>
+            <br/>
+
+            <label for="color2">Choose a color for curve 2:</label>
+            <select name="color2" id="color2" ref={this.color2Ref}>
+              <option value="DarkCyan">Blue</option>
+              <option value="Crimson">Red</option>
+              <option value="MediumSeaGreen">Green</option>
+              <option value="LightGray">Gray</option>
+            </select>
+            <input onClick={() => this.changeColor2()} type="submit" value="Submit"></input>
+            <br />
+
             { 
-              this.props.data["edgeLim"].toString() == "1"
+              // this.props.data["edgeLim"].toString() == "1"
+              this.state.edgeLim
               ? 
               <div>
                 <input 
@@ -1054,8 +1000,6 @@ class NormalCurve extends Component {
                 <label for="vehicle1">Turn edge limiting on/off</label>
               </div>
             }
-
-            
           </div>
         </div>
         <br />

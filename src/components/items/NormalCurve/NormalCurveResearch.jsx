@@ -216,7 +216,7 @@ class NormalCurveResearch extends Component {
 
   changeJSON(key, value) {
     var data = this.state.jsonData;
-    data[key] = Number(value);
+    data[key] = value;
     this.handleChange("FileContent", data, this.props.count);
   }
 
