@@ -48,6 +48,7 @@ td {
   margin: 20px;
 }
 
+<<<<<<< HEAD
 .tag1 {
   display: none;
 }
@@ -60,8 +61,7 @@ td {
 }
 .triangle2:hover + .tag2 {
   display: absolute;
-}
-
+=======
 .flex-container {
   width: 100%;
   height: 100%;
@@ -91,4 +91,5 @@ td {
 
 .normal-curve-text {
   width: 80%;
+>>>>>>> 3c2ed02d6b2452dc6b6364e62ac8f1e989244301
 }
