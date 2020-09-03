@@ -309,7 +309,12 @@ class ConfigStudy extends Component {
     const condition = this.state[exptName + "condition"];
 
     // process condition first
-    const conditionInfo = { "condition": condition };
+    var conditionInfo;
+    if (condition == null) {
+      conditionInfo = { "condition": "N/A" };
+    } else {
+      conditionInfo = { "condition": condition };
+    }
     // this.props.saveAddInfo(username, studyName, exptName, "condition", conditionInfo);
 
     // NEED TO CLEAN THIS UP
