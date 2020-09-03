@@ -373,7 +373,8 @@ class ConfigStudy extends Component {
     } else if (difference.length >= 0) {
       return (
         <div className="container">
-          <button onClick={() => difference.forEach(name => this.onDeploy(name))}>
+          <button style={{ padding: "12px 28px" }}
+          onClick={() => difference.forEach(name => this.onDeploy(name))}>
             <b>Deploy All Experiments</b>
           </button>
           <br/>

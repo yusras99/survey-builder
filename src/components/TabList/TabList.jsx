@@ -442,7 +442,7 @@ class TabList extends Component {
           {studyName}
         </Link>
         <div>
-          <button onClick={() => console.log(this.state.children)}>see children</button>
+          {/* <button onClick={() => console.log(this.state.children)}>see children</button> */}
           <form action="/submit" method="POST" className="unit">
             <p>Enter a name for this experiment </p>
             <input ref={this.nameRef}
@@ -478,6 +478,10 @@ class TabList extends Component {
                 :
                 <div className="extraPad">
                   <button onClick={() => this.outputCreate(false)} ref={this.submitRef} type="submit" value="Submit" className="btn">Update Experiment</button>
+                  <p style={{ opacity: 0 }}> place holder </p> 
+                  <button className="btn" onClick={() => this.props.history.push(studyLink)}>
+                    Cancel
+                  </button>
                 </div>
               }
             </div>
