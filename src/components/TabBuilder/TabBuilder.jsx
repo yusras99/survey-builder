@@ -73,38 +73,40 @@ class TabBuilder extends Component {
     return (
       <div>
         <br/>
-        <span>Choose what element to add next</span><br />
-        <select name="tabType" id="tabType" ref={this.selectRef}>
-          {/* <option value="slider">Slider</option> */}
-          <option value="static-text">Static Text</option>
-          <option value="normal-curve">Normal Curve</option>
-          <option value="threshold">Threshold</option>
-        </select>
-        <button onClick={() => this.props.build(this.selectRef.current.value)}>+</button>
-        <br/><br/>
-        OR
-        <br/><br/>
-        {
-          this.props.experiments.length == 0 
-          ? 
-          <div>
-            Cannot import question from another experiment because there are no 
-            experiments in this study yet.
-          </div>
-          :
-          <div>
-            <span>Import a question from another experiment in this study</span><br/>
-            <select name="importQue" id="importQue" ref={this.importQRef}>
-              {allGroups}
-            </select>
-            <button onClick={() => 
-              this.props.importQuestion(
-                qSelectedToExptname[this.importQRef.current.value], 
-                this.importQRef.current.value)}>
-              +
-            </button>
-          </div>
-        }
+        <div className="boxed"> 
+          <span>Choose what element to add next</span><br />
+          <select name="tabType" id="tabType" ref={this.selectRef}>
+            {/* <option value="slider">Slider</option> */}
+            <option value="static-text">Static Text</option>
+            <option value="normal-curve">Normal Curve</option>
+            <option value="threshold">Threshold</option>
+          </select>
+          <button onClick={() => this.props.build(this.selectRef.current.value)}>+</button>
+          <br/><br/>
+          OR
+          <br/><br/>
+          {
+            this.props.experiments.length == 0 
+            ? 
+            <div>
+              Cannot import question from another experiment because there are no 
+              experiments in this study yet.
+            </div>
+            :
+            <div>
+              <span>Import a question from another experiment in this study</span><br/>
+              <select name="importQue" id="importQue" ref={this.importQRef}>
+                {allGroups}
+              </select>
+              <button onClick={() => 
+                this.props.importQuestion(
+                  qSelectedToExptname[this.importQRef.current.value], 
+                  this.importQRef.current.value)}>
+                +
+              </button>
+            </div>
+          }
+        </div>
       </div>
     ) 
   }

@@ -464,6 +464,7 @@ class TabList extends Component {
             importQuestion={this.importQuestion}
             username={this.props.match.params.username}
             studyName={this.props.match.params.studyName} />
+          <br/>
           {/* Add condition here. Submit / Update Experiment */}
           {
             this.props.location.state != null 
@@ -492,7 +493,8 @@ class TabList extends Component {
           }
         </div>
         <br/>
-        <button onClick={() => console.log(finalObj)}>Show finalObj</button>
+        <button onClick={() => console.log(finalObj)}>Show finalObj</button><br/>
+        <button onClick={() => console.log(this.state.files)}>Show files</button>
       </div>
     )
   }

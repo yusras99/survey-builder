@@ -3,6 +3,13 @@ import Dropzone, { useDropzone } from "react-dropzone";
 import NormalCurve from './NormalCurve';
 import './NormalCurve.css';
 
+import sameSquare from './sameSquare.png';
+import sameSquareJSON from './sameSquare.json';
+import rlyDiff from './rlyDiff.png';
+import rlyDiffJSON from './rlyDiff.json';
+import bigSmall from './bigSmall.png';
+import bigSmallJSON from './bigSmall.json';
+
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -18,12 +25,22 @@ class NormalCurveResearch extends Component {
     this.svgRef = React.createRef();
     this.areaRef = React.createRef();
 
+    this.arg1ref = React.createRef();
+    this.arg2ref = React.createRef();
+    this.arg3ref = React.createRef();
+    this.arg4ref = React.createRef();
+    this.arg5ref = React.createRef();
+    this.arg6ref = React.createRef();
+    this.arg7ref = React.createRef();
+
     this.handleDrop = this.handleDrop.bind(this);
     this.handleSelectedFile = this.handleSelectedFile.bind(this);
     this.onChange = this.onChange.bind(this);
     this.changeJSON = this.changeJSON.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.delete = this.delete.bind(this);
+    this.processJSON = this.processJSON.bind(this);
+    this.selectNC = this.selectNC.bind(this);
 
     this.state = {
       dataReceived: false,
@@ -34,45 +51,50 @@ class NormalCurveResearch extends Component {
     };
   }
 
+  processJSON(jsonData) {
+    const unitHeight = jsonData["max-height"];
+    const circRad = jsonData["circle-radius"];
+    const distancing = circRad * 4 - 1;
+    const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
+    const ceilDist = height - 50;
+    const length = Math.ceil((distancing * jsonData["len1"] * 2 + distancing * jsonData["len2"] * 2) / 100) * 100;
+    const colNum = Math.round(length / distancing);
+    this.setState({
+      dataReceived: true,
+      // fileText: fileText,
+      jsonData: jsonData,
+      svgWidth: length,
+      svgHeight: height,
+      distancing: distancing,
+      dataReceived: true,
+      len1: jsonData["len1"],
+      colValHeiS: jsonData["colValHeiS"],
+      len2: jsonData["len2"],
+      colValHeiS2: jsonData["colValHeiS2"],
+      distancing1: (jsonData["len2"] + 1) * distancing,
+      distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * distancing,
+      triCent1: Math.round((0.5 * jsonData["len1"]) * distancing) + distancing,
+      triCent2: Math.round((0.5 * jsonData["len2"]) * distancing) + distancing,
+      col11: jsonData["len2"] + 1,
+      col12: jsonData["len1"] + jsonData["len2"] + 1,
+      col21: jsonData["len1"] + jsonData["len2"] + 3,
+      col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
+      colLim1: Math.round((length - (jsonData["len1"] * distancing)) / distancing),
+      colLim2: Math.round((length - (jsonData["len2"] * distancing)) / distancing),
+      overlapVals: jsonData["overlapVals"],
+      circRad: circRad,
+      ceilDist: ceilDist
+    });
+  }
+
   componentDidMount() {
     // importing component
     if (this.props.imported) {
       this.handleChange("FileName", this.props.qToDisplay["FileName"], this.props.count);
       const jsonData = this.props.qToDisplay["FileContent"];
       this.handleChange("FileContent", jsonData, this.props.count);
-      const unitHeight = jsonData["max-height"];
-      const circRad = jsonData["circle-radius"];
-      const distancing = circRad * 4 - 1;
-      const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
-      const ceilDist = height - 50;
-      const length = Math.ceil((distancing * jsonData["len1"] * 2 + distancing * jsonData["len2"] * 2) / 100) * 100;
-      const colNum = Math.round(length / distancing);
-      this.setState({
-        dataReceived: true,
-        // fileText: fileText,
-        jsonData: jsonData,
-        svgWidth: length,
-        svgHeight: height,
-        distancing: distancing,
-        dataReceived: true,
-        len1: jsonData["len1"],
-        colValHeiS: jsonData["colValHeiS"],
-        len2: jsonData["len2"],
-        colValHeiS2: jsonData["colValHeiS2"],
-        distancing1: (jsonData["len2"] + 1) * distancing,
-        distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * distancing,
-        triCent1: Math.round((0.5 * jsonData["len1"]) * distancing) + distancing,
-        triCent2: Math.round((0.5 * jsonData["len2"]) * distancing) + distancing,
-        col11: jsonData["len2"] + 1,
-        col12: jsonData["len1"] + jsonData["len2"] + 1,
-        col21: jsonData["len1"] + jsonData["len2"] + 3,
-        col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
-        colLim1: Math.round((length - (jsonData["len1"] * distancing)) / distancing),
-        colLim2: Math.round((length - (jsonData["len2"] * distancing)) / distancing),
-        overlapVals: jsonData["overlapVals"],
-        circRad: circRad,
-        ceilDist: ceilDist
-      });
+
+      this.processJSON(jsonData);
     }
     const username = this.props.auth.user.username;
     this.props.getColData(username, "itemData");
@@ -156,46 +178,15 @@ class NormalCurveResearch extends Component {
   }
 
   handleSelectedFile() {
+    console.log(this.props.count);
     this.handleChange("FileName", this.state.fileChosen, this.props.count);
 
     const jsonData = this.props.dataFlowColData.filter(item => 
       item.fileName == this.state.fileChosen)[0].fileContent;
 
     this.handleChange("FileContent", jsonData, this.props.count);
-
-    const unitHeight = jsonData["max-height"];
-    const circRad = jsonData["circle-radius"];
-    const distancing = circRad * 4 - 1;
-    const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
-    const ceilDist = height - 50;
-    const length = Math.ceil((distancing * jsonData["len1"] * 2 + distancing * jsonData["len2"] * 2) / 100) * 100;
-    const colNum = Math.round(length / distancing);
-    this.setState({
-      dataReceived: true,
-      // fileText: fileText,
-      jsonData: jsonData,
-      svgWidth: length,
-      svgHeight: height,
-      distancing: distancing,
-      dataReceived: true,
-      len1: jsonData["len1"],
-      colValHeiS: jsonData["colValHeiS"],
-      len2: jsonData["len2"],
-      colValHeiS2: jsonData["colValHeiS2"],
-      distancing1: (jsonData["len2"] + 1) * distancing,
-      distancing2: (jsonData["len1"] + jsonData["len2"] + 4) * distancing,
-      triCent1: Math.round((0.5 * jsonData["len1"]) * distancing) + distancing,
-      triCent2: Math.round((0.5 * jsonData["len2"]) * distancing) + distancing,
-      col11: jsonData["len2"] + 1,
-      col12: jsonData["len1"] + jsonData["len2"] + 1,
-      col21: jsonData["len1"] + jsonData["len2"] + 3,
-      col22: jsonData["len1"] + 2 * jsonData["len2"] + 3,
-      colLim1: Math.round((length - (jsonData["len1"] * distancing)) / distancing),
-      colLim2: Math.round((length - (jsonData["len2"] * distancing)) / distancing),
-      overlapVals: jsonData["overlapVals"],
-      circRad: circRad,
-      ceilDist: ceilDist
-    })
+    
+    this.processJSON(jsonData);
   }  
 
   delete() {
@@ -218,6 +209,32 @@ class NormalCurveResearch extends Component {
     var data = this.state.jsonData;
     data[key] = value;
     this.handleChange("FileContent", data, this.props.count);
+  }
+
+  selectNC(e) {
+    const id = e.currentTarget.id;
+
+    this.handleChange("FileName", id + ".json", this.props.count);
+
+    var jsonData;
+    switch (id) {
+      case "sameSquare":
+        jsonData = sameSquareJSON;
+        console.log("sameSquare");
+        break;
+      case "rlyDiff":
+        jsonData = rlyDiffJSON;
+        console.log("rlyDiff");
+        break;
+      case "bigSmall":
+        jsonData = bigSmallJSON;
+        console.log("bigSmall");
+        break;
+    };
+
+    this.handleChange("FileContent", jsonData, this.props.count);
+    
+    this.processJSON(jsonData);
   }
 
   render() {
@@ -256,27 +273,86 @@ class NormalCurveResearch extends Component {
       const fileOptions = fileNames.map(renderOption);
 
       return (
-        <div className="boxed">
-          Select previously uploaded files: 
-          <br/>
-          <select name="fileChosen" value={this.state.fileChosen} onChange={this.onChange}>
-            {fileOptions}
-          </select>
-          <button onClick={this.handleSelectedFile}>OK</button>
-          <br/>
-          <Dropzone
-            onDrop={this.handleDrop}
-            accept="application/JSON, .json"
-          >
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps({ className: "dropzone" })}>
-                <input {...getInputProps()} />
-                <p>Drag'n'drop files, or click to select files (must be valid JSON file)</p>
-              </div>
-            )}
-          </Dropzone>
-          <br/>
-          <button onClick={this.delete.bind(this)}>Delete</button>
+        <div>
+          <div className="boxed">
+            {/* Customize a Normal Curve item: <br/><br/>
+            What is the height of the first curve? 
+            <br/>
+            <input type="text" ref={this.arg1ref}/>
+            <br/>
+            What is the width of the first curve? 
+            <br/>
+            <input type="text" ref={this.arg2ref}/>
+            <br/>
+            What is the height of the second curve?
+            <br/>
+            <input type="text" ref={this.arg3ref}/>
+            <br/>
+            What is the width of the second curve?
+            <br/>
+            <input type="text" ref={this.arg4ref}/>
+            <br/>
+            What is the radius of each circle (minimum is 2, maximum is 5)
+            <br/>
+            <input type="text" ref={this.arg5ref}/>
+            <br/>
+            What is the default length of the x-axis (at least 1, default is 30) 
+            <br/>
+            <input type="text" ref={this.arg6ref}/>
+            <br/>
+            What is the value of the lowest value of our x-axis? (the highest value will be the lowest value + the length of the axis) 
+            <br/>
+            <input type="text" ref={this.arg7ref}/>
+            <br/> */}
+
+            Select one of the following Normal Curve items to configure: <br/><br/>
+            <div className="container">
+              <button>
+                <img src={sameSquare} alt="sameSquare" id="sameSquare"
+                  onClick={this.selectNC}
+                  style={{ height: "10vw", width: "10vw" }} /> 
+              </button>
+              <p> </p>
+              <button>
+                <img src={rlyDiff} alt="rlyDiff" id="rlyDiff"
+                  onClick={this.selectNC}
+                  style={{ height: "10vw", width: "10vw" }} /> 
+              </button>
+              <p> </p>
+              <button>
+                <img src={bigSmall} alt="bigSmall" id="bigSmall" 
+                  onClick={this.selectNC}
+                  style={{ height: "10vw", width: "10vw" }} /> 
+              </button>
+              <br/>
+              <button style={{ height: "3vw", width: "34.5vw" }}>
+                Customize Shapes
+              </button>
+            </div>
+            <br/>
+            {/* <br/><br/>
+            Select previously uploaded files: 
+            <br/>
+            <select name="fileChosen" value={this.state.fileChosen} onChange={this.onChange}>
+              {fileOptions}
+            </select>
+            <button onClick={this.handleSelectedFile}>OK</button>
+            <br/>
+            <Dropzone
+              onDrop={this.handleDrop}
+              accept="application/JSON, .json"
+            >
+              {({ getRootProps, getInputProps }) => (
+                <div {...getRootProps({ className: "dropzone" })}>
+                  <input {...getInputProps()} />
+                  <p>Drag'n'drop files, or click to select files (must be valid JSON file)</p>
+                </div>
+              )}
+            </Dropzone>
+            <br/> */}
+            <button onClick={this.delete.bind(this)}>Delete Question</button>
+          </div>
+          <br/><br/>
         </div>
       )
     }
