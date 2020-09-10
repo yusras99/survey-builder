@@ -678,7 +678,7 @@ class NormalCurve extends Component {
    * @param  {[Number]} newLength [The new length set by the researcher]
    * @return 
    */
-  lengthSubmit(newLength) {
+  lengthSubmit() {
     const newLength = this.lengthRef.current.value;
     const internalLength = newLength * this.state.distancing;
     const length = this.state.edgeLength + internalLength;
