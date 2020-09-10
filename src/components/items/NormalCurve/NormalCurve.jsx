@@ -645,7 +645,7 @@ class NormalCurve extends Component {
       col12 = this.state.axisEndCol + this.state.len1 - 1;
     }
 
-    this.changeJSON("startPos1", Number(newPos) - 1, this.state.jsonData);
+    this.changeJSON("startPos1", Number(newPos), this.state.jsonData);
 
     this.setState({
       distancing1: startPos1 * this.state.distancing,
@@ -669,7 +669,7 @@ class NormalCurve extends Component {
       col22 = this.state.axisEndCol + this.state.len2 - 1;
     }
 
-    this.changeJSON("startPos2", Number(newPos) - 1, this.state.jsonData);
+    this.changeJSON("startPos2", Number(newPos), this.state.jsonData);
 
     this.setState({
       distancing2: startPos2 * this.state.distancing,
