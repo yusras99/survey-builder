@@ -92,3 +92,15 @@ td {
 .normal-curve-text {
   width: 80%;
 }
+
+.args-container {
+  width: 70%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.arg {
+  align-self: center;
+}

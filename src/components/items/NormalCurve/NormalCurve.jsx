@@ -27,6 +27,14 @@ class NormalCurve extends Component {
     this.color1Ref = React.createRef();
     this.color2Ref = React.createRef();
 
+    this.arg0ref = React.createRef();
+    this.arg1ref = React.createRef();
+    this.arg2ref = React.createRef();
+    this.arg3ref = React.createRef();
+    this.arg4ref = React.createRef();
+    this.arg5ref = React.createRef();
+    this.arg6ref = React.createRef();
+
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
     this.triMouseDown = this.triMouseDown.bind(this);
@@ -568,7 +576,6 @@ class NormalCurve extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.data["edgeLim"]);
     // importing component, save imported data
     if (this.props.imported) {
       this.handleChange("Question", this.props.qToDisplay["Question"], this.props.count);
@@ -758,67 +765,106 @@ class NormalCurve extends Component {
     }
 
     return (
-      <div
-        onMouseMove={e => this.triDrag(e)}
-        onMouseUp={e => this.triUp(e)}>
-        <svg width={this.state.svgWidth} height={this.state.svgHeight + 10} ref={this.svgRef}>
-          {/* <rect opacity="0.2" width="100%" height="100%" fill="red"/> */}
-          {[...Array(this.state.len1).keys()].map(
-            (col) =>
-              [...Array(this.state.colValHeiS[col]).keys()].map(
-                (row) => this.dotReturn(col, row)
-              )
-          )}
-          {[...Array(this.state.len2).keys()].map(
-            (col) =>
-              [...Array(this.state.colValHeiS2[col]).keys()].map(
-                (row) => this.dotReturn2(col, row)
-              )
-          )}
-          <rect width={this.state.axisEnd - this.state.distancing}
-            height="2"
-            fill="black"
-            x={this.state.axisStartCol * this.state.distancing - 1}
-            y={this.state.ceilDist + 20} />
-          <rect width="2"
-            height="20"
-            fill="black"
-            x={this.state.axisStartCol * this.state.distancing - 1}
-            y={this.state.ceilDist + 20} />
-          <rect width="2"
-            height="20"
-            fill="black"
-            x={this.state.axisEnd - this.state.distancing + this.state.axisStartCol * this.state.distancing - 1}
-            y={this.state.ceilDist + 20} />
-          {[...Array(this.state.tickNum).keys()].map(
-            (tick) =>
-              <rect
-                width="2"
-                height="20"
-                fill="black"
-                x={this.state.axisStart + (this.state.tickDist * (tick + 1)) - 1} 
-                y={this.state.ceilDist + 20}
-              />
-          )}
-          {[...Array(this.state.tickNum).keys()].map(
-            (tick) =>
-            <text 
-            textAnchor="middle" 
-            x={this.state.axisStart + (this.state.tickDist * (tick + 1)) - 1} 
-            y={this.state.ceilDist + 55}>
-              {this.state.lowVal + (this.state.rangeVal * (tick + 1))}
-            </text>
-          )}
-          {/* triangle rendering below */}
-          {this.returnTri1()}
-          {this.returnTri2()}
-          <text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
-          <text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
-                    Sorry, please use a different browser.
-                </svg>
-        <br />
-        {/* Use defaultValue to show imported data */}
-        <div class="boxed">
+      <div className="boxed">
+        <h4>Configure Shapes</h4>
+        <div className="args-container">
+          <div className="arg">
+            First Curve Height
+            <br/>
+            <input type="text" ref={this.arg0ref}/>
+          </div>
+          <div className="arg">
+            First Curve Width
+            <br/>
+            <input type="text" ref={this.arg1ref}/>
+          </div>
+          <div className="arg">
+            Second Curve Height
+            <br/>
+            <input type="text" ref={this.arg2ref}/>
+          </div>
+          <div className="arg">
+            Second Curve Width
+            <br/>
+            <input type="text" ref={this.arg3ref}/>
+          </div>
+        </div>
+        <div className="args-container">
+          <div className="arg">
+            Circle Radius (2 ~ 5 inclusive)
+            <br/>
+            <input type="text" ref={this.arg4ref}/>
+          </div>
+          <div className="arg">
+            x-axis length (> 1)
+            <br/>
+            <input type="text" ref={this.arg5ref}/>
+          </div>
+          <div className="arg">
+            x-axis mininum
+            <br/>
+            <input type="text" ref={this.arg6ref}/>
+          </div>
+        </div>
+
+        <div 
+          onMouseMove={e => this.triDrag(e)}
+          onMouseUp={e => this.triUp(e)}>
+          <svg width={this.state.svgWidth} height={this.state.svgHeight + 10} ref={this.svgRef}>
+            {/* <rect opacity="0.2" width="100%" height="100%" fill="red"/> */}
+            {[...Array(this.state.len1).keys()].map(
+              (col) =>
+                [...Array(this.state.colValHeiS[col]).keys()].map(
+                  (row) => this.dotReturn(col, row)
+                )
+            )}
+            {[...Array(this.state.len2).keys()].map(
+              (col) =>
+                [...Array(this.state.colValHeiS2[col]).keys()].map(
+                  (row) => this.dotReturn2(col, row)
+                )
+            )}
+            <rect width={this.state.axisEnd - this.state.distancing}
+              height="2"
+              fill="black"
+              x={this.state.axisStartCol * this.state.distancing - 1}
+              y={this.state.ceilDist + 20} />
+            <rect width="2"
+              height="20"
+              fill="black"
+              x={this.state.axisStartCol * this.state.distancing - 1}
+              y={this.state.ceilDist + 20} />
+            <rect width="2"
+              height="20"
+              fill="black"
+              x={this.state.axisEnd - this.state.distancing + this.state.axisStartCol * this.state.distancing - 1}
+              y={this.state.ceilDist + 20} />
+            {[...Array(this.state.tickNum).keys()].map(
+              (tick) =>
+                <rect
+                  width="2"
+                  height="20"
+                  fill="black"
+                  x={this.state.axisStart + (this.state.tickDist * (tick + 1)) - 1} 
+                  y={this.state.ceilDist + 20}
+                />
+            )}
+            {[...Array(this.state.tickNum).keys()].map(
+              (tick) =>
+              <text 
+              textAnchor="middle" 
+              x={this.state.axisStart + (this.state.tickDist * (tick + 1)) - 1} 
+              y={this.state.ceilDist + 55}>
+                {this.state.lowVal + (this.state.rangeVal * (tick + 1))}
+              </text>
+            )}
+            {/* triangle rendering below */}
+            {this.returnTri1()}
+            {this.returnTri2()}
+            <text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
+            <text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
+                      Sorry, please use a different browser.
+          </svg>
           <div class="flex-container">
             <div class="flex-child-one">
               Question: <br/>
@@ -986,13 +1032,15 @@ class NormalCurve extends Component {
               <label for="vehicle1">Turn edge limiting on/off</label>
             </div>
           </div>
+          <br />
+          <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>
+          
+          {/* <h1>{this.props.data["startPos1"]} | {this.props.data["startPos2"]}</h1> */}
+          <button onClick={this.delete.bind(this)}>Delete</button>
         </div>
-        <br />
-        <h4>Area Under Curve: <span ref={this.areaRef}></span> | First x-coordinate: {this.state.col11} | Second x-coordinate: {this.state.col21} </h4>
-        
-        {/* <h1>{this.props.data["startPos1"]} | {this.props.data["startPos2"]}</h1> */}
-        <button onClick={this.delete.bind(this)}>Delete</button>
+
       </div>
+      
     )
   }
 }
