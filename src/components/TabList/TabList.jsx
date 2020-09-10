@@ -70,6 +70,7 @@ class TabList extends Component {
             this.configDataToItem(q, true);
             this.setState({ count: this.state.count += 1 });
           });
+          console.log("finished rendering items");
         };
       };
     };
@@ -493,8 +494,8 @@ class TabList extends Component {
           }
         </div>
         <br/>
-        <button onClick={() => console.log(finalObj)}>Show finalObj</button><br/>
-        <button onClick={() => console.log(this.state.files)}>Show files</button>
+        {/* <button onClick={() => console.log(finalObj)}>Show finalObj</button><br/>
+        <button onClick={() => console.log(this.state.files)}>Show files</button> */}
       </div>
     )
   }

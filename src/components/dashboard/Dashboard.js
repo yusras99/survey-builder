@@ -104,12 +104,12 @@ class Dashboard extends Component {
       <div className="container">
         <h2>Dashboard</h2>
 
-        <div className="boxed" style={{ width: "60%", margin: "auto" }}>
+        {/* <div className="boxed" style={{ width: "60%", margin: "auto" }}>
           <br/>
           <b>Configure Experiment Types:</b> <br/>
           <a href="https://colab.research.google.com/drive/1yleVQB_CrNJ5Z3v-YPatW2XqAD7yS8yp?usp=sharing" target="_blank">Normal Curves</a>
           <div><br/></div>
-        </div>
+        </div> */}
 
         <h3>Add a Study</h3>
         Enter a name for your study: <br/>

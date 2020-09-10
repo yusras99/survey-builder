@@ -413,7 +413,7 @@ class ConfigStudy extends Component {
             Build an Experiment
           </button>
         </Link>
-        <br/><br/>
+        <p> </p>
         <Link to={partStudyDataLink}>
           <button>
             View All Participant Data

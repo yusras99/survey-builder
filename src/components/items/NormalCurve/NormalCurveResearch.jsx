@@ -89,12 +89,13 @@ class NormalCurveResearch extends Component {
 
   componentDidMount() {
     // importing component
+    console.log(this.props);
     if (this.props.imported) {
       this.handleChange("FileName", this.props.qToDisplay["FileName"], this.props.count);
       const jsonData = this.props.qToDisplay["FileContent"];
       this.handleChange("FileContent", jsonData, this.props.count);
-
-      this.processJSON(jsonData);
+      this.setState({ imported: true });
+      // this.processJSON(jsonData);
     }
     const username = this.props.auth.user.username;
     this.props.getColData(username, "itemData");
@@ -205,8 +206,8 @@ class NormalCurveResearch extends Component {
     this.props.handleChange(key, value, count);
   }
 
-  changeJSON(key, value) {
-    var data = this.state.jsonData;
+  changeJSON(key, value, data) {
+    // var data = this.state.jsonData;
     data[key] = value;
     this.handleChange("FileContent", data, this.props.count);
   }
@@ -506,7 +507,7 @@ class NormalCurveResearch extends Component {
         </div>
       )
     // importing component
-    } else if (this.props.imported) {
+    } else if (this.state.imported) {
       return (
         <div>
           <NormalCurve 
@@ -531,7 +532,7 @@ class NormalCurveResearch extends Component {
       return (
         <div>
           <div className="boxed">
-            Select one of the following Normal Curve items to configure: <br/><br/>
+            Select one of the following Normal Curve items to start with: <br/><br/>
             <div className="container">
               <button>
                 <img src={sameSquare} alt="sameSquare" id="sameSquare"
