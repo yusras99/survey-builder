@@ -70,6 +70,7 @@ class TabList extends Component {
             this.configDataToItem(q, true);
             this.setState({ count: this.state.count += 1 });
           });
+          console.log("finished rendering items");
         };
       };
     };
@@ -442,7 +443,7 @@ class TabList extends Component {
           {studyName}
         </Link>
         <div>
-          <button onClick={() => console.log(this.state.children)}>see children</button>
+          {/* <button onClick={() => console.log(this.state.children)}>see children</button> */}
           <form action="/submit" method="POST" className="unit">
             <p>Enter a name for this experiment </p>
             <input ref={this.nameRef}
@@ -464,6 +465,7 @@ class TabList extends Component {
             importQuestion={this.importQuestion}
             username={this.props.match.params.username}
             studyName={this.props.match.params.studyName} />
+          <br/>
           {/* Add condition here. Submit / Update Experiment */}
           {
             this.props.location.state != null 
@@ -478,6 +480,10 @@ class TabList extends Component {
                 :
                 <div className="extraPad">
                   <button onClick={() => this.outputCreate(false)} ref={this.submitRef} type="submit" value="Submit" className="btn">Update Experiment</button>
+                  <p style={{ opacity: 0 }}> place holder </p> 
+                  <button className="btn" onClick={() => this.props.history.push(studyLink)}>
+                    Cancel
+                  </button>
                 </div>
               }
             </div>
@@ -488,7 +494,8 @@ class TabList extends Component {
           }
         </div>
         <br/>
-        <button onClick={() => console.log(finalObj)}>Show finalObj</button>
+        {/* <button onClick={() => console.log(finalObj)}>Show finalObj</button><br/>
+        <button onClick={() => console.log(this.state.files)}>Show files</button> */}
       </div>
     )
   }

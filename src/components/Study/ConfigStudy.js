@@ -309,7 +309,12 @@ class ConfigStudy extends Component {
     const condition = this.state[exptName + "condition"];
 
     // process condition first
-    const conditionInfo = { "condition": condition };
+    var conditionInfo;
+    if (condition == null) {
+      conditionInfo = { "condition": "N/A" };
+    } else {
+      conditionInfo = { "condition": condition };
+    }
     // this.props.saveAddInfo(username, studyName, exptName, "condition", conditionInfo);
 
     // NEED TO CLEAN THIS UP
@@ -373,7 +378,8 @@ class ConfigStudy extends Component {
     } else if (difference.length >= 0) {
       return (
         <div className="container">
-          <button onClick={() => difference.forEach(name => this.onDeploy(name))}>
+          <button style={{ padding: "12px 28px" }}
+          onClick={() => difference.forEach(name => this.onDeploy(name))}>
             <b>Deploy All Experiments</b>
           </button>
           <br/>
@@ -407,7 +413,7 @@ class ConfigStudy extends Component {
             Build an Experiment
           </button>
         </Link>
-        <br/><br/>
+        <p> </p>
         <Link to={partStudyDataLink}>
           <button>
             View All Participant Data

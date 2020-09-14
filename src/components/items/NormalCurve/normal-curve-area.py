@@ -102,7 +102,7 @@ def remove_zeroes(input_data):
     output_data = {}
     position = 0
 
-    for key, value in input_data.items():
+    for _, value in input_data.items():
         if value != 0:
             output_data[str(position)] = value
             position += 1

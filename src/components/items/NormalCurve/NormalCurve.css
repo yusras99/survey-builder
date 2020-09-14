@@ -92,3 +92,24 @@ td {
 .normal-curve-text {
   width: 80%;
 }
+
+.args-container {
+  width: 70%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.arg {
+  /* align-self: center; */
+  padding: 5px;
+}
+
+.normalCurve-boxed {
+  width: 90%;
+  margin: auto;
+  border-style: solid;
+  border-color: black;
+  border: 2px;
+}
