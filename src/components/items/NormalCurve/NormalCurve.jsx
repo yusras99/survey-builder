@@ -44,7 +44,7 @@ class NormalCurve extends Component {
     this.triUp = this.triUp.bind(this);
     this.curveArea = this.curveArea.bind(this);
     this.lengthSubmit = this.lengthSubmit.bind(this);
-    this.toggleXVals = this.toggleXVals.bind(this);
+    // this.toggleXVals = this.toggleXVals.bind(this);
     this.alterStartPos1 = this.alterStartPos1.bind(this);
     this.alterStartPos2 = this.alterStartPos2.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -67,10 +67,20 @@ class NormalCurve extends Component {
     this.state = this.establishStateData(this.props.data);
   }
 
+  /**
+   * Sets the shared area upon loading
+   * @param
+   * @return
+   */
   componentDidMount() {
     this.curveArea();
   }
 
+  /**
+   * Creates data for state upon loading the element
+   * @param  {[Object]} data [JSON file data for element]
+   * @return {[type]}     [JSON data for setting state]
+   */
   establishStateData(data) {
     // console.log("establishStateData()", new Date());
     const unitHeight = data["max-height"];
@@ -317,6 +327,12 @@ class NormalCurve extends Component {
     };
   }
 
+  /**
+   * Returns the <circle> for a given point on the first curve
+   * @param  {[Number]} xPos [X coordinate of circle]
+   * @param  {[Number]} yPos [Y coordinate of circle]
+   * @return {[JSX Object]}  [SVG Circle element]
+   */
   dotReturn(xPos, yPos) {
     const xPosOrig = xPos;
 
@@ -338,6 +354,12 @@ class NormalCurve extends Component {
     return hard;
   }
 
+  /**
+   * Returns the <circle> for a given point on the second curve
+   * @param  {[Number]} xPos [X coordinate of circle]
+   * @param  {[Number]} yPos [Y coordinate of circle]
+   * @return {[JSX Object]}  [SVG Circle element]
+   */
   dotReturn2(xPos, yPos) {
     const xPosOrig = xPos;
 
@@ -360,6 +382,11 @@ class NormalCurve extends Component {
     return hard;
   }
 
+  /**
+   * Returns the <polygon> for the triangle of the first curve
+   * @param  
+   * @return {[JSX Object]}  [SVG Polygon element]
+   */
   returnTri1() {
     if (this.state.fixCurve1) {
       return (null);
@@ -380,6 +407,11 @@ class NormalCurve extends Component {
     }
   }
 
+  /**
+   * Returns the <polygon> for the triangle of the second curve
+   * @param  
+   * @return {[JSX Object]}  [SVG Polygon element]
+   */
   returnTri2() {
     if (this.state.fixCurve2) {
       return (null);
@@ -400,6 +432,14 @@ class NormalCurve extends Component {
     }
   }
 
+  /**
+   * Returns the position of the triangle being dragged as a column relative to the
+   * absolute position and relative to the given starting value
+   * @param  {[Event]} e [Standard event sent when mouse movement occurs in javascript]
+   * @param  {[Number]} Dragger [1 for the first curve, 2 for the second]
+   * @return {[Number, Number]}  [Column position of triangle relative to absolute axis width,
+   * relative to starting position]
+   */
   svgColReturn(e, dragger) {
     let distFromCent;
     let variance;
@@ -423,6 +463,13 @@ class NormalCurve extends Component {
     return [col, colRelative];
   }
 
+  /**
+   * Updates state to reflect changes in curve position after mouse movement
+   * @param  {[Number]} col [Position of the curve in the SVG element]
+   * @param  {[Number]} colRelative [Position of the curve on the axis relative to the starting value]
+   * @param  {[Number]} dragger [1 for first curve, 2 for second curve]
+   * @return 
+   */
   svgColPlacement(col, colRelative, dragger) {
     // console.log(col);
     // console.log(this.state.axisStartCol);
@@ -489,6 +536,12 @@ class NormalCurve extends Component {
     }
   }
 
+  /**
+   * Updates state to reflect movement of trianlges and distance from mouse point to triangle center
+   * @param  {[Event]} e [Event called by javascript upon mouse action]
+   * @param  {[Number]} num [1 for first curve, 2 for second curve]
+   * @return 
+   */
   triMouseDown(e, num) {
     if (e.type === "mousedown") {
       // console.log("MOUSEDOWN");
@@ -518,6 +571,11 @@ class NormalCurve extends Component {
     }
   }
 
+  /**
+   * Called upon mouse being dragged, calls functions for moving curves
+   * @param  {[Event]} e [Event called by javascript upon mouse action]
+   * @return 
+   */
   triDrag(e) {
       e.preventDefault();
       var dragger = this.state.triDown;
@@ -529,6 +587,11 @@ class NormalCurve extends Component {
       this.curveArea();
   }
 
+  /**
+   * Informs state the mouse is no longer holding down on a triangle
+   * @param  {[Event]} e [Event called by javascript upon mouse action]
+   * @return 
+   */
   triUp(e) {
     // console.log("UP");
     if (this.state.triDown) {
@@ -536,6 +599,11 @@ class NormalCurve extends Component {
     }
   }
 
+  /**
+   * Calculates area of the curve and updates the element that carries area value using ref
+   * @param  
+   * @return 
+   */
   curveArea() {
     let col11;
     let col12;
@@ -564,6 +632,11 @@ class NormalCurve extends Component {
     }
   }
 
+  /**
+   * Deletes this element in the parent element if called
+   * @param  
+   * @return 
+   */
   delete() {
     this.props.delete(this.props.count);
   }
@@ -572,14 +645,33 @@ class NormalCurve extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  /**
+   * Calls props function changeJSON when change is made to experiment JSON
+   * that must be recorded
+   * @param  {[String]} key [key in JSON that must be updated]
+   * @param  {[]} value [New value for key in JSON]
+   * @param  {[]} data XXXXX
+   * @return 
+   */
   changeJSON(key, value, data) {
     this.props.changeJSON(key, value, data);
   }
 
+  /**
+   * Calls props function handleChange to update parent element
+   * @param  {[String]} key [key in parent that must be updated]
+   * @param  {[]} value [new value for key]
+   * @param  {[Number]} count [count of current element in parent list]
+   * @return 
+   */
   handleChange(key, value, count) {
     this.props.handleChange(key, value, count);
   }
-
+  /**
+   * Basic setup functions on component creation
+   * @param  
+   * @return 
+   */
   componentDidMount() {
     // importing component, save imported data
     if (this.props.imported) {
@@ -597,6 +689,12 @@ class NormalCurve extends Component {
     };
   }
 
+
+  /**
+   * Reloads the curve upon a new axis length being entered with new length recorded
+   * @param  {[Number]} newLength [The new length set by the researcher]
+   * @return 
+   */
   lengthSubmit() {
     const newLength = this.lengthRef.current.value;
     const internalLength = newLength * this.state.distancing;
@@ -608,28 +706,38 @@ class NormalCurve extends Component {
 
     this.changeJSON("axis-length", Number(newLength), this.state.jsonData);
 
-    this.setState({
-      colNum: newLength,
-      svgWidth: length,
-      axisEndCol: axisEndCol,
-      axisEnd: axisEnd
-    });
+    // this.setState({
+    //   colNum: newLength,
+    //   svgWidth: length,
+    //   axisEndCol: axisEndCol,
+    //   axisEnd: axisEnd
+    // });
 
-    const col1 = this.state.col11 - 1 + this.state.variance1;
-    this.svgColPlacement(col1, this.state.col11, 1);
+    // const col1 = this.state.col11 - 1 + this.state.variance1;
+    // this.svgColPlacement(col1, this.state.col11, 1);
 
-    const col2 = this.state.col21 - 1 + this.state.variance2;
-    this.svgColPlacement(col2, this.state.col21, 2);
+    // const col2 = this.state.col21 - 1 + this.state.variance2;
+    // this.svgColPlacement(col2, this.state.col21, 2);
+    
+    const newData = this.props.data;
+    newData["axis-length"] = newLength;
+    this.setState(this.establishStateData(newData));
   }
 
-  toggleXVals() {
-    this.setState(prevState => {
-      return {
-        showCoors: !prevState.showCoors
-      }
-    })
-  }
+  // toggleXVals() {
+  //   this.setState(prevState => {
+  //     return {
+  //       showCoors: !prevState.showCoors
+  //     }
+  //   })
+  // }
 
+  /**
+   * Manually alters the start position of the first curve when presented
+   * Accounts for possibility of going beyond the axis
+   * @param  {[Number]} newPos [new column position on the axis]
+   * @return
+   */
   alterStartPos1(newPos) {
     let startPos1 = parseInt(this.startPos1Ref.current.value) + this.state.variance1;
     let col11 = startPos1 - this.state.variance1 + 1;
@@ -654,6 +762,13 @@ class NormalCurve extends Component {
     });
   }
 
+  
+  /**
+   * Manually alters the start position of the second curve when presented
+   * Accounts for possibility of going beyond the axis
+   * @param  {[Number]} newPos [new column position on the axis]
+   * @return
+   */
   alterStartPos2(newPos) {
     let startPos2 = parseInt(this.startPos2Ref.current.value) + this.state.variance2;
     let col21 = startPos2 - this.state.variance2 + 1;
@@ -678,6 +793,11 @@ class NormalCurve extends Component {
     });
   }
   
+  /**
+   * Manually alters the radius of circles on the curves
+   * @param  {[Number]} radius [new radius value]
+   * @return
+   */
   updateRadius(radius) {
     // console.log("updateRadius", radius);
     this.changeJSON("circle-radius", parseInt(radius), this.state.jsonData);
@@ -686,6 +806,11 @@ class NormalCurve extends Component {
     this.setState(this.establishStateData(newData));
   }
 
+  /**
+   * Manually alters the number of ticks on the axis
+   * @param  {[Number]} newTickCount [new number of ticks on the axis]
+   * @return
+   */
   updateTicks(newTickCount) {
     this.changeJSON("tickNum", parseInt(newTickCount), this.state.jsonData);
     let newData = this.state.jsonData;
@@ -693,6 +818,12 @@ class NormalCurve extends Component {
     this.setState(this.establishStateData(newData));
   }
 
+  /**
+   * Manually alters the value of a given column (used in calculating length
+   * of the axis and tick values)
+   * @param  {[Number]} colVal [new column value]
+   * @return
+   */
   updateColVal(colVal) {
     this.changeJSON("colNumVal", parseInt(colVal), this.state.jsonData);
     let newData = this.state.jsonData;
@@ -702,6 +833,11 @@ class NormalCurve extends Component {
     // this.setState({ colNum: colVal });
   }
 
+  /**
+   * Toggles 'edgeLim' value, or whether the curves stop at the edge
+   * @param  
+   * @return
+   */
   checkChange() {
     this.setState(prevState => {
       this.changeJSON("edgeLim", !Boolean(prevState.edgeLim), this.state.jsonData);
@@ -712,6 +848,11 @@ class NormalCurve extends Component {
     // console.log(this.state.edgeLim);
   }
 
+  /**
+   * Toggles whether curve 1 is moveable
+   * @param 
+   * @return
+   */
   toggleTri1() {
     if (!this.state.fixCurve1) {
       this.setState({startPos1 : this.state.distancing1})
@@ -723,6 +864,11 @@ class NormalCurve extends Component {
       }});
   }
 
+  /**
+   * Toggles whether curve 2 is moveable
+   * @param  
+   * @return
+   */
   toggleTri2() {
     if (!this.state.fixCurve2) {
       this.setState({startPos2 : this.state.distancing2})
@@ -734,12 +880,22 @@ class NormalCurve extends Component {
       }});
   }
 
+  /**
+   * Updates color of curve 1 based on dropdown menu
+   * @param  
+   * @return
+   */
   changeColor1() {
     const newColor = this.color1Ref.current.value;
     this.changeJSON("color1", newColor, this.state.jsonData);
     this.setState({ color1 : newColor });
   }
 
+  /**
+   * Updates color of curve 2 based on dropdown menu
+   * @param  
+   * @return
+   */
   changeColor2() {
     const newColor = this.color2Ref.current.value;
     this.changeJSON("color2", newColor, this.state.jsonData);
