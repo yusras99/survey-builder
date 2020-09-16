@@ -4,6 +4,9 @@ import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
 import classnames from "classnames";
 
+/**
+ * Login a user
+ */
 class Login extends Component {
   constructor() {
     super();
@@ -34,11 +37,18 @@ class Login extends Component {
     }
   }
 
-  // <form> element will have a corresponding onChange event that sends value
-  // to this.state. Works similarly to html form post and request. 
+  /**
+   * Change entries in this.state
+   * @param {[Event]} e [An event that's subject to change]
+   */
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
+
+  /**
+   * Login user
+   * @param {[Event]} e [An event]
+   */
   onSubmit = e => {
     e.preventDefault();
     const userData = {
@@ -49,6 +59,7 @@ class Login extends Component {
     // pass in this.props.history
     this.props.loginUser(userData);
   };
+
   render() {
     const errors = this.state.errors;
     return (
@@ -56,7 +67,7 @@ class Login extends Component {
         <h1>Log in</h1>
         <form noValidate onSubmit={this.onSubmit}>
           Username:
-                    <input
+          <input
             onChange={this.onChange}
             value={this.state.username}
             error={errors.username}
@@ -69,8 +80,8 @@ class Login extends Component {
           <span className="red-text">{errors.userNotFound}</span>
           <br />
           <br />
-                    Password:
-                    <input
+          Password:
+          <input
             onChange={this.onChange}
             value={this.state.password}
             error={errors.password}
@@ -91,8 +102,6 @@ class Login extends Component {
     );
   };
 };
-
-// export default Login;
 
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,

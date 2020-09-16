@@ -51,11 +51,6 @@ export default function (state = initialState, action) {
         ...state,
         colNames: action.payload
       };
-    // case STORE_FILE:
-    //   return {
-    //     ...state,
-    //     files: [...state.files, action.payload]
-    //   };
     case STORE_FILENAME:
       return {
         ...state,

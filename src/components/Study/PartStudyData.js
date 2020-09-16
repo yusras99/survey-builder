@@ -13,6 +13,9 @@ import {
 
 import "./PartData.css";
 
+/**
+ * Shows participant data for a specific study
+ */
 class PartStudyData extends Component {
   constructor(props) {
     super(props);
@@ -23,21 +26,31 @@ class PartStudyData extends Component {
     this.getIndex = this.getIndex.bind(this);
   }
 
+  /**
+   * Get participant data from all collections associated with this study
+   */
   componentWillMount() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     axios
-    .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
-    .then(res => {
-      const nameArr = res.data;
-      const partColNames = nameArr.filter(name => 
-        name != "info" && name != "itemData" && name.includes(studyName));
-      console.log(partColNames);
-      partColNames.map(colName => this.props.getColsData(username, colName));
-      this.props.getStudyInfo(username, studyName);
+      .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
+      .then(res => {
+        const nameArr = res.data;
+        // ****** TODO ******
+        // improve this query method so it's safer than .includes
+        const partColNames = nameArr.filter(name => 
+          name != "info" && name != "itemData" && name.includes(studyName));
+        console.log(partColNames);
+        partColNames.map(colName => this.props.getColsData(username, colName));
+        this.props.getStudyInfo(username, studyName);
     })
   }
 
+  /**
+   * Flatten the object such that all data lives "flat" on the first level
+   * @param {[Object]} obj [a json object containing an indivual participant's
+   *                        experiment data]
+   */
   flattenObj(obj) {
     var flattendObj = {};
     const flattenObject = (obj, keyName) => {
@@ -68,6 +81,10 @@ class PartStudyData extends Component {
     return flattendObj;
   } 
 
+  /**
+   * Make an array where each entry is a flat json Object containing an 
+   * individual participant's experiment data
+   */
   makeArr() {
     if (!Object.keys(this.props.colsData).length == 0) {
       // console.log(this.props.colData);
@@ -110,6 +127,9 @@ class PartStudyData extends Component {
     }
   }
 
+  /**
+   * Convert json objects to string and present them
+   */
   showJSONData() {
     const arr = this.makeArr();
     if (arr != null) {
@@ -125,6 +145,9 @@ class PartStudyData extends Component {
     }
   }
 
+  /**
+   * Method to export csv file containing participant data for this study
+   */
   getIndex() {
     const studyName = this.props.match.params.studyName;
     if (!this.props.experiments.length == 0) {
@@ -152,7 +175,6 @@ class PartStudyData extends Component {
     }
   }
 
-  // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;

@@ -6,6 +6,9 @@ import classnames from "classnames";
 
 import { registerUser } from "../../actions/authActions";
 
+/**
+ * Register user
+ */
 class Register extends Component {
   constructor() {
     super();
@@ -33,12 +36,18 @@ class Register extends Component {
     };
   };
 
-  // <form> element will have a corresponding onChange event that sends value
-  // to this.state. Works similarly to html form and flask request. 
+  /**
+   * Change entries in this.state
+   * @param {[Event]} e [An event that's subject to change]
+   */
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
 
+  /**
+   * Register user
+   * @param {[Event]} e [An event]
+   */
   onSubmit = e => {
     e.preventDefault();
     const newUser = {
@@ -56,11 +65,11 @@ class Register extends Component {
         <h1>Register below</h1>
         <p className="grey-text text-darken-1">
           Already have an account?
-                    <Link to="/login">Log in</Link>
+        <Link to="/login">Log in</Link>
         </p>
         <form noValidate onSubmit={this.onSubmit}>
           Username:
-                    <input
+          <input
             onChange={this.onChange}
             value={this.state.username}
             error={errors.username}
@@ -105,8 +114,6 @@ class Register extends Component {
     );
   };
 };
-
-// export default Register;
 
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,

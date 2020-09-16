@@ -118,7 +118,7 @@ class NormalCurve extends Component {
       edgeLim = data["edgeLim"];
     }
     else {
-      edgeLim = true;
+      edgeLim = false;
     }
 
     const startPos1 = data["startPos1"];

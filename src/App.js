@@ -24,7 +24,6 @@ import ConfigStudy from './components/Study/ConfigStudy';
 import ExptConfigs from './components/Study/ExptConfigs';
 import PartStudyData from './components/Study/PartStudyData';
 import PartExptData from './components/Study/PartExptData';
-// import BuildExpt from './components/Study/BuildExpt.jsx';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -48,7 +47,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <HashRouter basename="/survey-builder/">
+      <HashRouter>
         <div className="App">
           < NavBar />
           <br/>
@@ -62,8 +61,6 @@ function App() {
               component={ConfigStudy} />
             <PrivateRoute exact path="/:username/:studyName/exptBuilder"
               component={TabList} />
-            {/* <PrivateRoute exact path="/:username/:studyName/newExpt" 
-              component={BuildExpt} /> */}
             <PrivateRoute exact path="/:username/:studyName/:exptName/configs"
               component={ExptConfigs}/>
             <PrivateRoute exact path="/:username/:studyName/participantsStudyData"

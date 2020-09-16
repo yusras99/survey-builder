@@ -7,7 +7,11 @@ import {
   USER_LOADING
 } from "./types";
 
-// Register User
+/**
+ * POST request to api to create a collection with user's login name
+ * @param {[Object]} userData [json object contains username and password]
+ * @param {[Object]} history [json object contains React history]
+ */
 export const registerUser = (userData, history) => dispatch => {
   axios
     // set up proxy in package.json later
@@ -21,7 +25,10 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
-// Login - get user token
+/**
+ * POST request to api to grant jwtToken and login user
+ * @param {[Object]} userData [json object contains username and password]
+ */
 export const loginUser = userData => dispatch => {
   axios
     // set up proxy in package.json later
@@ -46,7 +53,10 @@ export const loginUser = userData => dispatch => {
     );
 };
 
-// Set logged in user
+/**
+ * Set logged in user
+ * @param {[Boolean]} decoded [whether the user is logged in]
+ */
 export const setCurrentUser = decoded => {
   return {
     type: SET_CURRENT_USER,
@@ -54,14 +64,18 @@ export const setCurrentUser = decoded => {
   };
 };
 
-// User loading
+/**
+ * Load user
+ */
 export const setUserLoading = () => {
   return {
     type: USER_LOADING
   };
 };
 
-// Log user out
+/**
+ * Logout user
+ */
 export const logoutUser = () => dispatch => {
   // Remove token from local storage
   localStorage.removeItem("jwtToken");

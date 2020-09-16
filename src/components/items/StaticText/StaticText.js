@@ -30,10 +30,15 @@ class StaticText extends Component {
   }
 
   componentDidMount() {
+    // NOTE: import includes both "import question from another experiment" and
+    //       "Edit experiment"
     if (this.props.imported) {
+      // we only want to show the actual content because the question is imported 
+      // (researchers may want to use different csv column names)
       this.handleChange("Static Text", this.props.qToDisplay["Static Text"], this.props.count);
     }; 
     if (this.props.editing) {
+      // we want to show previous csv column names because researchers want to make edits
       this.handleChange("static-text-key", this.props.qToDisplay["static-text-key"], this.props.count);
     }; 
   }

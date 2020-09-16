@@ -4,11 +4,8 @@ import NormalCurve from './NormalCurve';
 import './NormalCurve.css';
 
 import sameSquare from './sameSquare.png';
-import sameSquareJSON from './sameSquare.json';
 import rlyDiff from './rlyDiff.png';
-import rlyDiffJSON from './rlyDiff.json';
 import bigSmall from './bigSmall.png';
-import bigSmallJSON from './bigSmall.json';
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -51,6 +48,10 @@ class NormalCurveResearch extends Component {
     };
   }
 
+  /**
+   * Set this.state to display config data as graphs to the frontend
+   * @param {[Object]} jsonData [json data containing config info for normalCurve]
+   */
   processJSON(jsonData) {
     const unitHeight = jsonData["max-height"];
     const circRad = jsonData["circle-radius"];
@@ -91,6 +92,8 @@ class NormalCurveResearch extends Component {
     // importing component
     console.log(this.props);
     if (this.props.imported) {
+      // if this normal curve component is imported, we need to append those 
+      // associating files to final output with handleChange()
       this.handleChange("FileName", this.props.qToDisplay["FileName"], this.props.count);
       const jsonData = this.props.qToDisplay["FileContent"];
       this.handleChange("FileContent", jsonData, this.props.count);
@@ -101,10 +104,16 @@ class NormalCurveResearch extends Component {
     this.props.getColData(username, "itemData");
   }
 
+  // Inherited function from TabList.jsx
   saveFile(type, name, content) {
     this.props.saveFile(type, name, content);
   }
 
+  /**
+   * DEPRECATED since we are not doing drag n drop anymore
+   * Set this.state based on file data and save file data to final output
+   * @param {[File]} acceptedFiles [a file in .json format]
+   */
   handleDrop(acceptedFiles) {
     console.log(acceptedFiles.map(file => {
       acceptedFiles.forEach((file) => {
@@ -178,6 +187,10 @@ class NormalCurveResearch extends Component {
     this.setState({ fileNames: acceptedFiles.map(file => file.name) })
   }
 
+  /**
+   * DEPRECATED since we are not doing drag n drop anymore
+   * Triggered when researchers select a previously uploaded file
+   */
   handleSelectedFile() {
     console.log(this.props.count);
     this.handleChange("FileName", this.state.fileChosen, this.props.count);
@@ -202,16 +215,30 @@ class NormalCurveResearch extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  // inherited from TabList.jsx
   handleChange(key, value, count) {
     this.props.handleChange(key, value, count);
   }
 
+  /**
+   * Update @param data and save to final output
+   * @param {[String]} key [key of entry to update]
+   * @param {[Any]} value [value of entry to update]
+   * @param {[Object]} data [a json object to be updated]
+   */
   changeJSON(key, value, data) {
     // var data = this.state.jsonData;
     data[key] = value;
     this.handleChange("FileContent", data, this.props.count);
   }
 
+  /**
+   * Save researcher selection to final output and update this.state
+   * WARNING: do not try to import jsonData from directory because data
+   *          will be altered by researchers' configuration
+   * @param {[Event]} e [an event triggered by researchers clicking on one of 
+   *                     the three normal curve options]
+   */
   selectNC(e) {
     const id = e.currentTarget.id;
 
@@ -495,6 +522,9 @@ class NormalCurveResearch extends Component {
 
   render() {
     if (this.state.dataReceived) {
+      // this case is triggered when researchers select one of the three options
+      // previously built for drag n drop file upload. 
+      // Search 'dataReceived' in this file to learn more
       return (
         <div>
           <NormalCurve 
@@ -508,6 +538,9 @@ class NormalCurveResearch extends Component {
       )
     // importing component
     } else if (this.state.imported) {
+      // a normal curve is imported in two possible ways:
+      // 1. when researchers import a question from another experiment in expt builder
+      // 2. when researchers use "Edit Experiment" feature from ConfigStudy
       return (
         <div>
           <NormalCurve 
@@ -522,6 +555,7 @@ class NormalCurveResearch extends Component {
         </div>
       )
     } else {
+      // provide researchers with three pre-built normal curve items
       const normalCurveFiles = this.props.dataFlowColData.filter(
         item => item.itemType == "normal-curve");
       var fileNames = normalCurveFiles.map(item => item.fileName);

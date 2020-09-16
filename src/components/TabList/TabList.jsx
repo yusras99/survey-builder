@@ -20,7 +20,7 @@ import {
 
 const axios = require('axios');
 
-// This component allows Psych researchers to configure an experiment 
+// Allows Psych researchers to configure an experiment 
 class TabList extends Component {
   constructor(props) {
     super(props);
@@ -80,6 +80,11 @@ class TabList extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  /**
+   * Pushes more component to this.state so that render() can present
+   * individual components to the frontend
+   * @param {[String]} tabDefine [component name]
+   */
   builderFunction = (tabDefine) => {
     var arr = this.state.children;
     // ###TODO###: Add more cases here for TabList to display 
@@ -134,6 +139,10 @@ class TabList extends Component {
     this.setState({ children: arr, count: newCount, output: curOutput, complete: false });
   }
 
+  /**
+   * Convert question type to its key in json
+   * @param {[String]} qType [question type]
+   */
   mapQTypetoQKey(qType) {
     switch(qType) {
       case "slider":
@@ -149,6 +158,13 @@ class TabList extends Component {
     }
   }
 
+  /**
+   * Grab question data based on questionKey and call configDataToItem
+   * to push selected component to this.state to be displayed with 
+   * default values based on latest user input
+   * @param {[String]} exptName [experiment name]
+   * @param {[String]} questionKey [question key labeled by users for csvColName]
+   */
   importQuestion(exptName, questionKey) {
     const thisExpt = this.props.experiments.filter(item => 
       item["exptName"] == exptName)[0];
@@ -160,16 +176,19 @@ class TabList extends Component {
       return thisExpt[k][key] == questionKey;
     })[0];
     const questionToDisplay = thisExpt[thisQKey];
-    console.log(questionToDisplay);
+    // console.log(questionToDisplay);
 
     // questions will show up once an expt type is pushed to this.state.children
+    // by configDataToItem
     this.configDataToItem(questionToDisplay, false);
   }
 
-  // input: question, a question in json format
-  //        editing, a boolean indicating whether the component is displayed 
-  //                  as part of "Edit Experiment"
-  // output: a React component
+  /**
+   * Push selected react component to this.state.children to be displayed
+   * @param {[Object]} question [a json object containing a question's data]
+   * @param {[Boolean]} editing [whether the component is displayed for 
+   *                             "Edit Experiment" feature]
+   */
   configDataToItem(question, editing) {
     var arr = this.state.children;
     switch (question["Type"]) {
@@ -236,17 +255,20 @@ class TabList extends Component {
     this.setState({ children: arr, count: newCount, output: curOutput, complete: false });    
   }
 
-  // Input: 
-  //  key: key of JSON object
-  //  value: value of JSON object
-  //  count: the numerical order of the JSON object
-  // Action: put the key and value pair in the final output JSON object
+  /**
+   * Put / modify the key and value pair in the final output JSON object
+   * @param {[String]} key [key of json object to be updated]
+   * @param {[Any]} value [value to be added / modified]
+   * @param {[Number]} count [numerical order of the question json obj]
+   */
   handleChange(key, value, count) {
     var curOutput = this.state.output;
     curOutput[count.toString()][key] = value;
     this.setState({ output: curOutput });
   }
 
+  // DEPRECATED method
+  // it's only applied to SliderTab which we don't use anymore
   appendToKeysArr(objType, nameType, csvColName, count) {
     var curOutput = this.state.output;
     const objKeys = Object.keys(curOutput[count.toString()]);
@@ -261,6 +283,10 @@ class TabList extends Component {
     // curOutput[count.toString()]["csvColNames"]
   }
 
+  /**
+   * Delete a question based on its numerical order
+   * @param {[Number]} id [ID of question to be deleted]
+   */
   delete(id) {
     var newDelete = this.state.deleted;
     newDelete.push(id);
@@ -283,7 +309,8 @@ class TabList extends Component {
   }
 
   // validating input fields. 
-  // for now: developers will need to add a case below 
+  // ****** TODO ******
+  // improve this function such that it checks if user has entered valid inputs
   checkOutput(obj) {
     var int = 0;
     var complete = true;
@@ -319,10 +346,15 @@ class TabList extends Component {
     return complete;
   }
 
-  // input: newExpt, a boolean representing whether this expt is new
+  /**
+   * Create a final json object containing an experiment's config data
+   * and send the object to database
+   * @param {[Boolean]} newExpt [whether the experiment is new]
+   */
   outputCreate(newExpt) {
     var obj = {};
     var index = {};
+    // the following block adds the mapping of cvs columns to question fields
     this.state.children
       .filter(item => this.state.deleted.indexOf(item.id) === -1)
       .map((item) => { 
@@ -368,6 +400,8 @@ class TabList extends Component {
         this.state.files.map(item => this.props.sendFile(username, item))
       };
 
+      // If this experiment is new, PUT request to append to the "experiments"
+      // array associated with studyName in the studyName's file in "/info"
       if (newExpt) {
         axios
         .put(
@@ -386,6 +420,10 @@ class TabList extends Component {
           console.log(error);
         });
       } else {
+        // the experiment is not new -> the experiment is in "Edit Experiment"
+        // mode, so we need to query the specific exptName and update that 
+        // element by deleting the old one and appending the new expt json obj
+        // to the "experiments" array associated with studyName
         if (this.props.location.state != null) {
           const exptName = this.props.location.state.exptName;
           axios
@@ -453,6 +491,7 @@ class TabList extends Component {
               type="text" id="userid" name="exptName" /><br />
             <b>all experiments in a study must have unique names</b>
           </form>
+          {/* Display components in this.state.children */}
           {
             this.state.children
               .filter(item => this.state.deleted.indexOf(item.id) === -1)
@@ -470,6 +509,8 @@ class TabList extends Component {
           {
             this.props.location.state != null 
             ?
+            // based on whether researchers are creating a new experiment or
+            // editing an experiment, we show different buttons
             <div>
               {
                 this.props.location.state.newExpt

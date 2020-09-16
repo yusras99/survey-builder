@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+/**
+ * Navigation bar
+ */
 class Navbar extends Component {
   render() {
     const userIsLoggedIn = this.props.auth.isAuthenticated;

@@ -29,15 +29,18 @@ class Dashboard extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
-  // load experiment names when the page loads
+  /**
+   * load experiment names when the page loads
+   */
   componentWillMount() {
     const username = this.props.auth.user.username;
     this.props.getDBInfo(username); // dbInfo will be in the store now
   }
 
+  /**
+   * Return names of studies created by user
+   */
   getStudyNames() {
-    // TODO. Filter out study names. If an item doesn't have study names
-    // as a key, then don't do anything. (wrap everything inside an if)
     const allInfo = this.props.dataFlowDBInfo;
     return allInfo.map(item => {
       const allKeys = Object.keys(item);
@@ -61,13 +64,19 @@ class Dashboard extends Component {
     });
   }
 
+  /**
+   * Call addStudyName from redux actions
+   */
   onAddStudy() {
     const username = this.props.auth.user.username;
     this.props.addStudyName(username, this.state.studyName);
-    // // alert("Your study has been succesfully created.");
-    // window.location.reload(false);
   };
 
+  /**
+   * DELETE request to remove collection named [studyName] and all other 
+   * collections associated with [studyName]
+   * @param {[Event]} e [an event triggered by deleting a study]
+   */
   onDeleteStudy(e) {
     const username = this.props.auth.user.username;
     const studyName = e.target.id;
@@ -104,6 +113,7 @@ class Dashboard extends Component {
       <div className="container">
         <h2>Dashboard</h2>
 
+        {/* Deprecated, used to direct researchers to configure normal curve items on google colab */}
         {/* <div className="boxed" style={{ width: "60%", margin: "auto" }}>
           <br/>
           <b>Configure Experiment Types:</b> <br/>

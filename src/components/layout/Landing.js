@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+/**
+ * Display researcher name on top of webpage
+ */
 class Landing extends Component {
   componentWillMount() {
   }

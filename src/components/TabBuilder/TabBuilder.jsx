@@ -20,6 +20,10 @@ class TabBuilder extends Component {
     this.props.getStudyInfo(username, studyName);
   }
 
+  /**
+   * Convert question type to its key in json
+   * @param {[String]} qType [question type]
+   */
   mapQTypetoQKey(qType) {
     switch(qType) {
       case "slider":
@@ -35,14 +39,14 @@ class TabBuilder extends Component {
     }
   }
 
-  // ###TODO###: add options here when you add your experiment type
   render() {
     var allGroups;
     // this object contains the mapping from questions to their experiment
     var qSelectedToExptname = {};
+    // the following block of code generates the content of a dropdown menu
+    // for researchers to select which question them want to import 
     if (!this.props.experiments.length == 0) {
       const allExpts = this.props.experiments;
-      // console.log(allExpts);
       const renderOption = item => <option value={item}>{item}</option>
       // per experiment
       // input: item represents a JSON object containing the configuration data
@@ -58,7 +62,6 @@ class TabBuilder extends Component {
           const csvColName = question[qKey];
           qArr.push(csvColName);
         })
-        // qArr.shift();
         qArr.map(q => qSelectedToExptname[q] = item.exptName);
         const qOptions = qArr.map(renderOption);
         return (
@@ -99,6 +102,7 @@ class TabBuilder extends Component {
                 {allGroups}
               </select>
               <button onClick={() => 
+                // importQuestion lives in TabList.jsx
                 this.props.importQuestion(
                   qSelectedToExptname[this.importQRef.current.value], 
                   this.importQRef.current.value)}>

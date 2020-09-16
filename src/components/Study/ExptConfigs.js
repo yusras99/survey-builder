@@ -7,31 +7,26 @@ import {
   getStudyInfo
 } from "../../actions/dataActions"
 
+/**
+ * Shows experiment configurations
+ * TODO: Improve this component so that data presentation looks better
+ */
 class ExptConfigs extends Component {
+
   componentDidMount() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     this.props.getStudyInfo(username, studyName);
-    // console.log(this.props.experiments);
   }
 
+  /**
+   * Get experiment config data (obj) from redux store and show it as a string
+   */
   showExptData() {
     const thisExpt = this.props.match.params.exptName;
     if (!this.props.experiments.length == 0) {
       const exptObj =
         this.props.experiments.find(item => item.exptName == thisExpt);
-      // const allKeys = Object.keys(exptObj);
-      // const questionKeys = allKeys.filter(
-      //   x => x != "userID" && x != "count" &&
-      //     x != "type" && x != "exptName");
-      // return questionKeys.map(q => {
-      //   const question = JSON.stringify(exptObj[q]);
-      //   return (
-      //     <div>
-      //       {question}
-      //     </div>
-      //   )
-      // })
       const JSONString = JSON.stringify(exptObj);
       return (
         <div>
@@ -39,8 +34,6 @@ class ExptConfigs extends Component {
         </div>
       )
     }
-    // const exptName = exptObj.exptName;
-    // const info = JSON.stringify(exptObj);
   }
 
   render() {

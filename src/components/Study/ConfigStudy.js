@@ -14,6 +14,9 @@ import {
 
 import axios from "axios";
 
+/**
+ * Create, Edit, Manage experiments in a study
+ */
 class ConfigStudy extends Component {
   constructor(props) {
     super(props);
@@ -28,12 +31,12 @@ class ConfigStudy extends Component {
     this.onChecked = this.onChecked.bind(this);
     this.onDeleteExperiment = this.onDeleteExperiment.bind(this);
   }
-  // note: using params to get studyName is probably not good practice. 
-  // figure out a better way to get info from previous page later, might
-  // use cookies? or does react have some way to pass states between pages?
+
   componentDidMount() {
     const username = this.props.auth.user.username;
     const studyName = this.props.match.params.studyName;
+    // Get whether studies in this experiment are randomized. 
+    // variable is stored in the file containing studyName
     axios
       .get('https://test-api-615.herokuapp.com/api/feedback/' + username +
         '/info/studyName-' + studyName)
@@ -42,6 +45,8 @@ class ConfigStudy extends Component {
           "randomize": true
         };
         console.log(res.data);
+        // Deal with studies created by researchers before I implemented 
+        // this randomize indicator
         if (!Object.keys(res.data).includes("randomize")) {
           this.putRandomize(username, studyName, dataToPut);
         } else {
@@ -50,6 +55,9 @@ class ConfigStudy extends Component {
       });
     this.props.getStudyInfo(username, studyName);
     this.props.getColNames(username);
+    // if there are more than 1 experiment collections associated with the 
+    // study, we mark the state of this experiment as { deployed : true }
+    // once deployed, researchers cannot turn on/off randomization
     axios
       .get('https://test-api-615.herokuapp.com/api/' + username + "/collections")
       .then(res => {
@@ -59,21 +67,35 @@ class ConfigStudy extends Component {
       });
   }
 
+  /**
+   * Get names of collections that are already deployed
+   */
   processColNames() {
     const studyName = this.props.match.params.studyName;
-    const processedArr = this.props.colNames.filter(name => name !== "info");
-    const currentStudyExpts = processedArr.filter(name =>
+    // const processedArr = this.props.colNames.filter(name => name !== "info");
+    // const currentStudyExpts = processedArr.filter(name =>
+    //   name.split('-')[0] == studyName);
+    const currentStudyExpts = this.props.colNames.filter(name =>
       name.split('-')[0] == studyName);
     const deployedExpts = currentStudyExpts.map(name => name.split('-')[1]);
-    // this.setState({ deployExpts: deployedExpts });
     return deployedExpts;
   }
 
+  /**
+   * PUT request to update document w info
+   * @param {[String]} database_name [name of database to query]
+   * @param {[String]} study_name [study name to query]
+   * @param {[Object]} data [a json object that will be added to the document
+   *                         queried by study_name]
+   */
   putRandomize(database_name, study_name, data) {
     axios.put('https://test-api-615.herokuapp.com/api/feedback/' + 
       database_name + '/info/studyName-' + study_name, data);
   }
 
+  /**
+   * Update document in database when users turn on/off randomization
+   */
   onChecked() {
     const nowState = !this.state.checked;
     this.setState({ checked: !this.state.checked });
@@ -85,7 +107,10 @@ class ConfigStudy extends Component {
     this.putRandomize(username, studyName, dataToPut);
   }
 
-  getExptNames() {
+  /**
+   * Return experiments in a study
+   */
+  getExpts() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
 
@@ -104,8 +129,6 @@ class ConfigStudy extends Component {
 
       const exptDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/configs";
-      // const partDataLink = "/" + username + "/" + studyName + "/" +
-      //   exptName + "/participantsData";
       const partExptDataLink = "/" + username + "/" + studyName + "/" +
         exptName + "/participantsExptData";
       const exptPartLink = "https://statistical-perceptions.github.io/" + 
@@ -143,10 +166,6 @@ class ConfigStudy extends Component {
               </button>
               <br/><br/>
               Condition: <b>{condition}</b>
-
-              {/* <br/>
-              <button onClick={() => console.log(condition)}></button> */}
-
               <br/><br/>
               <b>Database Link:</b><br/>
               {dbLink} <br/>
@@ -193,6 +212,8 @@ class ConfigStudy extends Component {
                 Configurations
               </button>
             </Link> <p> </p>
+            {/* We are passing info to the link so that TabList.js knows */}
+            {/* that we are in editing mode */}
             <Link to={{
                 pathname: exptBuilderLink,
                 state: {
@@ -264,6 +285,11 @@ class ConfigStudy extends Component {
     this.setState({ [e.target.id]: e.target.value });
   }
 
+  /**
+   * Delte both expt data stored in /info and expt collection that stores 
+   * participant data
+   * @param {[Event]} e [an event triggered by users to delete an expt]
+   */
   onDeleteExperiment(e) {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
@@ -293,6 +319,11 @@ class ConfigStudy extends Component {
     }
   }
 
+  /**
+   * Modify expt data associated with studyName file stored in /info 
+   * and create a new collectino to store participant data
+   * @param {[Event]} e [an event triggered by user deploying an expt]
+   */
   onDeploy(e) {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
@@ -317,8 +348,10 @@ class ConfigStudy extends Component {
     }
     // this.props.saveAddInfo(username, studyName, exptName, "condition", conditionInfo);
 
-    // NEED TO CLEAN THIS UP
+    // NEED TO CLEAN THIS UP 
     // i only used axios here for debugging
+    // PUT requests to add condition and link data to a specific experiment in 
+    // the "experiments array" associated with studyName
     axios
       .put('https://test-api-615.herokuapp.com/api/feedback/' + username + 
            '/info/studyName-' + studyName + '/experiments/exptName-' + exptName + '/' + 'condition',
@@ -336,6 +369,7 @@ class ConfigStudy extends Component {
                '/info/studyName-' + studyName + '/experiments/exptName-' + exptName + '/' + 'link',
                linkInfo)
           .then(res => {
+            // create a new collection in user's database
             this.props.createExptCol(username, studyName + "-" + exptName, exptName);
           })
       })
@@ -355,6 +389,9 @@ class ConfigStudy extends Component {
     });
   }
 
+  /**
+   * Footer to show different deployment buttons based on deployment status
+   */
   deploy() {
     const deployed = this.processColNames();
     const exptNames = this.props.experiments.map(item => item.exptName);
@@ -389,7 +426,6 @@ class ConfigStudy extends Component {
     }
   }
 
-  // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
@@ -442,7 +478,7 @@ class ConfigStudy extends Component {
           </div>
         }
         <br/>
-        {this.getExptNames()}
+        {this.getExpts()}
         <br /><br />
         {this.deploy()}
         <br />
@@ -455,15 +491,11 @@ class ConfigStudy extends Component {
 ConfigStudy.propTypes = {
   // Proptype.type, the type here must match initialState of reducer
   auth: PropTypes.object.isRequired,
-
   getStudyInfo: PropTypes.func.isRequired,
   experiments: PropTypes.array.isRequired,
-
   createExptCol: PropTypes.func.isRequired,
-
   getColNames: PropTypes.func.isRequired,
   colNames: PropTypes.array.isRequired,
-
   saveAddInfo: PropTypes.func.isRequired
 };
 

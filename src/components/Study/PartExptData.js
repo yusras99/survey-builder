@@ -11,6 +11,9 @@ import {
 
 import "./PartData.css";
 
+/**
+ * Shows participant data for a specific experiment
+ */
 class PartExptData extends Component {
   constructor(props) {
     super(props);
@@ -32,13 +35,18 @@ class PartExptData extends Component {
     this.props.getStudyInfo(username, studyName);
   }
 
+  /**
+   * Flatten the object such that all data lives "flat" on the first level
+   * @param {[Object]} obj [a json object containing an indivual participant's
+   *                        experiment data]
+   */
   flattenObj(obj) {
     var flattendObj = {};
     const flattenObject = (obj, keyName) => {
       Object.keys(obj).forEach(key => {
         var newKey = `${keyName}.${key}` 
         if (typeof obj[key] === "object") {
-          // calling the function again
+          // recursive call
           flattenObject(obj[key], newKey);
         } else {
           flattendObj[newKey] = obj[key];
@@ -62,13 +70,15 @@ class PartExptData extends Component {
     return flattendObj;
   } 
 
+  /**
+   * Make an array where each entry is a flat json Object containing an 
+   * individual participant's experiment data
+   */
   makeArr() {
     if (!Object.keys(this.props.colData).length == 0) {
-      // console.log(this.props.colData);
       var arr = [];
       var ids = [];
       const arrToProcess = this.props.colData;
-      console.log(arrToProcess);
       arrToProcess.forEach(item => {
         const id = item.participantID;
         const keysInItem = Object.keys(item);
@@ -105,6 +115,9 @@ class PartExptData extends Component {
     }
   }
 
+  /**
+   * Convert json objects to string and present them
+   */
   showJSONData() {
     const arr = this.makeArr();
     if (arr != null) {
@@ -120,6 +133,9 @@ class PartExptData extends Component {
     }
   }
 
+  /**
+   * Method to export csv file containing participant data for this expt
+   */
   getIndex() {
     const exptName = this.props.match.params.exptName;
     if (!this.props.experiments.length == 0) {
@@ -145,7 +161,6 @@ class PartExptData extends Component {
     }
   }
 
-  // an action to fetch userData from APi for componentWillMount
   render() {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
@@ -164,7 +179,6 @@ class PartExptData extends Component {
           </Link>
           <br/>
           <h4>Participants data: </h4> 
-          {/* <button onClick={this.downloadData}>See data as csv</button> */}
           <button>
             <CSVLink data={arr} filename={file_name}>
               Download Data as CSV
