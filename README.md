@@ -21,6 +21,7 @@ Resources used for the project:
 - [Explanation for src/actions, src/reducers, src/store.js](#redux)
 - [How to run this project on localhost](#localhost)
 - [survey-builder Dev Tutorial ](#tutorial)
+- [Deploy to Heroku](#heroku)
 
 ---
 
@@ -306,6 +307,16 @@ case "normal-curve":
   })
   break;
 ```
+
+---
+
+<a name="heroku"/>
+
+### Deploy to heroku
+
+Use psychApp2020@gmail.com credentials to log in to heroku. Follow [instructions](https://devcenter.heroku.com/articles/git) to deploy to heroku. 
+
+NOTE: Instead of using ```git push heroku master```, please use ```git push heroku main:master``` to build the app because we are using the ```main``` branch for development, but heroku is initially set up with ```master```. Using ```main:master``` forces heroku to build based on the ```main``` branch.
 
 ---
 
