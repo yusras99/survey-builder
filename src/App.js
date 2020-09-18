@@ -47,7 +47,7 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <HashRouter>
+      <HashRouter basename="/survey-builder/">
         <div className="App">
           < NavBar />
           <br/>
