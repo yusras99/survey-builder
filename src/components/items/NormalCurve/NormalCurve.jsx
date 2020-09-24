@@ -458,7 +458,7 @@ class NormalCurve extends Component {
     e.preventDefault();
     var x = svgP.x - distFromCent + this.state.mousePointerRange;
     var col = Math.round((x - this.state.axisStart) / this.state.distancing) + variance;
-    var colRelative = Math.round((x - this.state.axisStart) / this.state.distancing) + 1;
+    var colRelative = Math.round((x - this.state.axisStart) / this.state.distancing) - 1;
     // console.log(col, colRelative, variance);
     return [col, colRelative];
   }
@@ -512,8 +512,8 @@ class NormalCurve extends Component {
         if (col + this.state.triCentCol2 < this.state.axisStartCol) {
           this.setState({ distancing2: (this.state.variance2) * this.state.distancing, col21: 0, col22: this.state.len2 - 1 });
         }
-        else if (col + this.state.triCentCol2 + 1 > this.state.axisStartCol + this.state.axisEndCol) {
-          this.setState({ distancing2: this.state.distancing * (this.state.variance2 + this.state.axisEndCol - 1), col21: this.state.axisEndCol, col22: this.state.axisEndCol + this.state.len2 - 1 })
+        else if (col + this.state.triCentCol2 > this.state.axisStartCol + this.state.axisEndCol) {
+          this.setState({ distancing2: this.state.distancing * (this.state.variance2 + this.state.axisEndCol), col21: this.state.axisEndCol, col22: this.state.axisEndCol + this.state.len2 - 1 })
         }
         else {
           this.setState({ distancing2: this.state.distancing * col, col21: colRelative, col22: colRelative + this.state.len2 - 1 });
@@ -525,8 +525,8 @@ class NormalCurve extends Component {
         if (col + this.state.triCentCol1 < this.state.axisStartCol) {
           this.setState({ distancing1: (this.state.variance1) * this.state.distancing, col11: 0, col12: this.state.len1 - 1 });
         }
-        else if (col + this.state.triCentCol1 + 1 > this.state.axisStartCol + this.state.axisEndCol) {
-          this.setState({ distancing1: this.state.distancing * (this.state.variance1 + this.state.axisEndCol - 1), col11: this.state.axisEndCol, col12: this.state.axisEndCol + this.state.len1 - 1 })
+        else if (col + this.state.triCentCol1 > this.state.axisStartCol + this.state.axisEndCol) {
+          this.setState({ distancing1: this.state.distancing * (this.state.variance1 + this.state.axisEndCol), col11: this.state.axisEndCol, col12: this.state.axisEndCol + this.state.len1 - 1 })
         }
         else {
           this.setState({ distancing1: this.state.distancing * col, col11: colRelative, col12: colRelative + this.state.len1 - 1 });
@@ -1044,7 +1044,7 @@ class NormalCurve extends Component {
                     (row) => this.dotReturn2(col, row)
                   )
               )}
-              <rect width={this.state.axisEnd - this.state.distancing}
+              <rect width={this.state.axisEnd}
                 height="2"
                 fill="black"
                 x={this.state.axisStartCol * this.state.distancing - 1}
@@ -1057,7 +1057,7 @@ class NormalCurve extends Component {
               <rect width="2"
                 height="20"
                 fill="black"
-                x={this.state.axisEnd - this.state.distancing + this.state.axisStartCol * this.state.distancing - 1}
+                x={this.state.axisEnd + this.state.axisStartCol * this.state.distancing - 1}
                 y={this.state.ceilDist + 20} />
               {[...Array(this.state.tickNum).keys()].map(
                 (tick) =>
