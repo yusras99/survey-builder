@@ -55,7 +55,7 @@ class TabList extends Component {
     const username = this.props.match.params.username;
     const studyName = this.props.match.params.studyName;
     this.props.getStudyInfo(username, studyName);
-    console.log(this.props.location.state);
+    // console.log(this.props.location.state);
     if (this.props.location.state != null) {
       if (!this.props.location.state.newExpt) {
         const thisExpt = this.props.location.state.exptName;
@@ -80,6 +80,8 @@ class TabList extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  // ###TODO###: Add more cases here for TabList to display 
+  //             Follow the format of the provided components below
   /**
    * Pushes more component to this.state so that render() can present
    * individual components to the frontend
@@ -87,8 +89,6 @@ class TabList extends Component {
    */
   builderFunction = (tabDefine) => {
     var arr = this.state.children;
-    // ###TODO###: Add more cases here for TabList to display 
-    //             Follow the format of the provided components below
     switch (tabDefine) {
       case "slider":
         arr.push({ 
@@ -139,7 +139,8 @@ class TabList extends Component {
     this.setState({ children: arr, count: newCount, output: curOutput, complete: false });
   }
 
-  /**
+  /** ###TODO###: add more switch statements here when adding a new component
+   *  ###TODO###: the switch statement is not super necessary, pls improve
    * Convert question type to its key in json
    * @param {[String]} qType [question type]
    */
@@ -183,8 +184,10 @@ class TabList extends Component {
     this.configDataToItem(questionToDisplay, false);
   }
 
+  // ###### TODO ######: Add your component here
   /**
-   * Push selected react component to this.state.children to be displayed
+   * Push selected react component to this.state.children to be displayed 
+   * Used when importing or editing question. 
    * @param {[Object]} question [a json object containing a question's data]
    * @param {[Boolean]} editing [whether the component is displayed for 
    *                             "Edit Experiment" feature]

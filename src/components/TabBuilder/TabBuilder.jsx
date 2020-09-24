@@ -20,6 +20,8 @@ class TabBuilder extends Component {
     this.props.getStudyInfo(username, studyName);
   }
 
+  // ###TODO###: add more switch statements here when adding a new component
+  // ###TODO###: the switch statement is not super necessary, pls improve
   /**
    * Convert question type to its key in json
    * @param {[String]} qType [question type]

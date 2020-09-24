@@ -21,7 +21,6 @@ Resources used for the project:
 - [Explanation for src/actions, src/reducers, src/store.js](#redux)
 - [How to run this project on localhost](#localhost)
 - [survey-builder Dev Tutorial ](#tutorial)
-- [Deploy to Heroku](#heroku)
 
 ---
 
@@ -242,8 +241,11 @@ These few lines basically filters through the acquired documents and list their 
 
 ### Add your Experiment Type in TabBuilder.jsx
 
-Please navigate to **/src/components/TabBuilder.jsx** and follow the ```TODO``` tag. 
+You will add your new experiment type as switch statements in TabBuilder.jsx and TabList.jsx. 
 
+You will also add another switch case in TabBuilder.jsx. Note that the switch statement in TabBuilder.jsx is not super necessary, if you just want to test out data flow, please feel free to add your statement. When you are done, you may also find a way to improve how question keys are stored to get rid of the switch statement. 
+
+Note that there are two methods in TabList.jsx where you need to add a switch case containing your component: ```BuilderFunction``` and ```ConfigDataToItem```. TabList uses ```BuilderFunction``` to render a new experiment item to configure without default values while it uses ```ConfigDataToItem``` when importing a question / rendering a question in editing mode. 
 
 ---
 
@@ -307,16 +309,6 @@ case "normal-curve":
   })
   break;
 ```
-
----
-
-<a name="heroku"/>
-
-### Deploy to heroku
-
-Use psychApp2020@gmail.com credentials to log in to heroku. Follow [instructions](https://devcenter.heroku.com/articles/git) to deploy to heroku. 
-
-NOTE: Instead of using ```git push heroku master```, please use ```git push heroku main:master``` to build the app because we are using the ```main``` branch for development, but heroku is initially set up with ```master```. Using ```main:master``` forces heroku to build based on the ```main``` branch.
 
 ---
 
