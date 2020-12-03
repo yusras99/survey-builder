@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
-import NormalCurve from './threshold.jsx';
+import ThresholdCurve from './threshold.jsx';
 import './HistSlider.css';
 
-class NormalCurveResearch extends Component {
+class ThresholdCurveResearch extends Component {
     constructor(props) {
       super(props);
   
@@ -68,7 +68,7 @@ class NormalCurveResearch extends Component {
       // Search 'dataReceived' in this file to learn more
       return (
         <div>
-          <NormalCurve 
+          <ThresholdCurve 
             data={this.state.jsonData} />
           <br/>
         </div>
@@ -96,4 +96,4 @@ class NormalCurveResearch extends Component {
 
 }
 
-export default NormalCurveResearch;
+export default ThresholdCurveResearch;
