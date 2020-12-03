@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import './NormalCurve.css';
+import './ThresholdCurve.css';
 import './HistSlider.css';
 import Dropzone, { useDropzone } from "react-dropzone";
 
 import { json } from 'd3';
 
-class NormalCurve extends Component {
+class ThresholdCurve extends Component {
     constructor(props) {
       super(props);
   
@@ -389,4 +389,4 @@ dotReturn1(xPos, yPos) {
   }
 }
 
-export default NormalCurve;
+export default ThresholdCurve;
