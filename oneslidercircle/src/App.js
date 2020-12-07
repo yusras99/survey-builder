@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import NormalCurve from './threshold.jsx';
+import ThresholdCurve from './threshold.jsx';
 import * as d3 from "d3";
 import ThresholdCurveResearch from './thresholdReasearch.jsx';
 
@@ -38,7 +38,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NormalCurveResearch data={this.state.data}/>
+        <ThresholdCurveResearch data={this.state.data}/>
       </div>
     );
   }
