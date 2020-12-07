@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import NormalCurve from './threshold.jsx';
 import * as d3 from "d3";
-import NormalCurveResearch from './thesholdReasearch.jsx';
+import ThresholdCurveResearch from './thresholdReasearch.jsx';
 
 class App extends Component {
   
