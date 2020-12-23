@@ -548,8 +548,7 @@ class TabList extends Component {
           }
         </div>
         <br/>
-        {/* <button onClick={() => console.log(finalObj)}>Show finalObj</button><br/>
-        <button onClick={() => console.log(this.nameRef.current.value)}>Show exptName</button><br/> */}
+        {/* <button onClick={() => console.log(finalObj)}>Show finalObj</button><br/> */}
         {/* <button onClick={() => console.log(this.state.files)}>Show files</button> */}
       </div>
     )

@@ -96,7 +96,7 @@ class StaticText extends Component {
       // construct an image object
       const imag = {
         'name': file.name,
-        'link': reader.result
+        'parsedLink': reader.result
       }
       if (this.state.names.includes(file.name)) {
         alert("Image file name already exists. Please rename the image or upload another one.")
@@ -167,7 +167,8 @@ class StaticText extends Component {
         // this.getBase64Image(parsedURL);
         const imag = {
           'name': this.state.count,
-          'link': parsedURL
+          'parsedLink': parsedURL,
+          'originalLink': rawURl
         }
         await this.setState({ images: [...this.state.images, imag] });
         this.handleChange("Images", this.state.images, this.props.count);
@@ -188,6 +189,13 @@ class StaticText extends Component {
       this.handleChange("Images", this.props.qToDisplay["Images"], this.props.count);
       // this.setState({ names: this.props.qToDisplay["ImageNames"] });
       this.setState({ images: this.props.qToDisplay["Images"] });
+      var previousCount = 0;
+      const arrayLength = this.props.qToDisplay["Images"].length;
+      if (arrayLength != 0) {
+        const lastElement = this.props.qToDisplay["Images"][arrayLength - 1];
+        previousCount = lastElement.name;
+      }
+      this.setState({ count: previousCount });
     }; 
     if (this.props.editing) {
       // we want to show previous csv column names because researchers want to make edits
@@ -202,24 +210,20 @@ class StaticText extends Component {
     if (this.state.images.length != 0) {
       // console.log(this.state);
       Images = ({sth}) => (
-        <div>
-          {
-            this.state.images.map(imag => (
-              <div style={thumbWithDelete}>
-                <div style={thumb} key={imag.name}>
-                  <div style={thumbInner}>
-                    <img src={imag.link} style={{ height: "100%", width: "100%" }}/>
-                  </div>
-                </div>
-                <br/>
-                <button id={imag.name} onClick={this.onDeleteImage}>
-                  Delete
-                </button>
+        this.state.images.map(imag => (
+          <div style={thumbWithDelete}>
+            <div style={thumb} key={imag.name}>
+              <div style={thumbInner}>
+                <img src={imag.parsedLink} style={{ height: "100%", width: "100%" }}/>
               </div>
-            ))
-          }
-        </div>
-      )
+            </div>
+            <br/>
+            <button id={imag.name} onClick={this.onDeleteImage}>
+              Delete
+            </button>
+          </div>
+        ))
+      );
     }
     return (
       <div>
@@ -241,7 +245,7 @@ class StaticText extends Component {
             </textarea>
           }
           <br/><br/>
-          Add image(s) by copying shared Google Drive link below:
+          Add image(s) by pasting shared Google Drive link below:
           {/* <Dropzone
             onDrop={this.handleDrop}
             accept="image/jpeg, image/png"
