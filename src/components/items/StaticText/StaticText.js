@@ -253,11 +253,10 @@ class StaticText extends Component {
               </div>
             )}
           </Dropzone> */}
-          {/* <input type="text" ref={this.imageRef}
-            onInput={() => this.getImageURL(this.imageRef.current.value)}/> */}
           <br/>
           <textarea cols="60" rows="3" ref={this.imageRef} 
-            onInput={() => this.handleImageURL(this.imageRef.current.value)}>
+            onInput={() => this.handleImageURL(this.imageRef.current.value)}
+            placeholder="Paste a new link here">
           </textarea>
           <div style={thumbsContainer}>
             <Images data={''} />
