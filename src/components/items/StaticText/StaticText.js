@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useCallback } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
 
 import PropTypes from "prop-types";
@@ -15,6 +15,12 @@ const thumbsContainer = {
   flexWrap: 'wrap',
   marginTop: 16
 };
+
+const thumbWithDelete = {
+  display: 'inline-block',
+  justifyContent: 'center',
+  alignItems: 'center'
+}
 
 const thumb = {
   display: 'inline-flex',
@@ -39,14 +45,19 @@ class StaticText extends Component {
     super(props);
     this.qRef = React.createRef();
     this.keyRef = React.createRef();
+    this.imageRef = React.createRef();
 
     this.state = {
-      images: []
+      images: [],
+      names: [],
+      count: 0
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.onChange = this.onChange.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
+    this.onDeleteImage = this.onDeleteImage.bind(this);
+    this.handleImageURL = this.handleImageURL.bind(this);
   }
 
   delete() {
@@ -65,16 +76,36 @@ class StaticText extends Component {
     this.props.handleChange(type, q, count);
   }
 
+  onDeleteImage(e) {
+    // update both state and finalObj
+    const arrRemovedImg = this.state.images.filter(imag => imag.name != e.target.id);
+    this.setState({ images: arrRemovedImg });
+    this.handleChange("Images", arrRemovedImg, this.props.count);
+  }
+
+  /**
+   * DEPRECATED
+   * 
+   * encodes a file to base64
+   */
   getBase64(file) {
     let reader = new FileReader();
     reader.readAsDataURL(file);
+    console.log(file);
     reader.onload = () => {
-      // callback happens here
+      // construct an image object
       const imag = {
-        'content': reader.result,
-        'preview': URL.createObjectURL(file)
+        'name': file.name,
+        'link': reader.result
       }
-      this.setState({ images: [...this.state.images, imag] });
+      if (this.state.names.includes(file.name)) {
+        alert("Image file name already exists. Please rename the image or upload another one.")
+      } else {
+        this.setState({ names: [...this.state.names, file.name] });
+        this.setState({ images: [...this.state.images, imag] });
+        this.handleChange("ImageNames", this.state.names, this.props.count);
+        this.handleChange("Images", this.state.images, this.props.count);
+      }
     };
     reader.onerror = function (error) {
       alert("An error occured. Please refresh the page.");
@@ -82,6 +113,11 @@ class StaticText extends Component {
     };
   }
 
+  /**
+   * DEPRECATED
+   * 
+   * dropzone implementation for uploading files directly
+   */
   handleDrop(acceptedFiles) {
     console.log(acceptedFiles.map(file => {
       acceptedFiles.forEach((file) => {
@@ -94,33 +130,10 @@ class StaticText extends Component {
             " with a unique name.");
           this.setState({ dataReceived: false });
         } else {
-          this.handleChange("FileName", file.name, this.props.count);
-          console.log(file.name);
-          console.log(file);
-
           let base64str = '';
           this.getBase64(file, (result) => {
             base64str = result;
-            console.log(base64str);
           })
-
-          // const reader = new FileReader()
-          // reader.onabort = () => console.log('file reading was aborted')
-          // reader.onerror = () => console.log('file reading has failed')
-          // reader.onload = () => {
-          //   // Do whatever you want with the file contents
-          //   const fileText = reader.result;
-          //   // const jsonData = JSON.parse(fileText);
-
-          //   // this.handleChange("FileContent", jsonData, this.props.count);
-          //   // if (this.props.files.length == 0) {
-          //   //   this.saveFile("threshold", file.name, jsonData);
-          //   // } else {
-          //   //   const names = this.props.files.map(item => item.fileName);
-          //   //   if (!names.includes(file.name)) {
-          //   //     this.saveFile("threshold", file.name, jsonData);
-          //   //   }
-          //   // }
         };
       });
     }));
@@ -129,13 +142,52 @@ class StaticText extends Component {
     // });
   }
 
+  /**
+   * Parses the original URL into a URL that's accessible via HTML
+   * @param {String} rawURl the URL to an image on google drive
+   * 
+   * Example: 
+   * https://drive.google.com/file/d/1EfTINoAi0YUfR_3rECe_vDT9CtfGTlO-/view?usp=sharing
+   * to 
+   * https://drive.google.com/uc?export=view&id=1EfTINoAi0YUfR_3rECe_vDT9CtfGTlO-
+   */
+  async handleImageURL(rawURl) {
+    if (rawURl != '') {
+      this.state.count += 1;
+      const reg = 'file/d/(.*)/view?';
+      const match_arr = rawURl.match(reg);
+      if (match_arr == null) {
+        alert("Please make sure you have copied a valid URL");
+      } else {
+        // the actual id is the second element in the array because 
+        // the first element includes file/d/ and /view?
+        const imageID = match_arr[1];
+        const parsedURL = "https://drive.google.com/uc?export=view&id=" + imageID
+        console.log(parsedURL);
+        // this.getBase64Image(parsedURL);
+        const imag = {
+          'name': this.state.count,
+          'link': parsedURL
+        }
+        await this.setState({ images: [...this.state.images, imag] });
+        this.handleChange("Images", this.state.images, this.props.count);
+        this.imageRef.current.value = '';
+      }
+    }
+  }
+
   componentDidMount() {
+    console.log(this.props);
     // NOTE: import includes both "import question from another experiment" and
     //       "Edit experiment"
     if (this.props.imported) {
       // we only want to show the actual content because the question is imported 
       // (researchers may want to use different csv column names)
       this.handleChange("Static Text", this.props.qToDisplay["Static Text"], this.props.count);
+      // this.handleChange("ImageNames", this.props.qToDisplay["ImageNames"], this.props.count);
+      this.handleChange("Images", this.props.qToDisplay["Images"], this.props.count);
+      // this.setState({ names: this.props.qToDisplay["ImageNames"] });
+      this.setState({ images: this.props.qToDisplay["Images"] });
     }; 
     if (this.props.editing) {
       // we want to show previous csv column names because researchers want to make edits
@@ -145,17 +197,24 @@ class StaticText extends Component {
 
   render() {
     const qNum = this.props.count + 1;
+    // show preview thumbnails
     var Images = ({sth}) => <img src={''} />
     if (this.state.images.length != 0) {
-      console.log(this.state);
+      // console.log(this.state);
       Images = ({sth}) => (
         <div>
           {
             this.state.images.map(imag => (
-              <div style={thumb}>
-                <div style={thumbInner}>
-                  <img src={imag.preview} style={{ height: "100%", width: "100%" }}/>
+              <div style={thumbWithDelete}>
+                <div style={thumb} key={imag.name}>
+                  <div style={thumbInner}>
+                    <img src={imag.link} style={{ height: "100%", width: "100%" }}/>
+                  </div>
                 </div>
+                <br/>
+                <button id={imag.name} onClick={this.onDeleteImage}>
+                  Delete
+                </button>
               </div>
             ))
           }
@@ -182,8 +241,8 @@ class StaticText extends Component {
             </textarea>
           }
           <br/><br/>
-          Add image(s):
-          <Dropzone
+          Add image(s) by copying shared Google Drive link below:
+          {/* <Dropzone
             onDrop={this.handleDrop}
             accept="image/jpeg, image/png"
             >
@@ -193,7 +252,13 @@ class StaticText extends Component {
                 <p>Drag'n'drop files, or click to select files (must be .jpg or .png)</p>
               </div>
             )}
-          </Dropzone>
+          </Dropzone> */}
+          {/* <input type="text" ref={this.imageRef}
+            onInput={() => this.getImageURL(this.imageRef.current.value)}/> */}
+          <br/>
+          <textarea cols="60" rows="3" ref={this.imageRef} 
+            onInput={() => this.handleImageURL(this.imageRef.current.value)}>
+          </textarea>
           <div style={thumbsContainer}>
             <Images data={''} />
           </div>
