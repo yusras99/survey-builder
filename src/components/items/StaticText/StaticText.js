@@ -178,7 +178,6 @@ class StaticText extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     // NOTE: import includes both "import question from another experiment" and
     //       "Edit experiment"
     if (this.props.imported) {
@@ -188,14 +187,16 @@ class StaticText extends Component {
       // this.handleChange("ImageNames", this.props.qToDisplay["ImageNames"], this.props.count);
       this.handleChange("Images", this.props.qToDisplay["Images"], this.props.count);
       // this.setState({ names: this.props.qToDisplay["ImageNames"] });
-      this.setState({ images: this.props.qToDisplay["Images"] });
-      var previousCount = 0;
-      const arrayLength = this.props.qToDisplay["Images"].length;
-      if (arrayLength != 0) {
-        const lastElement = this.props.qToDisplay["Images"][arrayLength - 1];
-        previousCount = lastElement.name;
+      if (Object.keys(this.props.qToDisplay).includes("Images")) {
+        this.setState({ images: this.props.qToDisplay["Images"] });
+        var previousCount = 0;
+        const arrayLength = this.props.qToDisplay["Images"].length;
+        if (arrayLength != 0) {
+          const lastElement = this.props.qToDisplay["Images"][arrayLength - 1];
+          previousCount = lastElement.name;
+        }
+        this.setState({ count: previousCount });
       }
-      this.setState({ count: previousCount });
     }; 
     if (this.props.editing) {
       // we want to show previous csv column names because researchers want to make edits
