@@ -207,11 +207,11 @@ class ConfigStudy extends Component {
           <div>
             <div className="boxed">
             Experiment: <b>{expt.exptName}</b><br/><br/>
-            <Link to={exptDataLink}>
+            {/* <Link to={exptDataLink}>
               <button type="button">
                 Configurations
               </button>
-            </Link> <p> </p>
+            </Link> <p> </p> */}
             {/* We are passing info to the link so that TabList.js knows */}
             {/* that we are in editing mode */}
             <Link to={{
@@ -225,7 +225,8 @@ class ConfigStudy extends Component {
                 Edit Experiment
               </button>
             </Link>
-            <br/><br/>
+            {/* <br/><br/> */}
+            <p> </p>
             <button id={expt.exptName} onClick={this.onDeleteExperiment}>
             Delete this Experiment
             </button>
