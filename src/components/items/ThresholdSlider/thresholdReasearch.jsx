@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
 import ThresholdCurve from './threshold.jsx';
 import './HistSlider.css';
+import './ThresholdSlider.css';
 
 class ThresholdCurveResearch extends Component {
     constructor(props) {
@@ -67,7 +68,7 @@ class ThresholdCurveResearch extends Component {
       // previously built for drag n drop file upload. 
       // Search 'dataReceived' in this file to learn more
       return (
-        <div>
+        <div className="boxed">
           <ThresholdCurve 
             data={this.state.jsonData} />
           <br/>
@@ -76,7 +77,8 @@ class ThresholdCurveResearch extends Component {
     // importing component
     } else{
       return( 
-        <div>
+        <div className="boxed">
+          Threshold Question
           <Dropzone
                 onDrop={this.handleDrop}
                 accept="application/JSON, .json"
@@ -87,7 +89,8 @@ class ThresholdCurveResearch extends Component {
                     <p>Drag'n'drop files, or click to select files (must be valid JSON file)</p>
                   </div>
                 )}
-              </Dropzone>
+          </Dropzone>
+          TODO: delete question
         </div>
       )
     }

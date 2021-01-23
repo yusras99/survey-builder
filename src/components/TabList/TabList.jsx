@@ -12,6 +12,7 @@ import StaticText from '../items/StaticText/StaticText';
 import NormalCurve from '../items/NormalCurve/NormalCurve';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
 import HistogramResearch from '../items/Threshold/HistogramResearch';
+import ThresholdResearch from '../items/ThresholdSlider/thresholdReasearch';
 
 import { 
   sendFile,
@@ -123,7 +124,7 @@ class TabList extends Component {
       case "threshold":
         arr.push({
           id: this.state.count,
-          tab: <HistogramResearch getCount={this.getCount} 
+          tab: <ThresholdResearch getCount={this.getCount} 
                   delete={this.delete} count={this.state.count}
                   handleChange={this.handleChange} 
                   files={this.state.files} saveFile={this.saveFile}
@@ -242,7 +243,7 @@ class TabList extends Component {
       case "threshold":
         arr.push({
           id: this.state.count,
-          tab: <HistogramResearch getCount={this.getCount} 
+          tab: <ThresholdResearch getCount={this.getCount} 
                   delete={this.delete} count={this.state.count}
                   handleChange={this.handleChange} 
                   files={this.state.files} saveFile={this.saveFile}

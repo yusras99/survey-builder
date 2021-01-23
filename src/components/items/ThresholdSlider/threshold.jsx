@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import './ThresholdCurve.css';
-import './HistSlider.css';
+import './ThresholdSlider.css';
 import Dropzone, { useDropzone } from "react-dropzone";
+import { gsap } from 'gsap'
+import {TweenMax, Draggable} from "gsap/all";
 
 import { json } from 'd3';
+import { Tween } from 'gsap/gsap-core';
 
 class ThresholdCurve extends Component {
     constructor(props) {
@@ -64,7 +66,8 @@ class ThresholdCurve extends Component {
       this.rectReturn7 = this.rectReturn7.bind(this);
       this.rectReturn8 = this.rectReturn8.bind(this);
       this.textReturn = this.textReturn.bind(this);
-
+      this.returnSlider1 = this.returnSlider1.bind(this);
+      this.returnSlider2 = this.returnSlider2.bind(this);
 
       this.establishStateData = this.establishStateData.bind(this);
       //this.updateRadius = this.updateRadius.bind(this);
@@ -182,7 +185,14 @@ class ThresholdCurve extends Component {
         maxVal : data["maxVal"],
         legendKey : data["legendKey"],
         displayArr5 : data["displayArr5"],
-        refArr5 : data["refArr5"]
+        refArr5 : data["refArr5"],
+        indicesXPos: data["indicesXPos"],
+        thumbDown: false,
+        topSliderX: 0,
+        topSliderY: 60,
+        bottomSliderX: 90,
+        bottomSliderY: 175,
+        dragger1Pos: 0
       }
     }
 
@@ -320,57 +330,156 @@ dotReturn1(xPos, yPos) {
     return hard;
   }
 
-  render() {
-    return (
-      <div>
-        <svg width={this.state.width + 400} height={this.state.height + 10} ref={this.svgRef}>
-        {[...this.state.xPos1].map(
-          (col, index) =>
-            (this.dotReturn1(col,this.state.yPos1[index]))
-        )}
-        {this.dotReturn1(this.state.width +220,this.state.height/6 + 70)}
-        {[...this.state.xPos2].map(
-          (col, index) =>
-            (this.dotReturn2(col,this.state.yPos2[index]))
-        )}
-        {this.dotReturn2(this.state.width +220, this.state.height/6 + 40)}
-        {[...this.state.xPos3].map(
-          (col, index) =>
-            (this.dotReturn3(col,this.state.yPos3[index]))
-        )}
-        {this.dotReturn3(this.state.width +220, this.state.height/4 +28)}
-        {this.dotReturn4(this.state.width +220, this.state.height/4 +48)}
+  onUpdate = (info) => {
+    console.log(info);
+    // this.setState({ dragger1Pos: this.dragger1.x });
+  }
 
-        {[...this.state.xPos4].map(
-          (col, index) =>
-            (this.dotReturn4(col,this.state.yPos4[index]))
-        )}
-        {this.textReturn(this.state.width + 240, this.state.height/4 + 32, this.state.legendKey[0])}
-        {this.textReturn(this.state.width + 240, this.state.height/4 + 52, this.state.legendKey[1])}
-        {this.textReturn(this.state.width + 240, this.state.height/4 - 8, this.state.legendKey[2])}
-        {this.textReturn(this.state.width + 240, this.state.height/4 - 39, this.state.legendKey[3])}
-        {[...this.state.displayArr5].map(
-          (b, index) =>
-            (this.textReturn(this.state.refArr5[index] + 15, 265, b))
-        )}
-        {this.rectReturn1(this.state.width/2.5,600)}
-        {this.rectReturn2(this.state.width/2.5,600)}
-        {this.rectReturn3(this.state.width/2.5,650)}
-        {this.rectReturn4(this.state.width/2.5,650)}
-        {this.rectReturn5(this.state.width/2.5,700)}
-        {this.rectReturn6(this.state.width/2.5,700)}
-        {this.rectReturn7(this.state.width/2.5,750)}
-        {this.rectReturn8(this.state.width/2.5,750)}
+  onLoaded() {
+    document.body.addEventListener('touchmove', function (ev) { 
+      ev.preventDefault();
+    });
+    Draggable.create(this.dragger1, {
+     type: "x",
+     bounds: { minX: 0, maxX: 1000 },
+    //  onDrag: this.onUpdate,
+     throwProps: true,
+     liveSnap: {x:[0, 90, 190, 290, 390, 490, 590, 690, 790, 890, 980]},
+     onDragEnd: this.setState({ dragger1Pos: this.x })
+      // console.log(this.x)
+    //  onThrowUpdate: this.onUpdate
+    });
+  }
+
+  componentDidMount() {
+    gsap.registerPlugin(Draggable);
+    TweenMax.to(this.dragger1, 1, {
+      x: "+=0"
+    });
+    this.onLoaded();
+  }
+
+  returnSlider1() {
+    return (
+      <rect
+        x={this.state.topSliderX} y={this.state.topSliderY} 
+        width="5" height="80"
+        onMouseDown={(e, num) => this.sliderMouseDown(e, 1)}
+        ref={group => {
+          this.dragger1 = group;
+        }}
+      />
+    )
+  }
+
+  returnSlider2() {
+    return (
+      <rect
+        x={this.state.bottomSliderX} y={this.state.bottomSliderY} 
+        width="5" height="80"
+        onMouseDown={(e, num) => this.sliderMouseDown(e, 2)}
+      />
+    )
+  }
+  
+  // not finished
+  sliderMouseDown(e, num) {
+    if (e.type === "mousedown") {
+      e.preventDefault();
+
+    }
+  }
+
+  render() {
+    const widthFactor = 6;
+    const heightFactor = 3.5;
+    // TODO: change padding so that the entire graph is in the center of the box
+    return (
+      <div style={{ backgroundColor: "pink" }}>
+        <svg width={this.state.width} height={this.state.height/2.5} ref={this.svgRef}>
+
+          {/* rows of dots */}
+          {[...this.state.xPos1].map(
+            (col, index) =>
+              (this.dotReturn1(col + 13,this.state.yPos1[index]))
+          )}
+
+          {[...this.state.xPos2].map(
+            (col, index) =>
+              (this.dotReturn2(col + 13,this.state.yPos2[index]))
+          )}
+
+          {[...this.state.xPos3].map(
+            (col, index) =>
+              (this.dotReturn3(col + 13,this.state.yPos3[index]))
+          )}
+          
+          {[...this.state.xPos4].map(
+            (col, index) =>
+              (this.dotReturn4(col + 13,this.state.yPos4[index]))
+          )}
+          
+          
+          {/* legend dots */}
+          {/* {this.dotReturn1(this.state.width +220,this.state.height/6 + 70)}
+          {this.dotReturn2(this.state.width +220, this.state.height/6 + 40)}
+          {this.dotReturn3(this.state.width +220, this.state.height/4 +28)}
+          {this.dotReturn4(this.state.width +220, this.state.height/4 +48)} */}
+          {this.dotReturn1(this.state.width/widthFactor,this.state.height/heightFactor)}
+          {this.dotReturn2(this.state.width/widthFactor, this.state.height/heightFactor + 30)}
+          {this.dotReturn3(this.state.width/widthFactor, this.state.height/heightFactor +60)}
+          {this.dotReturn4(this.state.width/widthFactor, this.state.height/heightFactor +90)}
+
+          {/* legend texts */}
+          {/* {this.textReturn(this.state.width + 240, this.state.height/4 + 32, this.state.legendKey[0])}
+          {this.textReturn(this.state.width + 240, this.state.height/4 + 52, this.state.legendKey[1])}
+          {this.textReturn(this.state.width + 240, this.state.height/4 - 8, this.state.legendKey[2])}
+          {this.textReturn(this.state.width + 240, this.state.height/4 - 39, this.state.legendKey[3])} */}
+          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 2 * this.state.rad, this.state.legendKey[0])}
+          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 30 + 2 * this.state.rad, this.state.legendKey[1])}
+          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 60 + 2 * this.state.rad, this.state.legendKey[2])}
+          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 90 + 2 * this.state.rad, this.state.legendKey[3])}
+
+          {/* indices for columns */}
+          {[...this.state.displayArr5].map(
+            (b, index) =>
+              (this.textReturn(this.state.refArr5[index] + 15, this.state.indicesXPos, b))
+          )}
+
+          {/* rectangular bars */}
+          {/* {this.rectReturn1(this.state.width/2.5,600)}
+          {this.rectReturn2(this.state.width/2.5,600)}
+          {this.rectReturn3(this.state.width/2.5,650)}
+          {this.rectReturn4(this.state.width/2.5,650)}
+          {this.rectReturn5(this.state.width/2.5,700)}
+          {this.rectReturn6(this.state.width/2.5,700)}
+          {this.rectReturn7(this.state.width/2.5,750)}
+          {this.rectReturn8(this.state.width/2.5,750)} */}
+          {this.rectReturn1(this.state.width/2.5,this.state.height/heightFactor - 2 * this.state.rad)}
+          {this.rectReturn2(this.state.width/2.5,this.state.height/heightFactor - 2 * this.state.rad)}
+          {this.rectReturn3(this.state.width/2.5,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
+          {this.rectReturn4(this.state.width/2.5,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
+          {this.rectReturn5(this.state.width/2.5,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
+          {this.rectReturn6(this.state.width/2.5,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
+          {this.rectReturn7(this.state.width/2.5,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
+          {this.rectReturn8(this.state.width/2.5,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
+
+          {/* sliders */}
+          {this.returnSlider1()}
+          {this.returnSlider2()}
+
         </svg>
+      
+
         <div>
-        <input type="range" min={this.state.minVal} max={this.state.maxVal} 
-              className="hist-slider" onChange={this.onChange1}
+        {/* <input type="range" min={this.state.minVal} max={this.state.maxVal} 
+              className="thresh-top-slider" onChange={this.onChange1}
               name="sliderPos" value={this.state.sliderPos} ref={this.sliderRef}
               style={{ width: this.state.width, left:115}}/>
-            <input type = "range" min = {this.state.minVal} max = {this.state.maxVal}
-            className = "hist-slider-two" onChange={this.onChange2}
+        <input type = "range" min = {this.state.minVal} max = {this.state.maxVal}
+            className = "thresh-bottom-slider" onChange={this.onChange2}
             name = "sliderPos2" value = {this.state.sliderPos2} ref = {this.slider2Ref}
-            style = {{width: this.state.width, left:115}}/>
+            style = {{width: this.state.width, left:115}}/> */}
         </div>  
                 <label>Choose a color combination (the first color is on top): </label>
                   <select name="stroke1" id="stroke1" ref={this.stroke1Ref}
@@ -384,7 +493,7 @@ dotReturn1(xPos, yPos) {
                   </select>
                   <input onClick={() => this.changeStroke1()} type="submit" value="Submit"></input>
                   <br></br>
-                  </div>
+      </div>
     )
   }
 }

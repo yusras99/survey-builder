@@ -1,0 +1,51 @@
+.boxed-threshold {
+  border: 1px solid black;
+  display: inline-block;
+  padding: 10px;
+  max-width: 70%;
+} 
+
+.thresh-top-slider {
+  -webkit-appearance: none;
+  height: 10px;
+  outline: none;
+  background: #d3d3d3;
+  opacity: 1;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  position: relative;
+  top:150px;
+}
+
+.thresh-top-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 2px;
+  background: black;
+  cursor: pointer;
+  opacity: 1;
+  height: 200px;
+}
+
+.thresh-bottom-slider{
+  -webkit-appearance: none;
+  height: 10px;
+  outline: none;
+  background: #d3d3d3;
+  opacity: 1;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  position: relative;
+  top: 375px;
+
+}
+.thresh-bottom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 2px;
+  background:black;
+  cursor: pointer;
+  opacity: 1;
+  height: 200px;
+  left:200px;
+}
