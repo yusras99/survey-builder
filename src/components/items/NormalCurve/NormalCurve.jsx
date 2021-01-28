@@ -633,64 +633,6 @@ class NormalCurve extends Component {
   }
 
   /**
-   * Deletes this element in the parent element if called
-   * @param  
-   * @return 
-   */
-  delete() {
-    this.props.delete(this.props.count);
-  }
-  
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value })
-  }
-
-  /**
-   * Calls props function changeJSON when change is made to experiment JSON
-   * that must be recorded
-   * @param  {[String]} key [key in JSON that must be updated]
-   * @param  {[]} value [New value for key in JSON]
-   * @param  {[]} data XXXXX
-   * @return 
-   */
-  changeJSON(key, value, data) {
-    this.props.changeJSON(key, value, data);
-  }
-
-  /**
-   * Calls props function handleChange to update parent element
-   * @param  {[String]} key [key in parent that must be updated]
-   * @param  {[]} value [new value for key]
-   * @param  {[Number]} count [count of current element in parent list]
-   * @return 
-   */
-  handleChange(key, value, count) {
-    this.props.handleChange(key, value, count);
-  }
-  /**
-   * Basic setup functions on component creation
-   * @param  
-   * @return 
-   */
-  componentDidMount() {
-    // importing component, save imported data
-    if (this.props.imported) {
-      this.handleChange("Question", this.props.qToDisplay["Question"], this.props.count);
-      this.handleChange("graph1key", this.props.qToDisplay["graph1key"], this.props.count);
-      this.handleChange("graph2key", this.props.qToDisplay["graph2key"], this.props.count);
-      this.setState({ configuredShapes: true });
-    } else {
-      this.setState({ configuredShapes: false });
-    }
-    if (this.props.editing) {
-      this.handleChange("normal-curve-question-key", this.props.qToDisplay["normal-curve-question-key"], this.props.count);
-      this.handleChange("normal-curve-legend-key1", this.props.qToDisplay["normal-curve-legend-key1"], this.props.count);
-      this.handleChange("normal-curve-legend-key2", this.props.qToDisplay["normal-curve-legend-key2"], this.props.count);
-    };
-  }
-
-
-  /**
    * Reloads the curve upon a new axis length being entered with new length recorded
    * @param  {[Number]} newLength [The new length set by the researcher]
    * @return 
@@ -902,6 +844,76 @@ class NormalCurve extends Component {
     this.setState({ color2 : newColor });
   }
 
+  /**
+   * Deletes this element in the parent element if called
+   * @param  
+   * @return 
+   */
+  delete() {
+    this.props.delete(this.props.count);
+  }
+  
+  /**
+   * Change the state within the normal curve component
+   * @param {Event} e some event
+   */
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value })
+  }
+
+  /**
+   * Calls props function changeJSON when change is made to experiment JSON
+   * that must be recorded
+   * This function is inherited from NormalCurveResearch.jsx
+   * This function is specifically designed to change the shape ocnfiguration
+   * data for the normal curve component. 
+   * @param  {[String]} key [key in JSON that must be updated]
+   * @param  {[]} value [New value for key in JSON]
+   * @param  {[]} data XXXXX
+   * @return 
+   */
+  changeJSON(key, value, data) {
+    this.props.changeJSON(key, value, data);
+  }
+
+  /**
+   * Calls props function handleChange to update parent element
+   * This function is inherited from TabList.jsx
+   * !!! This function updates the final obj to send to the database !!!
+   * @param  {[String]} key [key in parent that must be updated]
+   * @param  {[Any]} value [new value for key]
+   * @param  {[Number]} count [count of current element in parent list]
+   * @return 
+   */
+  handleChange(key, value, count) {
+    this.props.handleChange(key, value, count);
+  }
+
+  /**
+   * Basic setup functions on component creation
+   * @param  
+   * @return 
+   */
+  componentDidMount() {
+    // importing component, save imported data
+    if (this.props.imported) {
+      this.handleChange("Question", this.props.qToDisplay["Question"], this.props.count);
+      this.handleChange("graph1key", this.props.qToDisplay["graph1key"], this.props.count);
+      this.handleChange("graph2key", this.props.qToDisplay["graph2key"], this.props.count);
+      this.setState({ configuredShapes: true });
+    } else {
+      this.setState({ configuredShapes: false });
+    }
+    if (this.props.editing) {
+      this.handleChange("normal-curve-question-key", this.props.qToDisplay["normal-curve-question-key"], this.props.count);
+      this.handleChange("normal-curve-legend-key1", this.props.qToDisplay["normal-curve-legend-key1"], this.props.count);
+      this.handleChange("normal-curve-legend-key2", this.props.qToDisplay["normal-curve-legend-key2"], this.props.count);
+    };
+  }
+
+  /**
+   * Updates normal curve shapes upon initial configurations (by researchers)
+   */
   onUpdateShapes() {
     const argArr = [
       Number(this.arg0ref.current.value),
@@ -923,6 +935,9 @@ class NormalCurve extends Component {
       })
   }
 
+  /**
+   * Updates shapes again when researchers finish configuration
+   */
   onFinishShapes() {
     var confirm = window.confirm("Are you sure these are the shapes you want?"+
       " Once you click 'OK', you won't be able to change the shapes again" + 

@@ -7,6 +7,17 @@ import {TweenMax, Draggable} from "gsap/all";
 import { json } from 'd3';
 import { Tween } from 'gsap/gsap-core';
 
+// --------- TODO ----------
+// set up bottom slider
+// record positions such that the 4 boxes move accordingly
+// calculate snap positions in python code
+// add more fields for researchers (legend names, question, ...)
+// set up dataflow (save researcher configuration to database)
+// add component to participant app (pull researcher config from database)
+// for now threshold requires drag and drop, will be nice if it follows the same
+// format as normal curve (give researchers 3 options to select from and then
+// further configure)
+
 class ThresholdCurve extends Component {
     constructor(props) {
       super(props);
@@ -335,6 +346,7 @@ dotReturn1(xPos, yPos) {
     // this.setState({ dragger1Pos: this.dragger1.x });
   }
 
+  // TODO: create another dragger here
   onLoaded() {
     document.body.addEventListener('touchmove', function (ev) { 
       ev.preventDefault();
@@ -351,6 +363,9 @@ dotReturn1(xPos, yPos) {
     });
   }
 
+  /**
+   * Set up dragger when the component mounts
+   */
   componentDidMount() {
     gsap.registerPlugin(Draggable);
     TweenMax.to(this.dragger1, 1, {
@@ -359,6 +374,9 @@ dotReturn1(xPos, yPos) {
     this.onLoaded();
   }
 
+  /**
+   * Renders a dragger in the svg
+   */
   returnSlider1() {
     return (
       <rect
@@ -372,6 +390,7 @@ dotReturn1(xPos, yPos) {
     )
   }
 
+  // TODO: put in a ref for this.dragger2
   returnSlider2() {
     return (
       <rect
@@ -386,7 +405,6 @@ dotReturn1(xPos, yPos) {
   sliderMouseDown(e, num) {
     if (e.type === "mousedown") {
       e.preventDefault();
-
     }
   }
 

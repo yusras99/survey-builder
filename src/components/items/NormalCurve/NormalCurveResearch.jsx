@@ -225,6 +225,8 @@ class NormalCurveResearch extends Component {
 
   /**
    * Update @param data and save to final output
+   * This function is specifically designed to change the shape ocnfiguration
+   * data for the normal curve component. 
    * @param {[String]} key [key of entry to update]
    * @param {[Any]} value [value of entry to update]
    * @param {[Object]} data [a json object to be updated]

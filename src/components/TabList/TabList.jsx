@@ -9,9 +9,7 @@ import { Link } from "react-router-dom";
 // ###TODO###: import your component here
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
-import NormalCurve from '../items/NormalCurve/NormalCurve';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
-import HistogramResearch from '../items/Threshold/HistogramResearch';
 import ThresholdResearch from '../items/ThresholdSlider/thresholdReasearch';
 
 import { 

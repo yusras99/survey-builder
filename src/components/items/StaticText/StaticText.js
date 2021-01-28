@@ -55,91 +55,49 @@ class StaticText extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.handleDrop = this.handleDrop.bind(this);
     this.onDeleteImage = this.onDeleteImage.bind(this);
     this.handleImageURL = this.handleImageURL.bind(this);
   }
 
+  /**
+   * Deletes this element in the parent element if called
+   * @param  
+   * @return 
+   */
   delete() {
     this.props.delete(this.props.count);
   }
 
-  getCount() {
-    this.props.getCount(this.props.count);
-  }
-
+  /**
+   * Change the state within the normal curve component
+   * @param {Event} e some event
+   */
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  /**
+   * Calls props function handleChange to update parent element
+   * This function is inherited from TabList.jsx
+   * !!! This function updates the final obj to send to the database !!!
+   * @param  {[String]} key [key in parent that must be updated]
+   * @param  {[Any]} value [new value for key]
+   * @param  {[Number]} count [count of current element in parent list]
+   * @return 
+   */
   handleChange(type, q, count) {
     this.props.handleChange(type, q, count);
   }
 
+  /**
+   * Deletes the selected 
+   * @param {Event} e an event to delete an image
+   */
   onDeleteImage(e) {
     // update both state and finalObj
     const arrRemovedImg = this.state.images.filter(imag => imag.name != e.target.id);
     this.setState({ images: arrRemovedImg });
     this.handleChange("Images", arrRemovedImg, this.props.count);
-  }
-
-  /**
-   * DEPRECATED
-   * 
-   * encodes a file to base64
-   */
-  getBase64(file) {
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    console.log(file);
-    reader.onload = () => {
-      // construct an image object
-      const imag = {
-        'name': file.name,
-        'parsedLink': reader.result
-      }
-      if (this.state.names.includes(file.name)) {
-        alert("Image file name already exists. Please rename the image or upload another one.")
-      } else {
-        this.setState({ names: [...this.state.names, file.name] });
-        this.setState({ images: [...this.state.images, imag] });
-        this.handleChange("ImageNames", this.state.names, this.props.count);
-        this.handleChange("Images", this.state.images, this.props.count);
-      }
-    };
-    reader.onerror = function (error) {
-      alert("An error occured. Please refresh the page.");
-      console.log('Error: ', error);
-    };
-  }
-
-  /**
-   * DEPRECATED
-   * 
-   * dropzone implementation for uploading files directly
-   */
-  handleDrop(acceptedFiles) {
-    console.log(acceptedFiles.map(file => {
-      acceptedFiles.forEach((file) => {
-        // const normalCurveFiles = this.props.dataFlowColData.filter(
-        //   item => item.itemType == "threshold");
-        // var fileNames = normalCurveFiles.map(item => item.fileName);
-        // if (fileNames.includes(file.name)) {
-        if (false) {
-          alert("File name already exists. Please upload a file" +  
-            " with a unique name.");
-          this.setState({ dataReceived: false });
-        } else {
-          let base64str = '';
-          this.getBase64(file, (result) => {
-            base64str = result;
-          })
-        };
-      });
-    }));
-    // this.setState({
-    //   fileNames: acceptedFiles.map(file => file.name)
-    // });
   }
 
   /**
@@ -178,15 +136,15 @@ class StaticText extends Component {
   }
 
   componentDidMount() {
-    // NOTE: import includes both "import question from another experiment" and
-    //       "Edit experiment"
+    // NOTE: this.props.import includes both situations:
+    // - "import question from another experiment" 
+    //    - (you'll see this when u have at least one experiment in your study)
+    // - "Edit experiment"
     if (this.props.imported) {
       // we only want to show the actual content because the question is imported 
       // (researchers may want to use different csv column names)
       this.handleChange("Static Text", this.props.qToDisplay["Static Text"], this.props.count);
-      // this.handleChange("ImageNames", this.props.qToDisplay["ImageNames"], this.props.count);
       this.handleChange("Images", this.props.qToDisplay["Images"], this.props.count);
-      // this.setState({ names: this.props.qToDisplay["ImageNames"] });
       if (Object.keys(this.props.qToDisplay).includes("Images")) {
         this.setState({ images: this.props.qToDisplay["Images"] });
         var previousCount = 0;
@@ -198,6 +156,7 @@ class StaticText extends Component {
         this.setState({ count: previousCount });
       }
     }; 
+    // Note: this.props.editing only includes "Edit Experiment" situation
     if (this.props.editing) {
       // we want to show previous csv column names because researchers want to make edits
       this.handleChange("static-text-key", this.props.qToDisplay["static-text-key"], this.props.count);
@@ -209,7 +168,6 @@ class StaticText extends Component {
     // show preview thumbnails
     var Images = ({sth}) => <img src={''} />
     if (this.state.images.length != 0) {
-      // console.log(this.state);
       Images = ({sth}) => (
         this.state.images.map(imag => (
           <div style={thumbWithDelete}>
@@ -247,17 +205,6 @@ class StaticText extends Component {
           }
           <br/><br/>
           Add image(s) by pasting shared Google Drive link below:
-          {/* <Dropzone
-            onDrop={this.handleDrop}
-            accept="image/jpeg, image/png"
-            >
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps({ className: "dropzone" })}>
-                <input {...getInputProps()} />
-                <p>Drag'n'drop files, or click to select files (must be .jpg or .png)</p>
-              </div>
-            )}
-          </Dropzone> */}
           <br/>
           <textarea cols="60" rows="3" ref={this.imageRef} 
             onInput={() => this.handleImageURL(this.imageRef.current.value)}
