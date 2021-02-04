@@ -80,6 +80,8 @@ class ThresholdCurve extends Component {
       this.returnSlider1 = this.returnSlider1.bind(this);
       this.returnSlider2 = this.returnSlider2.bind(this);
 
+      this.recordBottomSlider = this.recordBottomSlider.bind(this);
+
       this.establishStateData = this.establishStateData.bind(this);
       //this.updateRadius = this.updateRadius.bind(this);
       //this.changeColor1 = this.changeColor1.bind(this);
@@ -201,9 +203,10 @@ class ThresholdCurve extends Component {
         thumbDown: false,
         topSliderX: 0,
         topSliderY: 60,
-        bottomSliderX: 90,
+        bottomSliderX: 0,
         bottomSliderY: 175,
-        dragger1Pos: 0
+        dragger1Pos: 0,
+        dragger2Pos: 0
       }
     }
 
@@ -357,10 +360,30 @@ dotReturn1(xPos, yPos) {
     //  onDrag: this.onUpdate,
      throwProps: true,
      liveSnap: {x:[0, 90, 190, 290, 390, 490, 590, 690, 790, 890, 980]},
-     onDragEnd: this.setState({ dragger1Pos: this.x })
+     onDragEnd: function () {
+       console.log(this.x);
+     }
       // console.log(this.x)
     //  onThrowUpdate: this.onUpdate
     });
+    Draggable.create(this.dragger2, {
+      type: "x",
+      bounds: { minX: 0, maxX: 1000 },
+      throwProps: true,
+      liveSnap: {x:[0, 90, 190, 290, 390, 490, 590, 690, 790, 890, 980]},
+      onDragEnd: function () {
+        console.log(this.x);
+        //this.setState({ dragger2Pos: this.x, rect3Width: this.x });
+      }
+     });
+  }
+
+  recordBottomSlider(xValue) {
+    this.setState({ dragger2Pos: xValue });
+    console.log(xValue);
+    this.setState({ rect3Width: this.state.dragger2Pos });
+    console.log("hi");
+    console.log(this.setState.rect3Width);
   }
 
   /**
@@ -369,6 +392,9 @@ dotReturn1(xPos, yPos) {
   componentDidMount() {
     gsap.registerPlugin(Draggable);
     TweenMax.to(this.dragger1, 1, {
+      x: "+=0"
+    });
+    TweenMax.to(this.dragger2, 2, {
       x: "+=0"
     });
     this.onLoaded();
@@ -396,7 +422,10 @@ dotReturn1(xPos, yPos) {
       <rect
         x={this.state.bottomSliderX} y={this.state.bottomSliderY} 
         width="5" height="80"
-        onMouseDown={(e, num) => this.sliderMouseDown(e, 2)}
+        onMouseDown={(e, num) => this.sliderMouseDown(e, 1)}
+        ref={group => {
+          this.dragger2 = group;
+        }}
       />
     )
   }
