@@ -61,6 +61,7 @@ class ThresholdCurve extends Component {
       //this.dotReturn = this.dotReturn.bind(this); 
       this.onChange1 = this.onChange1.bind(this);
       this.onChange2 = this.onChange2.bind(this);
+      this.onChange4 = this.onChange4.bind(this);
 
       //this.svgColReturn = this.svgColReturn.bind(this);
       //this.svgColReturn = this.svgColReturn.bind(this);
@@ -77,10 +78,7 @@ class ThresholdCurve extends Component {
       this.rectReturn7 = this.rectReturn7.bind(this);
       this.rectReturn8 = this.rectReturn8.bind(this);
       this.textReturn = this.textReturn.bind(this);
-      this.returnSlider1 = this.returnSlider1.bind(this);
-      this.returnSlider2 = this.returnSlider2.bind(this);
 
-      this.recordBottomSlider = this.recordBottomSlider.bind(this);
 
       this.establishStateData = this.establishStateData.bind(this);
       //this.updateRadius = this.updateRadius.bind(this);
@@ -91,14 +89,19 @@ class ThresholdCurve extends Component {
       //this.onFinishShapes = this.onFinishShapes.bind(this);   
       this.state = this.establishStateData(this.props.data);
     }
+
+    onChange4(q) {
+      this.setState({rect3Width : q})
+    }
+
     onChange1(e) {
       this.setState({ [e.target.name]: e.target.value })
       this.setState({rect1Width : 400*this.state.displayArr1[e.target.value-1]})
       this.setState({rect2Width: 400*this.state.displayArr2[e.target.value-1]})
     }
     onChange2(e) {
-      this.setState({rect3Width : 400*this.state.displayArr3[e.target.value-1]})
       this.setState({rect4Width: 400*this.state.displayArr4[e.target.value-1]})
+      this.setState({rect3Width: 400*this.state.displayArr3[e.target.value-1]})
       this.setState({ [e.target.name]: e.target.value })
     }
 
@@ -203,14 +206,12 @@ class ThresholdCurve extends Component {
         thumbDown: false,
         topSliderX: 0,
         topSliderY: 60,
-        bottomSliderX: 0,
+        bottomSliderX: 90,
         bottomSliderY: 175,
         dragger1Pos: 0,
         dragger2Pos: 0
       }
     }
-
-
 
 dotReturn1(xPos, yPos) {
     var hard = 
@@ -343,99 +344,15 @@ dotReturn1(xPos, yPos) {
     x = {xPos} y = {yPos +1} stroke = {this.state.stroke4} height = {this.state.rectHeight-2} width = {400} fill = {"none"} strokeOpacity = "0.3"></rect>;
     return hard;
   }
-
-  onUpdate = (info) => {
-    console.log(info);
-    // this.setState({ dragger1Pos: this.dragger1.x });
-  }
-
-  // TODO: create another dragger here
-  onLoaded() {
-    document.body.addEventListener('touchmove', function (ev) { 
-      ev.preventDefault();
-    });
-    Draggable.create(this.dragger1, {
-     type: "x",
-     bounds: { minX: 0, maxX: 1000 },
-    //  onDrag: this.onUpdate,
-     throwProps: true,
-     liveSnap: {x:[0, 90, 190, 290, 390, 490, 590, 690, 790, 890, 980]},
-     onDragEnd: function () {
-       console.log(this.x);
-     }
-      // console.log(this.x)
-    //  onThrowUpdate: this.onUpdate
-    });
-    Draggable.create(this.dragger2, {
-      type: "x",
-      bounds: { minX: 0, maxX: 1000 },
-      throwProps: true,
-      liveSnap: {x:[0, 90, 190, 290, 390, 490, 590, 690, 790, 890, 980]},
-      onDragEnd: function () {
-        console.log(this.x);
-        //this.setState({ dragger2Pos: this.x, rect3Width: this.x });
-      }
-     });
-  }
-
-  recordBottomSlider(xValue) {
-    this.setState({ dragger2Pos: xValue });
-    console.log(xValue);
-    this.setState({ rect3Width: this.state.dragger2Pos });
-    console.log("hi");
-    console.log(this.setState.rect3Width);
-  }
-
   /**
    * Set up dragger when the component mounts
    */
-  componentDidMount() {
-    gsap.registerPlugin(Draggable);
-    TweenMax.to(this.dragger1, 1, {
-      x: "+=0"
-    });
-    TweenMax.to(this.dragger2, 2, {
-      x: "+=0"
-    });
-    this.onLoaded();
-  }
-
   /**
    * Renders a dragger in the svg
    */
-  returnSlider1() {
-    return (
-      <rect
-        x={this.state.topSliderX} y={this.state.topSliderY} 
-        width="5" height="80"
-        onMouseDown={(e, num) => this.sliderMouseDown(e, 1)}
-        ref={group => {
-          this.dragger1 = group;
-        }}
-      />
-    )
-  }
 
-  // TODO: put in a ref for this.dragger2
-  returnSlider2() {
-    return (
-      <rect
-        x={this.state.bottomSliderX} y={this.state.bottomSliderY} 
-        width="5" height="80"
-        onMouseDown={(e, num) => this.sliderMouseDown(e, 1)}
-        ref={group => {
-          this.dragger2 = group;
-        }}
-      />
-    )
-  }
   
   // not finished
-  sliderMouseDown(e, num) {
-    if (e.type === "mousedown") {
-      e.preventDefault();
-    }
-  }
 
   render() {
     const widthFactor = 6;
@@ -448,25 +365,24 @@ dotReturn1(xPos, yPos) {
           {/* rows of dots */}
           {[...this.state.xPos1].map(
             (col, index) =>
-              (this.dotReturn1(col + 13,this.state.yPos1[index]))
+              (this.dotReturn1(col + 13,this.state.yPos1[index] - 100))
           )}
 
           {[...this.state.xPos2].map(
             (col, index) =>
-              (this.dotReturn2(col + 13,this.state.yPos2[index]))
+              (this.dotReturn2(col + 13,this.state.yPos2[index]- 100))
           )}
 
           {[...this.state.xPos3].map(
             (col, index) =>
-              (this.dotReturn3(col + 13,this.state.yPos3[index]))
+              (this.dotReturn3(col + 13,this.state.yPos3[index] - 100))
           )}
           
           {[...this.state.xPos4].map(
             (col, index) =>
-              (this.dotReturn4(col + 13,this.state.yPos4[index]))
+              (this.dotReturn4(col + 13,this.state.yPos4[index] - 100))
           )}
-          
-          
+                    
           {/* legend dots */}
           {/* {this.dotReturn1(this.state.width +220,this.state.height/6 + 70)}
           {this.dotReturn2(this.state.width +220, this.state.height/6 + 40)}
@@ -512,21 +428,19 @@ dotReturn1(xPos, yPos) {
           {this.rectReturn8(this.state.width/2.5,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
 
           {/* sliders */}
-          {this.returnSlider1()}
-          {this.returnSlider2()}
 
         </svg>
       
 
         <div>
-        {/* <input type="range" min={this.state.minVal} max={this.state.maxVal} 
+        <input type="range" min={this.state.minVal} max={this.state.maxVal} 
               className="thresh-top-slider" onChange={this.onChange1}
               name="sliderPos" value={this.state.sliderPos} ref={this.sliderRef}
-              style={{ width: this.state.width, left:115}}/>
+              style={{ width: this.state.width, left:0}}/>
         <input type = "range" min = {this.state.minVal} max = {this.state.maxVal}
             className = "thresh-bottom-slider" onChange={this.onChange2}
             name = "sliderPos2" value = {this.state.sliderPos2} ref = {this.slider2Ref}
-            style = {{width: this.state.width, left:115}}/> */}
+            style = {{width: this.state.width, left:0}}/>
         </div>  
                 <label>Choose a color combination (the first color is on top): </label>
                   <select name="stroke1" id="stroke1" ref={this.stroke1Ref}
