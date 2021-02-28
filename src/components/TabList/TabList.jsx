@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
-import ThresholdResearch from '../items/ThresholdSlider/thresholdReasearch';
+import ThresholdCurveResearch from '../items/ThresholdSlider/thresholdReasearch';
 
 import { 
   sendFile,
@@ -122,7 +122,7 @@ class TabList extends Component {
       case "threshold":
         arr.push({
           id: this.state.count,
-          tab: <ThresholdResearch getCount={this.getCount} 
+          tab: <ThresholdCurveResearch getCount={this.getCount} 
                   delete={this.delete} count={this.state.count}
                   handleChange={this.handleChange} 
                   files={this.state.files} saveFile={this.saveFile}
@@ -241,7 +241,7 @@ class TabList extends Component {
       case "threshold":
         arr.push({
           id: this.state.count,
-          tab: <ThresholdResearch getCount={this.getCount} 
+          tab: <ThresholdCurveResearch getCount={this.getCount} 
                   delete={this.delete} count={this.state.count}
                   handleChange={this.handleChange} 
                   files={this.state.files} saveFile={this.saveFile}
