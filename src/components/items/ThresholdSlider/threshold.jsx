@@ -45,6 +45,11 @@ class ThresholdCurve extends Component {
       this.stroke3Ref = React.createRef();
       this.stroke4Ref = React.createRef();
       this.fill1Ref = React.createRef();
+      this.refLine6Ref = React.createRef();
+      this.refLine5Ref = React.createRef();
+      this.refLine7Ref = React.createRef();
+      this.refLine8Ref = React.createRef();
+
       this.fill2Ref = React.createRef();
       this.fill3Ref = React.createRef();
       this.fill4Ref = React.createRef();
@@ -60,8 +65,19 @@ class ThresholdCurve extends Component {
 
       //this.dotReturn = this.dotReturn.bind(this); 
       this.onChange1 = this.onChange1.bind(this);
+      this.line1 = this.line1.bind(this);
+      this.line2 = this.line2.bind(this);
+      this.line3 = this.line3.bind(this);
       this.onChange2 = this.onChange2.bind(this);
       this.onChange4 = this.onChange4.bind(this);
+      this.onChange5 = this.onChange5.bind(this);
+
+      this.onChange6 = this.onChange6.bind(this);
+
+      this.onChange7 = this.onChange7.bind(this);
+
+      this.onChange8 = this.onChange8.bind(this);
+
 
       //this.svgColReturn = this.svgColReturn.bind(this);
       //this.svgColReturn = this.svgColReturn.bind(this);
@@ -78,6 +94,8 @@ class ThresholdCurve extends Component {
       this.rectReturn7 = this.rectReturn7.bind(this);
       this.rectReturn8 = this.rectReturn8.bind(this);
       this.textReturn = this.textReturn.bind(this);
+      this.textReturn2 = this.textReturn2.bind(this);
+
 
 
       this.establishStateData = this.establishStateData.bind(this);
@@ -103,6 +121,35 @@ class ThresholdCurve extends Component {
       this.setState({rect4Width: 400*this.state.displayArr4[e.target.value-1]})
       this.setState({rect3Width: 400*this.state.displayArr3[e.target.value-1]})
       this.setState({ [e.target.name]: e.target.value })
+    }
+    line1(xPos1,xPos2,yPos1,yPos2){
+      var hard = <line x1 = {xPos1} x2 = {xPos2} y1 = {yPos1} y2 = {yPos2} stroke = "#000000"></line>;
+      return hard;
+    }
+    line2(xPos1,xPos2,yPos1,yPos2){
+      var dottedLine = [];
+      for(var i = 0; i < yPos2 - yPos1; i+=4){
+        var hard = <line x1 = {xPos1} x2 = {xPos1} y1 = {yPos1 + i} y2 = {yPos2 + i + 2} stroke = "#808080"></line>;
+        dottedLine.push(hard);
+      }
+      return dottedLine;
+    }
+
+    line3(xPos1,xPos2,yPos1,yPos2){
+      var hard = <line x1 = {this.state.placement1} x2 = {this.state.placement1} y1 = {yPos1} y2 = {yPos2} stroke = "#808080"   strokeWidth="2"></line>;
+      return hard;
+    }
+    line4(xPos1,xPos2,yPos1,yPos2){
+      var hard = <line x1 = {this.state.placement2} x2 = {this.state.placement2} y1 = {yPos1} y2 = {yPos2} stroke = "#808080"   strokeWidth="2"  stroke-dasharray = "4"></line>;
+      return hard;
+    }
+    line5(xPos1,xPos2,yPos1,yPos2){
+      var hard = <line x1 = {this.state.placement3} x2 = {this.state.placement3} y1 = {yPos1} y2 = {yPos2} stroke = "#808080"   strokeWidth="2"></line>;
+      return hard;
+    }
+    line6(xPos1,xPos2,yPos1,yPos2){
+      var hard = <line x1 = {this.state.placement4} x2 = {this.state.placement4} y1 = {yPos1} y2 = {yPos2} stroke = "#808080"   strokeWidth="2" stroke-dasharray = "4"></line>;
+      return hard;
     }
 
     changeStroke1() {
@@ -156,6 +203,18 @@ class ThresholdCurve extends Component {
         this.setState({fill2: "#FFD300"});
       }
     }
+    onChange5(e){
+      this.setState({placement1:e})
+    }
+    onChange6(e){
+      this.setState({placement2:e})
+    }
+    onChange7(e){
+      this.setState({placement3:e})
+    }
+    onChange8(e){
+      this.setState({placement4:e})
+    }
 
     establishStateData(data) {
       // console.log("establishStateData()", new Date());
@@ -173,6 +232,10 @@ class ThresholdCurve extends Component {
         yPos3: data["yPos3"],
         xPos4: data["xPos4"],
         yPos4: data["yPos4"],
+        placement1:200,
+        placement2:300,
+        placement3:500,
+        placement4:800,
         stroke1: data["stroke1"],
         stroke2: data["stroke2"],
         stroke3: data["stroke3"],
@@ -279,19 +342,11 @@ dotReturn1(xPos, yPos) {
   }
 
   textReturn(xPos, yPos, tedxt){
-    var hard = <text x = {xPos} y = {yPos}>{tedxt}</text>;
+    var hard = <text x = {xPos} y = {yPos} fontSize = "10">{tedxt}</text>;
     return hard;
   }
   textReturn2(xPos, yPos, tedxt){
-    var hard = <text x = {xPos} y = {yPos}>{tedxt}</text>;
-    return hard;
-  }
-  textReturn3(xPos, yPos, tedxt){
-    var hard = <text x = {xPos} y = {yPos}>{tedxt}</text>;
-    return hard;
-  }
-  textReturn4(xPos, yPos, tedxt){
-    var hard = <text x = {xPos} y = {yPos}>{tedxt}</text>;
+    var hard = <text x = {xPos} y = {yPos} fontSize = "12" color = "grey">{tedxt}</text>;
     return hard;
   }
 
@@ -388,26 +443,30 @@ dotReturn1(xPos, yPos) {
           {this.dotReturn2(this.state.width +220, this.state.height/6 + 40)}
           {this.dotReturn3(this.state.width +220, this.state.height/4 +28)}
           {this.dotReturn4(this.state.width +220, this.state.height/4 +48)} */}
-          {this.dotReturn1(this.state.width/widthFactor,this.state.height/heightFactor)}
-          {this.dotReturn2(this.state.width/widthFactor, this.state.height/heightFactor + 30)}
-          {this.dotReturn3(this.state.width/widthFactor, this.state.height/heightFactor +60)}
-          {this.dotReturn4(this.state.width/widthFactor, this.state.height/heightFactor +90)}
+          {this.dotReturn1(810,20)}
+          {this.dotReturn3(820, 20)}
+          {this.dotReturn2(810, 30)}
+          {this.dotReturn4(820, 30)}
 
           {/* legend texts */}
           {/* {this.textReturn(this.state.width + 240, this.state.height/4 + 32, this.state.legendKey[0])}
           {this.textReturn(this.state.width + 240, this.state.height/4 + 52, this.state.legendKey[1])}
           {this.textReturn(this.state.width + 240, this.state.height/4 - 8, this.state.legendKey[2])}
           {this.textReturn(this.state.width + 240, this.state.height/4 - 39, this.state.legendKey[3])} */}
-          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 2 * this.state.rad, this.state.legendKey[0])}
-          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 30 + 2 * this.state.rad, this.state.legendKey[1])}
-          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 60 + 2 * this.state.rad, this.state.legendKey[2])}
-          {this.textReturn(this.state.width/widthFactor + 4 * this.state.rad, this.state.height/heightFactor + 90 + 2 * this.state.rad, this.state.legendKey[3])}
-
+          {this.textReturn(830, 25, this.state.legendKey[0])}
+          {this.textReturn(830, 35, this.state.legendKey[1])}
+          {this.textReturn2(5, 25, this.state.legendKey[2])}
+          {this.textReturn2(5, 255, this.state.legendKey[3])}
           {/* indices for columns */}
           {[...this.state.displayArr5].map(
             (b, index) =>
               (this.textReturn(this.state.refArr5[index] + 15, this.state.indicesXPos, b))
           )}
+
+          {this.line4(this.placement1,this.placement1,50,125)}
+          {this.line5(this.placement2,this.placement2,150,225)}
+          {this.line3(this.placement3,this.placement3,50,125)}
+          {this.line6(this.placement4,this.placement4,160,235)}
 
           {/* rectangular bars */}
           {/* {this.rectReturn1(this.state.width/2.5,600)}
@@ -454,6 +513,17 @@ dotReturn1(xPos, yPos) {
                   </select>
                   <input onClick={() => this.changeStroke1()} type="submit" value="Submit"></input>
                   <br></br>
+                  <input name = "refLine5" id = "refLine5" ref = {this.refLine5Ref}></input>
+                  <input onClick = {() => this.onChange5(this.refLine5Ref.current.value)} type = "submit" value = "Submit"></input> 
+                  <br></br>
+                  <input name = "refLine6" id = "refLine6" ref = {this.refLine6Ref}></input>
+                  <input onClick = {() => this.onChange6(this.refLine6Ref.current.value)} type = "submit" value = "Submit"></input> 
+                  <br></br>
+                  <input name = "refLine7" id = "refLine7" ref = {this.refLine7Ref}></input>
+                  <input onClick = {() => this.onChange7(this.refLine7Ref.current.value)} type = "submit" value = "Submit"></input> 
+                  <br></br>
+                  <input name = "refLine8" id = "refLine8" ref = {this.refLine8Ref}></input>
+                  <input onClick = {() => this.onChange8(this.refLine8Ref.current.value)} type = "submit" value = "Submit"></input> 
       </div>
     )
   }
