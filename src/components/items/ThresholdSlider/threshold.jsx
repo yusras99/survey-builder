@@ -477,14 +477,18 @@ dotReturn1(xPos, yPos) {
           {this.rectReturn6(this.state.width/2.5,700)}
           {this.rectReturn7(this.state.width/2.5,750)}
           {this.rectReturn8(this.state.width/2.5,750)} */}
-          {this.rectReturn1(this.state.width/2.5,this.state.height/heightFactor - 2 * this.state.rad)}
-          {this.rectReturn2(this.state.width/2.5,this.state.height/heightFactor - 2 * this.state.rad)}
-          {this.rectReturn3(this.state.width/2.5,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
-          {this.rectReturn4(this.state.width/2.5,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
-          {this.rectReturn5(this.state.width/2.5,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
-          {this.rectReturn6(this.state.width/2.5,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
-          {this.rectReturn7(this.state.width/2.5,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
-          {this.rectReturn8(this.state.width/2.5,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
+          {this.rectReturn1(this.state.width/2.5 - 100,this.state.height/heightFactor - 2 * this.state.rad)}
+          {this.rectReturn2(this.state.width/2.5- 100,this.state.height/heightFactor - 2 * this.state.rad)}
+          {this.textReturn2(this.state.width/2.5+ 100,this.state.height/heightFactor - 2 * this.state.rad - 8, "label 1")}
+          {this.rectReturn3(this.state.width/2.5 - 100,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
+          {this.rectReturn4(this.state.width/2.5 - 100,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
+          {this.textReturn2(this.state.width/2.5 +100,this.state.height/heightFactor + 30 - 2 * this.state.rad, "label 2")}
+          {this.rectReturn5(this.state.width/2.5 - 100,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
+          {this.rectReturn6(this.state.width/2.5 - 100,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
+          {this.textReturn2(this.state.width/2.5 + 100,this.state.height/heightFactor + 60 - 2 * this.state.rad, "label 3")}
+          {this.rectReturn7(this.state.width/2.5 - 100,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
+          {this.rectReturn8(this.state.width/2.5 - 100,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
+          {this.textReturn2(this.state.width/2.5 + 100,this.state.height/heightFactor + 90 - 2 * this.state.rad, "label 4")}
 
           {/* sliders */}
 
