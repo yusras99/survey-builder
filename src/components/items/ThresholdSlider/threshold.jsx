@@ -49,6 +49,8 @@ class ThresholdCurve extends Component {
       this.refLine5Ref = React.createRef();
       this.refLine7Ref = React.createRef();
       this.refLine8Ref = React.createRef();
+      this.refLine9Ref = React.createRef();
+      this.refLine10Ref = React.createRef();
 
       this.fill2Ref = React.createRef();
       this.fill3Ref = React.createRef();
@@ -232,10 +234,12 @@ class ThresholdCurve extends Component {
         yPos3: data["yPos3"],
         xPos4: data["xPos4"],
         yPos4: data["yPos4"],
+        legend: data["legend"],
         placement1:200,
         placement2:300,
         placement3:500,
         placement4:800,
+        key: data["displayArr5"],
         stroke1: data["stroke1"],
         stroke2: data["stroke2"],
         stroke3: data["stroke3"],
@@ -246,7 +250,7 @@ class ThresholdCurve extends Component {
         fill4: data["fill4"],
         height: 1000,
         width: data["width"],
-        rad:data["circRad"],
+        rad: data["circRad"],
         minVal:1,
         sliderPos:8,
         sliderPos2:5,
@@ -263,9 +267,7 @@ class ThresholdCurve extends Component {
         displayVal2: 1,
         maxVal : data["maxVal"],
         legendKey : data["legendKey"],
-        displayArr5 : data["displayArr5"],
-        refArr5 : data["refArr5"],
-        indicesXPos: data["indicesXPos"],
+        labels: data["legend"],
         thumbDown: false,
         topSliderX: 0,
         topSliderY: 60,
@@ -458,15 +460,25 @@ dotReturn1(xPos, yPos) {
           {this.textReturn2(5, 25, this.state.legendKey[2])}
           {this.textReturn2(5, 255, this.state.legendKey[3])}
           {/* indices for columns */}
-          {[...this.state.displayArr5].map(
-            (b, index) =>
-              (this.textReturn(this.state.refArr5[index] + 15, this.state.indicesXPos, b))
-          )}
+          {this.textReturn(this.state.placement1 - 10,45,this.state.labels[0])}
+          {this.textReturn(this.state.placement2 - 10,45,this.state.labels[1])}
+          {this.textReturn(this.state.placement3 - 10,245,this.state.labels[2])}
+          {this.textReturn(this.state.placement4 - 10,245,this.state.labels[3])}
 
           {this.line4(this.placement1,this.placement1,50,125)}
-          {this.line5(this.placement2,this.placement2,150,225)}
+          {this.line5(this.placement2,this.placement2,160,235)}
           {this.line3(this.placement3,this.placement3,50,125)}
           {this.line6(this.placement4,this.placement4,160,235)}
+          {this.textReturn(35,165,this.state.key[0])}
+          {this.textReturn(135,165,this.state.key[1])}
+          {this.textReturn(235,165,this.state.key[2])}
+          {this.textReturn(335,165,this.state.key[3])}
+          {this.textReturn(435,165,this.state.key[4])}
+          {this.textReturn(535,165,this.state.key[5])}
+          {this.textReturn(635,165,this.state.key[6])}
+          {this.textReturn(735,165,this.state.key[7])}
+          {this.textReturn(835,165,this.state.key[8])}
+          {this.textReturn(935,165,this.state.key[9])}
 
           {/* rectangular bars */}
           {/* {this.rectReturn1(this.state.width/2.5,600)}
@@ -479,16 +491,16 @@ dotReturn1(xPos, yPos) {
           {this.rectReturn8(this.state.width/2.5,750)} */}
           {this.rectReturn1(this.state.width/2.5 - 100,this.state.height/heightFactor - 2 * this.state.rad)}
           {this.rectReturn2(this.state.width/2.5- 100,this.state.height/heightFactor - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5+ 100,this.state.height/heightFactor - 2 * this.state.rad - 8, "label 1")}
+          {this.textReturn2(this.state.width/2.5+ 80,this.state.height/heightFactor - 2 * this.state.rad - 8, this.state.legend[0])}
           {this.rectReturn3(this.state.width/2.5 - 100,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
           {this.rectReturn4(this.state.width/2.5 - 100,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5 +100,this.state.height/heightFactor + 30 - 2 * this.state.rad, "label 2")}
+          {this.textReturn2(this.state.width/2.5 +80,this.state.height/heightFactor + 30 - 2 * this.state.rad, this.state.legend[1])}
           {this.rectReturn5(this.state.width/2.5 - 100,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
           {this.rectReturn6(this.state.width/2.5 - 100,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5 + 100,this.state.height/heightFactor + 60 - 2 * this.state.rad, "label 3")}
+          {this.textReturn2(this.state.width/2.5 + 80,this.state.height/heightFactor + 60 - 2 * this.state.rad, this.state.legend[2])}
           {this.rectReturn7(this.state.width/2.5 - 100,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
           {this.rectReturn8(this.state.width/2.5 - 100,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5 + 100,this.state.height/heightFactor + 90 - 2 * this.state.rad, "label 4")}
+          {this.textReturn2(this.state.width/2.5 + 80,this.state.height/heightFactor + 90 - 2 * this.state.rad, this.state.legend[3])}
 
           {/* sliders */}
 
@@ -528,6 +540,7 @@ dotReturn1(xPos, yPos) {
                   <br></br>
                   <input name = "refLine8" id = "refLine8" ref = {this.refLine8Ref}></input>
                   <input onClick = {() => this.onChange8(this.refLine8Ref.current.value)} type = "submit" value = "Submit"></input> 
+
       </div>
     )
   }
