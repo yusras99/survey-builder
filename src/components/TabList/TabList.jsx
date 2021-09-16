@@ -10,12 +10,18 @@ import { Link } from "react-router-dom";
 import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
-import ThresholdCurveResearch from '../items/ThresholdSlider/thresholdReasearch';
+import ThresholdResearch from '../items/ThresholdSlider/thresholdReasearch';
+import TradeoffThree from '../items/Tradeoff/TradeoffThree';
+import GraphSliderResearch from '../items/GraphSlider/GraphSliderResearch';
+import SumQuestionResearch from '../items/sumQuestion/sumQuestionResearch';
+
+
 
 import { 
   sendFile,
   getStudyInfo
 } from '../../actions/dataActions'
+import TradeoffResearch from '../items/Tradeoff/TradeoffResearch';
 
 const axios = require('axios');
 
@@ -122,13 +128,53 @@ class TabList extends Component {
       case "threshold":
         arr.push({
           id: this.state.count,
-          tab: <ThresholdCurveResearch getCount={this.getCount} 
+          tab: <ThresholdResearch getCount={this.getCount} 
                   delete={this.delete} count={this.state.count}
                   handleChange={this.handleChange} 
                   files={this.state.files} saveFile={this.saveFile}
                   key={this.state.count.toString()}/>
         })
         break;
+        case "sumquestion":
+          arr.push({
+            id: this.state.count,
+            tab: <SumQuestionResearch getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count}
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/>
+            })
+            break;
+          case "tradeoffthree":
+              arr.push({
+                id: this.state.count,
+                tab: <TradeoffResearch getCount={this.getCount} data = {[]}
+                        delete={this.delete} count={this.state.count}
+                        handleChange={this.handleChange} 
+                        files={this.state.files} saveFile={this.saveFile}
+                        key={this.state.count.toString()}/>
+              })
+             break;
+         case "graphSlider":
+            arr.push({
+              id: this.state.count,
+              tab: <GraphSliderResearch getCount={this.getCount} 
+                    delete={this.delete} count={this.state.count}
+                    handleChange={this.handleChange} 
+                    files={this.state.files} saveFile={this.saveFile}
+                    key={this.state.count.toString()}/>
+              })
+             break;
+       
+      case "template": 
+        arr.push({
+          id: this.state.count,
+          tab: <template getCount={this.getCount} 
+                  delete={this.delete} count={this.state.count} 
+                  handleChange={this.handleChange} 
+                  files={this.state.files} saveFile={this.saveFile}
+                  key={this.state.count.toString()}/> 
+        })
       default:
         arr = <div>Unknown Element</div>
     }
@@ -154,6 +200,12 @@ class TabList extends Component {
         return "normal-curve-question-key"
       case "threshold":
         return "threshold-key"
+      case "graphSlider":
+        return "graphSlider-key"
+      case "tradeoffthree":
+        return "tradeoffthree-key"
+        case "sumquestion":
+          return "sumquestion-key"
       default:
         return ""
     }
@@ -241,13 +293,43 @@ class TabList extends Component {
       case "threshold":
         arr.push({
           id: this.state.count,
-          tab: <ThresholdCurveResearch getCount={this.getCount} 
+          tab: <ThresholdResearch getCount={this.getCount} 
                   delete={this.delete} count={this.state.count}
                   handleChange={this.handleChange} 
                   files={this.state.files} saveFile={this.saveFile}
                   key={this.state.count.toString()}/>
         })
         break;
+        case "tradeoffthree":
+          arr.push({
+            id: this.state.count,
+            tab: <TradeoffResearch getCount={this.getCount} data = {[]}
+                    delete={this.delete} count={this.state.count}
+                    handleChange={this.handleChange} 
+                    files={this.state.files} saveFile={this.saveFile}
+                    key={this.state.count.toString()}/>
+          })
+          break;
+          case "sumquestion":
+            arr.push({
+              id: this.state.count,
+              tab: <SumQuestionResearch getCount={this.getCount} data = {[]}
+                      delete={this.delete} count={this.state.count}
+                      handleChange={this.handleChange} 
+                      files={this.state.files} saveFile={this.saveFile}
+                      key={this.state.count.toString()}/>
+            })
+            break;
+          case "graphSlider":
+            arr.push({
+              id: this.state.count,
+              tab: <GraphSliderResearch getCount={this.getCount} 
+                      delete={this.delete} count={this.state.count}
+                      handleChange={this.handleChange} 
+                      files={this.state.files} saveFile={this.saveFile}
+                      key={this.state.count.toString()}/>
+            })
+            break;
       default:
         arr = <div>Unknown Element</div>
     };
@@ -383,6 +465,13 @@ class TabList extends Component {
             index[exptItem["normal-curve-question-key"] + "." + exptItem["normal-curve-legend-key2"]] = exptItem["graph2key"];
           case "threshold":
             index[exptItem["threshold-key"]] = exptItem["Question"];
+          case "tradeoffthree":
+            index[exptItem["tradeoff-key"]] = exptItem["Question"];
+          case "graphSlider":
+            index[exptItem["graphSlider-key"]] = exptItem["Question"];
+          case "sumquestion":
+            index[exptItem["sumquestion-key"]] = exptItem["Question"];
+
         }
       });
     // var validName = this.nameRef.current.value.length > 0;
