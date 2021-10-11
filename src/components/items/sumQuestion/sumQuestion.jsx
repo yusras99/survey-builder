@@ -96,8 +96,9 @@ class SumQuestion extends Component{
         this.setState({"question": this.qRef.current.value})
         console.log(this.state.jsonData);
         this.changeJSON("maxVal", this.num1Ref.current.value, this.jsonData);
-        this.changeJSON("number", this.numRef.current.value, this.state.jsonData);
+        this.changeJSON("number", this.numRef.current.value, this.jsonData);
         this.handleChange('FileContent', this.state.jsonData, 0);
+        alert("Your input has been succesfully saved.")
     }
 
     changeJSON(key, value, data) {

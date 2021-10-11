@@ -18,10 +18,11 @@ class GraphSliderResearch extends Component {
       this.arg5ref = React.createRef();
       this.arg6ref = React.createRef();
       this.arg7ref = React.createRef();
+
   
       this.handleDrop = this.handleDrop.bind(this);
       this.processJSON = this.processJSON.bind(this);
-  
+      this.handleChange = this.handleChange.bind(this);
       this.state = {
         dataReceived: false,
         fileNames: [],
@@ -31,6 +32,9 @@ class GraphSliderResearch extends Component {
       };
     }
 
+    handleChange(key, value, count) {
+      this.props.handleChange(key, value, count);
+    }
     handleDrop(acceptedFiles) {
         const jsonData = {};
         console.log(acceptedFiles.map(file => {
@@ -109,7 +113,8 @@ class GraphSliderResearch extends Component {
       return (
         <div>
           <GraphSlider 
-            data={this.state.jsonData} />
+            data={this.state.jsonData}             handleChange={this.handleChange} 
+            />
           <br/>
         </div>
       )

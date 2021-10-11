@@ -43,7 +43,7 @@ class ThresholdCurveResearch extends Component {
               // Do whatever you want with the file contents
               const fileText = reader.result;
               const jsonData = JSON.parse(fileText);
-
+              console.log(jsonData);
               this.setState({
                 dataReceived : "true",
                 jsonData: jsonData
@@ -70,7 +70,7 @@ class ThresholdCurveResearch extends Component {
       return (
         <div className="boxed">
           <ThresholdCurve 
-            data={this.state.jsonData} />
+            data={this.state.jsonData} handleChange = {this.props.handleChange}/>
           <br/>
         </div>
       )

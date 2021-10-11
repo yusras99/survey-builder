@@ -84,7 +84,7 @@ class SumQuestionResearch extends Component {
     } else{
       return( 
         <div className="boxed">
-          Threshold Question
+          Sum Question
           <Dropzone
                 onDrop={this.handleDrop}
                 accept="application/JSON, .json"

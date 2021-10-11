@@ -75,6 +75,7 @@ class ThresholdCurve extends Component {
       this.onChange5 = this.onChange5.bind(this);
 
       this.onChange6 = this.onChange6.bind(this);
+      this.changeJSON = this.changeJSON.bind(this);
 
       this.onChange7 = this.onChange7.bind(this);
 
@@ -97,6 +98,8 @@ class ThresholdCurve extends Component {
       this.rectReturn8 = this.rectReturn8.bind(this);
       this.textReturn = this.textReturn.bind(this);
       this.textReturn2 = this.textReturn2.bind(this);
+      this.jsonData = this.props.data;
+      this.handleChange = this.handleChange.bind(this);
 
 
 
@@ -109,19 +112,25 @@ class ThresholdCurve extends Component {
       //this.onFinishShapes = this.onFinishShapes.bind(this);   
       this.state = this.establishStateData(this.props.data);
     }
-
+    changeJSON(key, value, data) {
+      // var data = this.state.jsonData;
+      data[key] = value;
+    }
+    handleChange(key, value, count) {
+      this.props.handleChange(key, value, count);
+  }
     onChange4(q) {
       this.setState({rect3Width : q})
     }
 
     onChange1(e) {
       this.setState({ [e.target.name]: e.target.value })
-      this.setState({rect1Width : 400*this.state.displayArr1[e.target.value-1]})
-      this.setState({rect2Width: 400*this.state.displayArr2[e.target.value-1]})
+      this.setState({rect1Width : 4*this.state.displayArr1[e.target.value-1]})
+      this.setState({rect2Width: 4*this.state.displayArr2[e.target.value-1]})
     }
     onChange2(e) {
-      this.setState({rect4Width: 400*this.state.displayArr4[e.target.value-1]})
-      this.setState({rect3Width: 400*this.state.displayArr3[e.target.value-1]})
+      this.setState({rect4Width: 4*this.state.displayArr4[e.target.value-1]})
+      this.setState({rect3Width: 4*this.state.displayArr3[e.target.value-1]})
       this.setState({ [e.target.name]: e.target.value })
     }
     line1(xPos1,xPos2,yPos1,yPos2){
@@ -206,16 +215,24 @@ class ThresholdCurve extends Component {
       }
     }
     onChange5(e){
-      this.setState({placement1:e})
+      this.setState({placement1:e});
+      this.changeJSON("placement1",e,this.jsonData);
+      this.handleChange('FileContent', this.jsonData, 0);
     }
     onChange6(e){
       this.setState({placement2:e})
+      this.changeJSON("placement2",e,this.jsonData);
+      this.handleChange('FileContent', this.jsonData, 0);
     }
     onChange7(e){
       this.setState({placement3:e})
+      this.changeJSON("placement3",e,this.jsonData);
+      this.handleChange('FileContent', this.jsonData, 0);
     }
     onChange8(e){
       this.setState({placement4:e})
+      this.changeJSON("placement4",e,this.jsonData);
+      this.handleChange('FileContent', this.jsonData, 0);
     }
 
     establishStateData(data) {

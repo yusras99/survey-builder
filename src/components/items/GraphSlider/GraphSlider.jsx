@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import "./GraphSlider.css";
-// import Output from './output1.json';
 
 class GraphSlider extends Component {
     constructor(props) {
@@ -8,12 +7,23 @@ class GraphSlider extends Component {
 
         this.createSlider = this.createSlider.bind(this);
         this.svgRef = React.createRef();
+        this.x1Ref = React.createRef();
+        this.x2Ref = React.createRef();
+        this.y1Ref = React.createRef();
+        this.y2Ref = React.createRef();
         this.titleRef = React.createRef();
         this.createLine = this.createLine.bind(this);
         this.controlColor = this.controlColor.bind(this);
         this.controlLineName = this.controlLineName.bind(this);
         const Output = this.props.data;
-
+        this.onChangeTitle = this.onChangeTitle.bind(this);
+        this.onChangeX1 = this.onChangeX1.bind(this);
+        this.onChangex2 = this.onChangex2.bind(this);
+        this.onChangey1 = this.onChangey1.bind(this);
+        this.onChangey2 = this.onChangey2.bind(this);
+        this.onChangeName = this.onChangeName.bind(this);
+        this.changeJSON = this.changeJSON.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
             minLoc: 50,
             svgWidth: 400,
@@ -26,6 +36,7 @@ class GraphSlider extends Component {
             ceilDist: 300,
             dragging: false,
             data: Output.pointsData,
+            jsonData: {},
             x1: 0,
             x2: 300,
             y1: 0,
@@ -34,7 +45,13 @@ class GraphSlider extends Component {
         }
         // console.log(Output);
     }
-
+    handleChange(key, value, count) {
+        this.props.handleChange(key, value, count);
+    }
+    changeJSON(key, value, data) {
+        // var data = this.state.jsonData;
+        data[key] = value;
+      }
     createSlider() {
         return (
             <polygon
@@ -70,15 +87,57 @@ class GraphSlider extends Component {
         newColorObj[lineNum.toString()]["color"] = e.target.value;
         this.setState({ data: newColorObj });
         console.log(e.target.value);
+        this.handleChange('pointsData', newColorObj, 0);
     }
 
     controlLineName(e, lineNum) {
         const pointsData = this.state.data;
         pointsData[lineNum.toString()]["name"] = e.target.value;
         this.setState({data: pointsData});
-    }
+        this.handleChange('pointsData', pointsData, 0);
 
+    }
+    onChangeTitle(e){
+        const pointsData = this.state.jsonData;
+        console.log(pointsData);
+        this.setState({title:this.titleRef.current.value});
+        this.changeJSON(this.state.title, this.titleRef.current.value, pointsData);
+
+    }
+    onChangeX1(e){
+        const pointsData = this.state.data;
+        this.setState({x1:this.x1Ref.current.value})
+        this.changeJSON(this.state.x1, this.x1Ref.current.value, pointsData);
+
+    }
+    onChangex2(e){
+        const pointsData = this.state.data;
+        this.setState({x2:this.x2Ref.current.value})
+        this.changeJSON(this.state.x2, this.x2Ref.current.value, pointsData);
+    }
+    onChangey1(e){
+        const pointsData = this.state.data;
+        this.setState({y1:this.y1Ref.current.value})
+        this.changeJSON(this.state.y1, this.y1Ref.current.value, pointsData);
+    }
+    onChangey2(e){
+        const pointsData = this.state.data;
+        this.setState({y2:this.y2Ref.current.value})
+        this.changeJSON(this.state.y2, this.y2Ref.current.value, pointsData);
+        console.log(pointsData)
+    }
+    handleChange(key, value, count) {
+        this.props.handleChange(key, value, count);
+    }
+    onChangeName(e){
+        const pointsData = this.state.data;
+        pointsData["Name"] = e;
+        this.setState({data:pointsData});
+        console.log(pointsData);
+        console.log(this.state.data);
+    }
     render() {
+        console.log(this.state.lines);
         return (
             <div className="carrier">
                 <div>
@@ -180,28 +239,28 @@ class GraphSlider extends Component {
                 <br />
                 <div class="box">
                     Edit title:
-                    <input type="text" onChange={e => this.setState( {title: e.target.value })} 
-                    class="option"/>
+                    <input name = "title" id = "title" ref = {this.titleRef}></input>
+                  <input onClick = {() => this.onChangeTitle()} type = "submit" value = "Submit"></input> 
                 </div>
                 <div class="box">
                     First x-coordinate: 
-                    <input type="text" onChange={e => this.setState( {x1: e.target.value})}
-                    class="option"/>
+                    <input name = "x1" id = "x1" ref = {this.x1Ref}></input>
+                  <input onClick = {() => this.onChangeX1()} type = "submit" value = "Submit"></input> 
                 </div>
                 <div class="box">
                     Second x-coordinate: 
-                    <input type="text" onChange={e => this.setState( {x2: e.target.value})}
-                    class="option"/>
+                    <input name = "x2" id = "x2" ref = {this.x2Ref}></input>
+                  <input onClick = {() => this.onChangeX2()} type = "submit" value = "Submit"></input> 
                 </div>
                 <div class="box">
                     First y-coordinate: 
-                    <input type="text" onChange={e => this.setState( {y1: e.target.value})}
-                    class="option"/>
+                    <input name = "y1" id = "y1" ref = {this.y1Ref}></input>
+                  <input onClick = {() => this.onChangey1()} type = "submit" value = "Submit"></input> 
                 </div>
                 <div class="box">
                     Second y-coordinate: 
-                    <input type="text" onChange={e => this.setState( {y2: e.target.value})}
-                    class="option"/>
+                    <input name = "y2" id = "y2" ref = {this.y2Ref}></input>
+                  <input onClick = {() => this.onChangey2()} type = "submit" value = "Submit"></input> 
                 </div>
                 {[...Array(this.state.lines).keys()].map(
                     (line) =>
@@ -209,7 +268,7 @@ class GraphSlider extends Component {
                         <span>Select color for line {line}</span>
                         <select 
                             value={this.state.data[line.toString()].color} 
-                            onChange={(e) => this.controlColor(line, e)} 
+                            onChange= {e => this.controlColor(line, e)} 
                             class="option"
                         >
                             <option value="blue">Blue</option>
