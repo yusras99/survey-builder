@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './HistSlider.css';
 
-class TradeoffThree extends Component {
+class Tradeoff extends Component {
 
     constructor(props) {
         super(props);
@@ -75,14 +75,12 @@ class TradeoffThree extends Component {
             sliderPos:1,
             sliderPos2:1,
             questionText:"",
-            rect1Arr: data["rect1Arr"],
-            rect2Arr: data["rect2Arr"],
-            rect3Arr: data["rect3Arr"],
-            rect4Arr: data["rect4Arr"],
-            rect5Arr: data["rect5Arr"],
-            rect6Arr: data["rect6Arr"],
-            rect7Arr: data["rect7Arr"],
-            rect8Arr: data["rect8Arr"],
+            rect1Arr: data["acc_0"],
+            rect2Arr: data["npv_0"],
+            rect3Arr: data["acc_1"],
+            rect4Arr: data["npv_1"],
+            rect5Arr: data["acc_total"],
+            rect6Arr: data["npv_total"],
             line1Height:0.4,
             line2Height:0.5,
             line3Height:0.4,
@@ -91,7 +89,7 @@ class TradeoffThree extends Component {
             line6Height:0.3,
             line7Height:0.2,
             line8Height:0.1,
-            threeGraphs: false,
+            threeGraphs: true,
             threeGraphOne: true,
             fourGraphOne: true,
             graphOneLabel:"",
@@ -178,6 +176,7 @@ class TradeoffThree extends Component {
 
     }
     onChange1(e){
+         console.log(this.state.rect1Arr.length);
         this.setState({ [e.target.name]: e.target.value })
         this.setState({rect1Height :200*this.state.rect1Arr[e.target.value]})
         this.setState({rect2Height :200*this.state.rect2Arr[e.target.value]})
@@ -185,8 +184,10 @@ class TradeoffThree extends Component {
         this.setState({rect4Height :200*this.state.rect4Arr[e.target.value]})
         this.setState({rect5Height :200*this.state.rect5Arr[e.target.value]})
         this.setState({rect6Height :200*this.state.rect6Arr[e.target.value]})
-        this.setState({rect7Height :200*this.state.rect7Arr[e.target.value]})
-        this.setState({rect8Height :200*this.state.rect8Arr[e.target.value]})
+        if(this.state.threeGraphs == false){
+          this.setState({rect7Height :200*this.state.rect7Arr[e.target.value]})
+          this.setState({rect8Height :200*this.state.rect8Arr[e.target.value]})
+        }
     }
 
 
@@ -992,4 +993,4 @@ class TradeoffThree extends Component {
 
 }
 
-export default TradeoffThree;
+export default Tradeoff;

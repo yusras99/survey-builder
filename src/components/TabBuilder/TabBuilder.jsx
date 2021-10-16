@@ -38,10 +38,6 @@ class TabBuilder extends Component {
         return "threshold-key"
       case "tradeoff":
         return "tradeoff-key"
-      case "tradeofftwo":
-        return "tradeofftwo-key"
-      case "tradeoffthree":
-        return 'tradeoffthree-key'
       case "graphSlider":
         return "graphSlider-key"
       case "sumquestion":
@@ -95,9 +91,7 @@ class TabBuilder extends Component {
             <option value="static-text">Static Text</option>
             <option value="normal-curve">Normal Curve</option>
             <option value="threshold">Threshold</option>
-            <option value = "tradeoff">TradeoffOne</option>
-            <option value = "tradeofftwo">TradeoffTwo</option>
-            <option value = "tradeoffthree">TradeoffThree</option>
+            <option value = "tradeoff">Tradeoff</option>
             <option value = "graphSlider">Graph Slider</option>
             <option value = "sumquestion">Sum Question</option>
           </select>

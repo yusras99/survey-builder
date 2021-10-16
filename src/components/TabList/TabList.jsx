@@ -145,7 +145,7 @@ class TabList extends Component {
                   key={this.state.count.toString()}/>
             })
             break;
-          case "tradeoffthree":
+          case "tradeoff":
               arr.push({
                 id: this.state.count,
                 tab: <TradeoffResearch getCount={this.getCount} data = {[]}

@@ -252,6 +252,7 @@ class ThresholdCurve extends Component {
         xPos4: data["xPos4"],
         yPos4: data["yPos4"],
         legend: data["legend"],
+        legend2: data["legend2"],
         placement1:200,
         placement2:300,
         placement3:500,
@@ -508,16 +509,16 @@ dotReturn1(xPos, yPos) {
           {this.rectReturn8(this.state.width/2.5,750)} */}
           {this.rectReturn1(this.state.width/2.5 - 100,this.state.height/heightFactor - 2 * this.state.rad)}
           {this.rectReturn2(this.state.width/2.5- 100,this.state.height/heightFactor - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5+ 80,this.state.height/heightFactor - 2 * this.state.rad - 8, this.state.legend[0])}
+          {this.textReturn2(this.state.width/2.5+ 80,this.state.height/heightFactor - 2 * this.state.rad - 8, this.state.legend2[0])}
           {this.rectReturn3(this.state.width/2.5 - 100,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
           {this.rectReturn4(this.state.width/2.5 - 100,this.state.height/heightFactor + 30 - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5 +80,this.state.height/heightFactor + 30 - 2 * this.state.rad, this.state.legend[1])}
+          {this.textReturn2(this.state.width/2.5 +80,this.state.height/heightFactor + 30 - 2 * this.state.rad, this.state.legend2[1])}
           {this.rectReturn5(this.state.width/2.5 - 100,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
           {this.rectReturn6(this.state.width/2.5 - 100,this.state.height/heightFactor + 60 - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5 + 80,this.state.height/heightFactor + 60 - 2 * this.state.rad, this.state.legend[2])}
+          {this.textReturn2(this.state.width/2.5 + 80,this.state.height/heightFactor + 60 - 2 * this.state.rad, this.state.legend2[2])}
           {this.rectReturn7(this.state.width/2.5 - 100,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
           {this.rectReturn8(this.state.width/2.5 - 100,this.state.height/heightFactor + 90 - 2 * this.state.rad)}
-          {this.textReturn2(this.state.width/2.5 + 80,this.state.height/heightFactor + 90 - 2 * this.state.rad, this.state.legend[3])}
+          {this.textReturn2(this.state.width/2.5 + 80,this.state.height/heightFactor + 90 - 2 * this.state.rad, this.state.legend2[3])}
 
           {/* sliders */}
 

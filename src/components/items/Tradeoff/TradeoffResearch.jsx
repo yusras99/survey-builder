@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
-import TradeoffThree from './TradeoffThree.jsx';
+import Tradeoff from './TradeoffThree.jsx';
 
 class TradeoffResearch extends Component {
     constructor(props) {
@@ -72,7 +72,7 @@ class TradeoffResearch extends Component {
       // Search 'dataReceived' in this file to learn more
       return (
         <div className="boxed">
-          <TradeoffThree 
+          <Tradeoff
             data={this.state.jsonData}                  
             handleChange={this.handleChange} count = {this.props.count}
             />
