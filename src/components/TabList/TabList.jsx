@@ -11,7 +11,6 @@ import SliderTab from '../items/Slider/SliderTab';
 import StaticText from '../items/StaticText/StaticText';
 import NormalCurveResearch from '../items/NormalCurve/NormalCurveResearch';
 import ThresholdResearch from '../items/ThresholdSlider/thresholdReasearch';
-import TradeoffThree from '../items/Tradeoff/TradeoffThree';
 import GraphSliderResearch from '../items/GraphSlider/GraphSliderResearch';
 import SumQuestionResearch from '../items/sumQuestion/sumQuestionResearch';
 
