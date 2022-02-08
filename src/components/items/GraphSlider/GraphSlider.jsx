@@ -21,7 +21,6 @@ class GraphSlider extends Component {
         this.onChangex2 = this.onChangex2.bind(this);
         this.onChangey1 = this.onChangey1.bind(this);
         this.onChangey2 = this.onChangey2.bind(this);
-        this.onChangeName = this.onChangeName.bind(this);
         this.changeJSON = this.changeJSON.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.state = {
@@ -41,7 +40,7 @@ class GraphSlider extends Component {
             x2: 300,
             y1: 0,
             y2: 300,
-            title: Output.title
+            title: Output.title,
         }
         // console.log(Output);
     }
@@ -51,6 +50,8 @@ class GraphSlider extends Component {
     changeJSON(key, value, data) {
         // var data = this.state.jsonData;
         data[key] = value;
+        console.log(this.state.data);
+        this.handleChange('FileContent',this.state.data,0);
       }
     createSlider() {
         return (
@@ -108,7 +109,7 @@ class GraphSlider extends Component {
         const pointsData = this.state.data;
         this.setState({x1:this.x1Ref.current.value})
         this.changeJSON(this.state.x1, this.x1Ref.current.value, pointsData);
-
+        console.log(pointsData);
     }
     onChangex2(e){
         const pointsData = this.state.data;
@@ -129,15 +130,9 @@ class GraphSlider extends Component {
     handleChange(key, value, count) {
         this.props.handleChange(key, value, count);
     }
-    onChangeName(e){
-        const pointsData = this.state.data;
-        pointsData["Name"] = e;
-        this.setState({data:pointsData});
-        console.log(pointsData);
-        console.log(this.state.data);
-    }
     render() {
         console.log(this.state.lines);
+        console.log(this.state.data);
         return (
             <div className="carrier">
                 <div>
@@ -188,6 +183,7 @@ class GraphSlider extends Component {
                             y={(this.state.graphHeight / this.state.tickNum) * tick + this.state.minLoc}
                         />
                     )}
+
                     {[...Array(this.state.lines).keys()].map(
                         (line) =>
                             [...Array(this.state.data[line.toString()].points).keys()].map(
