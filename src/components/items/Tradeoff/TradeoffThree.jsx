@@ -83,6 +83,8 @@ class Tradeoff extends Component {
             rect4Arr: data["metric2_1"],
             rect5Arr: data["metric3_0"],
             rect6Arr: data["metric3_1"],
+            rect7Arr: data["metric4_0"],
+            rect8Arr: data["metric4_1"],
             line1Height:0.4,
             line2Height:0.5,
             line3Height:0.4,
@@ -153,6 +155,8 @@ class Tradeoff extends Component {
             rect4Arr: data["metric2_1"],
             rect5Arr: data["metric3_0"],
             rect6Arr: data["metric3_1"],
+            rect7Arr: data["metric4_0"],
+            rect8Arr: data["metric4_1"],
             line1Height:0.4,
             line2Height:0.5,
             line3Height:0.4,
@@ -496,6 +500,7 @@ class Tradeoff extends Component {
       }
     render(){
       const threeGraphs = this.state.threeGraphs;
+      console.log(this.state.data);
         return (
             <div>
                 <svg width = {1400} height = {1000} style={{}} class = "b"> 
