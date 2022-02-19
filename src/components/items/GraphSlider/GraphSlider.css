@@ -13,7 +13,14 @@
     top: 5px;
     margin-right: 5px;
 }
-
+.column{
+    float:none;
+    margin: 0 auto;
+    width: 30%;
+}
+.column1{
+    width: 35%;
+}
 .box {
     margin: 10px;
 }
