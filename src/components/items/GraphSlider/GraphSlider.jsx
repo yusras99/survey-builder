@@ -12,6 +12,7 @@ class GraphSlider extends Component {
         this.y1Ref = React.createRef();
         this.y2Ref = React.createRef();
         this.titleRef = React.createRef();
+        this.questionRef = React.createRef();
         this.createLine = this.createLine.bind(this);
         this.controlColor = this.controlColor.bind(this);
         this.controlLineName = this.controlLineName.bind(this);
@@ -23,6 +24,7 @@ class GraphSlider extends Component {
         this.onChangey2 = this.onChangey2.bind(this);
         this.changeJSON = this.changeJSON.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.onChangeQuestion = this.onChangeQuestion.bind(this);
         this.state = {
             minLoc: 50,
             svgWidth: 400,
@@ -50,8 +52,8 @@ class GraphSlider extends Component {
     changeJSON(key, value, data) {
         // var data = this.state.jsonData;
         data[key] = value;
-        console.log(this.state.data);
-        this.handleChange('FileContent',this.state.data,0);
+        console.log(this.props.count);
+        this.handleChange('FileContent',this.state.data,this.props.count);
       }
     createSlider() {
         return (
@@ -88,22 +90,25 @@ class GraphSlider extends Component {
         newColorObj[lineNum.toString()]["color"] = e.target.value;
         this.setState({ data: newColorObj });
         console.log(e.target.value);
-        this.handleChange('pointsData', newColorObj, 0);
+        this.handleChange('pointsData', newColorObj, this.props.count);
     }
 
     controlLineName(e, lineNum) {
         const pointsData = this.state.data;
         pointsData[lineNum.toString()]["name"] = e.target.value;
         this.setState({data: pointsData});
-        this.handleChange('pointsData', pointsData, 0);
+        this.handleChange('pointsData', pointsData, this.props.count);
 
     }
     onChangeTitle(e){
-        const pointsData = this.state.jsonData;
-        console.log(pointsData);
+        console.log(this.titleRef.current.value);
         this.setState({title:this.titleRef.current.value});
-        this.changeJSON(this.state.title, this.titleRef.current.value, pointsData);
-
+        this.handleChange('Title',this.titleRef.current.value,this.props.count);
+    }
+    onChangeQuestion(e){
+        console.log(this.questionRef.current.value);
+        this.setState({questionText:this.questionRef.current.value});
+        this.handleChange('Question',this.questionRef.current.value,this.props.count);
     }
     onChangeX1(e){
         const pointsData = this.state.data;
@@ -135,7 +140,8 @@ class GraphSlider extends Component {
         console.log(this.state.data);
         return (
             <div className="carrier">
-                <div>
+                <div class = "column">
+                    <text>{this.state.questionText}</text>
                     <h1 ref={this.titleRef}>{this.state.title}</h1>
                 </div>
                 <svg 
@@ -233,6 +239,11 @@ class GraphSlider extends Component {
                     )}
                 </div>
                 <br />
+                <div class = "box">
+                    Edit question text:
+                    <input name = "question" id = "question" ref = {this.questionRef}></input>
+                    <input onClick = {() => this.onChangeQuestion()} type = "submit" value = "Submit"></input>
+                </div>
                 <div class="box">
                     Edit title:
                     <input name = "title" id = "title" ref = {this.titleRef}></input>
@@ -267,9 +278,13 @@ class GraphSlider extends Component {
                             onChange= {e => this.controlColor(line, e)} 
                             class="option"
                         >
-                            <option value="blue">Blue</option>
-                            <option value="green">Green</option>
                             <option value="teal">Teal</option>
+                            <option value = "#d55e00">Orange</option>
+                            <option value = "#cc79a7">Pink</option>
+                            <option value = "#0072b2">Blue</option>
+                            <option value = "#f0e442">Yellow</option>
+                            <option value = "#009e73">Green</option>
+
                         </select>
                     </div>
                 )}
