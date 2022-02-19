@@ -19,7 +19,7 @@ class GraphSlider extends Component {
         const Output = this.props.data;
         this.onChangeTitle = this.onChangeTitle.bind(this);
         this.onChangeX1 = this.onChangeX1.bind(this);
-        this.onChangex2 = this.onChangex2.bind(this);
+        this.onChangeX2 = this.onChangeX2.bind(this);
         this.onChangey1 = this.onChangey1.bind(this);
         this.onChangey2 = this.onChangey2.bind(this);
         this.changeJSON = this.changeJSON.bind(this);
@@ -111,26 +111,20 @@ class GraphSlider extends Component {
         this.handleChange('Question',this.questionRef.current.value,this.props.count);
     }
     onChangeX1(e){
-        const pointsData = this.state.data;
-        this.setState({x1:this.x1Ref.current.value})
-        this.changeJSON(this.state.x1, this.x1Ref.current.value, pointsData);
-        console.log(pointsData);
+        this.setState({x1:this.x1Ref.current.value});
+        this.handleChange('x1', this.x1Ref.current.value, this.props.count);
     }
-    onChangex2(e){
-        const pointsData = this.state.data;
-        this.setState({x2:this.x2Ref.current.value})
-        this.changeJSON(this.state.x2, this.x2Ref.current.value, pointsData);
+    onChangeX2(e){
+        this.setState({x2:this.x2Ref.current.value});
+        this.handleChange('x2', this.x2Ref.current.value, this.props.count);
     }
     onChangey1(e){
-        const pointsData = this.state.data;
-        this.setState({y1:this.y1Ref.current.value})
-        this.changeJSON(this.state.y1, this.y1Ref.current.value, pointsData);
+        this.setState({y1:this.y1Ref.current.value});
+        this.handleChange('y1', this.y1Ref.current.value, this.props.count);
     }
     onChangey2(e){
-        const pointsData = this.state.data;
-        this.setState({y2:this.y2Ref.current.value})
-        this.changeJSON(this.state.y2, this.y2Ref.current.value, pointsData);
-        console.log(pointsData)
+        this.setState({y2:this.y2Ref.current.value});
+        this.handleChange('y2', this.y2Ref.current.value, this.props.count);
     }
     handleChange(key, value, count) {
         this.props.handleChange(key, value, count);
