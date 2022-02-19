@@ -113,7 +113,7 @@ class GraphSliderResearch extends Component {
       return (
         <div>
           <GraphSlider 
-            data={this.state.jsonData}             handleChange={this.handleChange} 
+            data={this.state.jsonData} handleChange={this.handleChange} count = {this.props.count}
             />
           <br/>
         </div>
