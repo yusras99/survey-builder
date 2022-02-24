@@ -15,6 +15,8 @@ class Tradeoff extends Component {
         this.refLine2Ref = React.createRef();
         this.changeJSON = this.changeJSON.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.questionRef = React.createRef();
+        this.titleRef = React.createRef();
 
 
         this.refLine4Ref = React.createRef();
@@ -56,6 +58,8 @@ class Tradeoff extends Component {
         this.establishStateData = this.establishStateData.bind(this);
         this.state = this.establishStateData(this.props.data);
         this.onChange1 = this.onChange1.bind(this);
+        this.onChangeQuestion = this.onChangeQuestion.bind(this);
+        this.onChangeTitle = this.onChangeTitle.bind(this);
     }
 
     establishStateData(data){
@@ -209,7 +213,7 @@ class Tradeoff extends Component {
     changeJSON(key, value, data) {
       // var data = this.state.jsonData;
       data[key] = value;
-      this.handleChange('FileContent', this.jsonData, 0);
+      this.handleChange('FileContent', this.jsonData, this.props.count);
 
     }
 
@@ -243,6 +247,11 @@ class Tradeoff extends Component {
           this.setState({threeGraphOne: false});
       }
   }
+  onChangeQuestion(e){
+    console.log(this.questionRef.current.value);
+    this.setState({questionText:this.questionRef.current.value});
+    this.handleChange('Question',this.questionRef.current.value,this.props.count);
+}
   handleChange(key, value, count) {
     this.props.handleChange(key, value, count);
   }
@@ -251,9 +260,12 @@ class Tradeoff extends Component {
       data[key] = value;
       this.handleChange("FileContent", data, this.props.count);
     }
+    onChangeTitle(e){
+      console.log(this.titleRef.current.value);
+      this.setState({title:this.titleRef.current.value});
+      this.handleChange('Title',this.titleRef.current.value,this.props.count);
+  }
     onUpdateShapes(){
-      this.setState({questionText : this.arg5ref.current.value})
-      this.setState({boldQuestionText : this.arg12ref.current.value})
       this.setState({graphOneLabel : this.arg1ref.current.value})
       this.setState({graphTwoLabel : this.arg2ref.current.value})
       this.setState({sliderLabelLeft : this.arg3ref.current.value})
@@ -264,18 +276,16 @@ class Tradeoff extends Component {
       this.setState({legend2 : this.arg9ref.current.value})
       this.setState({legend3 : this.arg10ref.current.value})
       this.setState({legend4 : this.arg11ref.current.value})
-      this.changeJSON("questionText", this.state.questionText, this.state.jsonData)
-      this.changeJSON("boldQuestionText", this.state.boldQuestionText, this.state.jsonData)
       this.changeJSON("graphOneLabel", this.state.graphOneLabel, this.state.jsonData)
       this.changeJSON("graphTwoLabel", this.state.graphTwoLabel, this.state.jsonData)
       this.changeJSON("sliderLabelLeft", this.state.sliderLabelLeft, this.state.jsonData)
       this.changeJSON("sliderLabelRight", this.state.sliderLabelRight, this.state.jsonData)
-      this.changeJSON("graphThreeLabel", this.state.questionText, this.state.jsonData)
-      this.changeJSON("graphFourLabel", this.state.questionText, this.state.jsonData)
-      this.changeJSON("legend2", this.state.questionText, this.state.jsonData)
-      this.changeJSON("legend1", this.state.questionText, this.state.jsonData)
-      this.changeJSON("legend3", this.state.questionText, this.state.jsonData)
-      this.changeJSON("legend4", this.state.questionText, this.state.jsonData)
+      this.changeJSON("graphThreeLabel", this.state.graphThreeLabel, this.state.jsonData)
+      this.changeJSON("graphFourLabel", this.state.graphFourlabel, this.state.jsonData)
+      this.changeJSON("legend2", this.state.legend2, this.state.jsonData)
+      this.changeJSON("legend1", this.state.legend1, this.state.jsonData)
+      this.changeJSON("legend3", this.state.legend3, this.state.jsonData)
+      this.changeJSON("legend4", this.state.legend4, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
 
@@ -298,53 +308,53 @@ class Tradeoff extends Component {
 
     onChange10(e){
       this.setState({line1Height:e})
-      this.changeJSON("line1height", this.state.line1Height, this.state.jsonData)
+      this.changeJSON("line1height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
     onChange2(e){
       this.setState({line2Height:e})
-      this.changeJSON("line2height", this.state.line2Height, this.state.jsonData)
+      this.changeJSON("line2height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
 
     }
     onChange3(e){
       this.setState({line3Height:e})
-      this.changeJSON("line3height", this.state.line3Height, this.state.jsonData)
+      this.changeJSON("line3height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
 
     }
     onChange4(e){
       this.setState({line4Height:e})
-      this.changeJSON("line4height", this.state.line4Height, this.state.jsonData)
+      this.changeJSON("line4height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
 
     }
     onChange5(e){
       this.setState({line5Height:e})
-      this.changeJSON("line5height", this.state.line5Height, this.state.jsonData)
+      this.changeJSON("line5height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
 
     }
     onChange6(e){
       this.setState({line6Height:e})
-      this.changeJSON("line6height", this.state.line6Height, this.state.jsonData)
+      this.changeJSON("line6height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
     onChange7(e){
       this.setState({line7Height:e})
-      this.changeJSON("line7height", this.state.line7Height, this.state.jsonData)
+      this.changeJSON("line7height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
     onChange8(e){
       this.setState({line8Height:e})
-      this.changeJSON("line8height", this.state.line8Height, this.state.jsonData)
+      this.changeJSON("line8height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
@@ -416,7 +426,9 @@ class Tradeoff extends Component {
         this.handleChange('FileContent', this.state.jsonData, 0)
 
       }
+
       else{
+        console.log(newGraph);
         this.setState({threeGraphs: false});
         this.changeJSON("threeGraphs", this.state.threeGraphs, this.state.jsonData);
         this.handleChange('FileContent', this.state.jsonData, 0)
@@ -500,9 +512,12 @@ class Tradeoff extends Component {
       }
     render(){
       const threeGraphs = this.state.threeGraphs;
-      console.log(this.state.data);
         return (
             <div>
+              <div class = "column">
+              < text>{this.state.questionText}</text>
+                <h1 ref={this.titleRef}>{this.state.title}</h1>
+              </div>
                 <svg width = {1400} height = {1000} style={{}} class = "b"> 
                     {this.line1(173,187,648,648)}
                     {this.line1(173,187,488,488)}
@@ -1050,8 +1065,6 @@ class Tradeoff extends Component {
                   }
                                     </svg>
                   <svg class = "e" width = {1400} height = {800}>
-                  <text x = {200} y = {15}>{this.state.questionText}</text>
-                  <text x = {200} y = {115} font-weight = "bold">{this.state.boldQuestionText}</text>
                   <text x = {230} y = {265}>Legend:</text>
                   <text x = {305} y = {265}>{this.state.legend1}</text>
                   <rect x = {290} y = {255} height = {10} width = {10} stroke = {this.state.stroke1} fill = {this.state.stroke1}></rect>
@@ -1191,6 +1204,16 @@ class Tradeoff extends Component {
                     <option value = "2 and 1">1 and 2</option>
                     <option value = "2 and 2">2 and 2</option>
                   </select>
+                  <div class = "box">
+                    Edit question text:
+                    <input name = "question" id = "question" ref = {this.questionRef}></input>
+                    <input onClick = {() => this.onChangeQuestion()} type = "submit" value = "Submit"></input>
+                </div>
+                <div class="box">
+                    Edit title:
+                    <input name = "title" id = "title" ref = {this.titleRef}></input>
+                  <input onClick = {() => this.onChangeTitle()} type = "submit" value = "Submit"></input> 
+                </div>
                   <input onClick = {() => this.changeGraphColNumber()} type = "submit" value = "Submit"></input>
                   <br></br>
                   <label>Choose a color combination (starting from top left): </label>
@@ -1206,11 +1229,6 @@ class Tradeoff extends Component {
                   <input onClick={() => this.changeStroke1()} type="submit" value="Submit"></input>
                   <br></br>
                   Enter the question text here
-                  <br/>
-                  <input type="text" id = "question" ref={this.arg5ref}
-                    defaultValue={""}/>
-                    <br></br>
-                    Enter the bold question text here (displayed below the question)
                   <br/>
                   <input type="text" id = "question" ref={this.arg12ref}
                     defaultValue={""}/>
