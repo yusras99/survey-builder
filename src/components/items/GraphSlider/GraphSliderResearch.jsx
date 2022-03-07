@@ -100,7 +100,7 @@ class GraphSliderResearch extends Component {
 
     processJSON(data){
         this.setState({
-            dataReceived : "true",
+            dataReceived : "true",  
             jsonData:data
         });
   }
@@ -130,7 +130,7 @@ class GraphSliderResearch extends Component {
                 {({ getRootProps, getInputProps }) => (
                   <div {...getRootProps({ className: "dropzone" })}>
                     <input {...getInputProps()} />
-                    <p>Drag'n'drop files, or click to select files (must be valid JSON file)</p>
+                    <p>Drag'n'drop files, or click to select files (must be valid CSV file)</p>
                   </div>
                 )}
               </Dropzone>
