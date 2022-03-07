@@ -204,8 +204,14 @@ class Tradeoff extends Component {
             label_4_3: data["label_4_3"],
             label_4_4: data["label_4_4"],
             label_4_5: data["label_4_5"],
-            label_4_6: data["label_4_6"]
+            label_4_6: data["label_4_6"],
 
+            graphLabel1: data["graphLabel1"],
+            graphLabel1: data["graphLabel2"],
+            graphLabel1: data["graphLabel3"],
+            graphLabel1: data["graphLabel4"],
+            graphLabel1: data["graphLabel5"],
+            graphLabel1: data["graphLabel6"]
           }
         }
     }
@@ -286,6 +292,13 @@ class Tradeoff extends Component {
       this.changeJSON("legend1", this.state.legend1, this.state.jsonData)
       this.changeJSON("legend3", this.state.legend3, this.state.jsonData)
       this.changeJSON("legend4", this.state.legend4, this.state.jsonData)
+      this.setState("label_1_1", this.state.label_1_1, this.state.jsonData)
+      this.setState("label_1_2", this.state.label_1_2, this.state.jsonData)
+      this.setState("label_1_3", this.state.label_1_3, this.state.jsonData)
+      this.setState("label_1_4", this.state.label_1_4, this.state.jsonData)
+      this.setState("label_1_5", this.state.label_1_5, this.state.jsonData)
+      this.setState("label_1_6", this.state.label_1_6, this.state.jsonData)
+
       this.handleChange('FileContent', this.state.jsonData, 0)
 
 
@@ -1214,7 +1227,6 @@ class Tradeoff extends Component {
                     <input name = "title" id = "title" ref = {this.titleRef}></input>
                   <input onClick = {() => this.onChangeTitle()} type = "submit" value = "Submit"></input> 
                 </div>
-                  <input onClick = {() => this.changeGraphColNumber()} type = "submit" value = "Submit"></input>
                   <br></br>
                   <label>Choose a color combination (starting from top left): </label>
                   <select name="stroke1" id="stroke1" ref={this.stroke1Ref}
@@ -1228,11 +1240,6 @@ class Tradeoff extends Component {
                   </select>
                   <input onClick={() => this.changeStroke1()} type="submit" value="Submit"></input>
                   <br></br>
-                  Enter the question text here
-                  <br/>
-                  <input type="text" id = "question" ref={this.arg12ref}
-                    defaultValue={""}/>
-                    <br></br>
                   Enter the graph one label here
                   <br/>
                   <input type="text" id = "question" ref={this.arg1ref}
