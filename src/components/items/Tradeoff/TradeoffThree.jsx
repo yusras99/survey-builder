@@ -16,8 +16,8 @@ class Tradeoff extends Component {
         this.changeJSON = this.changeJSON.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.questionRef = React.createRef();
+        this.sliderQuestionRef = React.createRef();
         this.titleRef = React.createRef();
-
 
         this.refLine4Ref = React.createRef();
         this.refLine3Ref = React.createRef();
@@ -60,6 +60,7 @@ class Tradeoff extends Component {
         this.onChange1 = this.onChange1.bind(this);
         this.onChangeQuestion = this.onChangeQuestion.bind(this);
         this.onChangeTitle = this.onChangeTitle.bind(this);
+        this.onChangeSliderQuestion = this.onChangeSliderQuestion.bind(this);
     }
 
     establishStateData(data){
@@ -222,7 +223,6 @@ class Tradeoff extends Component {
       this.handleChange('FileContent', this.jsonData, this.props.count);
 
     }
-
     handleChange(key, value, count) {
       this.props.handleChange(key, value, count);
     }
@@ -239,18 +239,26 @@ class Tradeoff extends Component {
       if (newColor === "1 and 1"){
           this.setState({fourGraphOne: true});
           this.setState({threeGraphOne: true});
+          this.handleChange("fourGraphOne", "true", this.props.count);
+          this.handleChange("threeGraphOne", "true", this.props.count);
       }
       if (newColor === "1 and 2"){
-          this.setState({fourGraphOne: true});
-          this.setState({threeGraphOne: false});
-      }
-      if (newColor === "2 and 1"){
           this.setState({fourGraphOne: false});
           this.setState({threeGraphOne: true});
+          this.handleChange("fourGraphOne", "false", this.props.count);
+          this.handleChange("threeGraphOne", "true", this.props.count);
+      }
+      if (newColor === "2 and 1"){
+          this.setState({fourGraphOne: true});
+          this.setState({threeGraphOne: false});
+          this.handleChange("fourGraphOne", "true", this.props.count);
+          this.handleChange("threeGraphOne", "false", this.props.count);
       }
       if (newColor === "2 and 2"){
           this.setState({fourGraphOne: false});
           this.setState({threeGraphOne: false});
+          this.handleChange("fourGraphOne", "false", this.props.count);
+          this.handleChange("threeGraphOne", "false", this.props.count);
       }
   }
   onChangeQuestion(e){
@@ -258,6 +266,10 @@ class Tradeoff extends Component {
     this.setState({questionText:this.questionRef.current.value});
     this.handleChange('Question',this.questionRef.current.value,this.props.count);
 }
+ onChangeSliderQuestion(e){
+   this.setState({sliderQuestionText: this.sliderQuestionRef.current.value});
+   this.handleChange('sliderQuestion', this.sliderQuestionRef.current.value, this.props.count);
+ }
   handleChange(key, value, count) {
     this.props.handleChange(key, value, count);
   }
@@ -292,12 +304,7 @@ class Tradeoff extends Component {
       this.changeJSON("legend1", this.state.legend1, this.state.jsonData)
       this.changeJSON("legend3", this.state.legend3, this.state.jsonData)
       this.changeJSON("legend4", this.state.legend4, this.state.jsonData)
-      this.setState("label_1_1", this.state.label_1_1, this.state.jsonData)
-      this.setState("label_1_2", this.state.label_1_2, this.state.jsonData)
-      this.setState("label_1_3", this.state.label_1_3, this.state.jsonData)
-      this.setState("label_1_4", this.state.label_1_4, this.state.jsonData)
-      this.setState("label_1_5", this.state.label_1_5, this.state.jsonData)
-      this.setState("label_1_6", this.state.label_1_6, this.state.jsonData)
+
 
       this.handleChange('FileContent', this.state.jsonData, 0)
 
@@ -433,18 +440,18 @@ class Tradeoff extends Component {
     }
     changeGraphNumber(){
       const newGraph = this.threeGraphRef.current.value;
+      console.log(this.threeGraphRef.current.value);
       if (newGraph === "True"){
         this.setState({threeGraphs: true});
         this.changeJSON("threeGraphs", this.state.threeGraphs, this.state.jsonData);
-        this.handleChange('FileContent', this.state.jsonData, 0)
+        this.handleChange('threeGaphs', this.threeGraphRef.current.value, this.props.count);
 
       }
 
       else{
-        console.log(newGraph);
         this.setState({threeGraphs: false});
         this.changeJSON("threeGraphs", this.state.threeGraphs, this.state.jsonData);
-        this.handleChange('FileContent', this.state.jsonData, 0)
+        this.handleChange('threeGaphs', this.threeGraphRef.current.value, this.props.count);
 
       }
   }
@@ -1217,10 +1224,16 @@ class Tradeoff extends Component {
                     <option value = "2 and 1">1 and 2</option>
                     <option value = "2 and 2">2 and 2</option>
                   </select>
+                  <input onClick = {() => this.changeGraphColNumber()} type = "submit" value = "Submit"></input>
                   <div class = "box">
-                    Edit question text:
+                    Edit question text for above the graphs:
                     <input name = "question" id = "question" ref = {this.questionRef}></input>
                     <input onClick = {() => this.onChangeQuestion()} type = "submit" value = "Submit"></input>
+                </div>
+                <div class = "box">
+                    Edit question text for directly above the slider:
+                    <input name = "sliderQuestion" id = "sliderQuestion" ref = {this.sliderQuestionRef}></input>
+                    <input onClick = {() => this.onChangeSliderQuestion()} type = "submit" value = "Submit"></input>
                 </div>
                 <div class="box">
                     Edit title:
@@ -1250,6 +1263,16 @@ class Tradeoff extends Component {
                   <input type="text" id = "question" ref={this.arg2ref}
                     defaultValue={""}/>
                     <br></br>
+                    Enter the graph three label
+                  <br/>
+                  <input type="text" id = "question" ref={this.arg6ref}
+                    defaultValue={""}/>
+                    <br></br>
+                  Enter the graph four label (if applicable)
+                  <br/>
+                  <input type="text" id = "question" ref={this.arg7ref}
+                    defaultValue={""}/>
+                    <br/>
                   Enter the left hand label of the slider here
                   <br/>
                   <input type="text" id = "question" ref={this.arg3ref}
@@ -1260,16 +1283,7 @@ class Tradeoff extends Component {
                   <input type="text" id = "question" ref={this.arg4ref}
                     defaultValue={""}/>
                     <br></br>
-                  Enter the graph three label
-                  <br/>
-                  <input type="text" id = "question" ref={this.arg6ref}
-                    defaultValue={""}/>
-                    <br></br>
-                  Enter the graph four label (if applicable)
-                  <br/>
-                  <input type="text" id = "question" ref={this.arg7ref}
-                    defaultValue={""}/>
-                    <br/>
+                  
                                      Enter the first legend entry
                   <br/>
                   <input type="text" id = "question" ref={this.arg8ref}
