@@ -1,0 +1,40 @@
+# This is the workflow to automatically build any PRs to the gh-pages
+
+name: buildMainBranch
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pull request to the main branch
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+
+    - name: Install dependencies
+      run: npm install
+
+      
+    - name: Audit fix
+      run: npm audit fix
+      
+    - name: Build
+      run: npm run build
+
+
+      
