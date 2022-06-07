@@ -54,6 +54,7 @@ class NormalCurve extends Component {
     this.updateRadius = this.updateRadius.bind(this);
     this.updateTicks = this.updateTicks.bind(this);
     this.checkChange = this.checkChange.bind(this);
+    this.checkChange2 = this.checkChange2.bind(this);
     this.toggleTri1 = this.toggleTri1.bind(this);
     this.toggleTri2 = this.toggleTri2.bind(this);
     this.returnTri1 = this.returnTri1.bind(this);
@@ -119,6 +120,13 @@ class NormalCurve extends Component {
     }
     else {
       edgeLim = false;
+    }
+    let xCoordRemoved;
+    if ("xCoordRemoved" in data) {
+      xCoordRemoved = data["xCoordRemoved"];
+    }
+    else {
+      xCoordRemoved = false;
     }
 
     const startPos1 = data["startPos1"];
@@ -319,6 +327,7 @@ class NormalCurve extends Component {
       tickDist: tickDist,
       rangeVal: rangeVal,
       edgeLim: edgeLim,
+      xCoordRemoved: xCoordRemoved,
       fixCurve1: fixCurve1,
       fixCurve2: fixCurve2,
       maxLength: maxLength,
@@ -789,6 +798,15 @@ class NormalCurve extends Component {
     })
     // console.log(this.state.edgeLim);
   }
+  checkChange2() {
+    this.setState(prevState => {
+      this.changeJSON("xCoordRemoved", !Boolean(prevState.xCoordRemoved), this.state.jsonData);
+      return {
+        xCoordRemoved: Number(!Boolean(prevState.xCoordRemoved))
+      }
+    })
+    // console.log(this.state.edgeLim);
+  }
 
   /**
    * Toggles whether curve 1 is moveable
@@ -1096,8 +1114,18 @@ class NormalCurve extends Component {
               {/* triangle rendering below */}
               {this.returnTri1()}
               {this.returnTri2()}
-              <text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
-              <text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
+              
+              {
+                this.state.xCoordRemoved
+                ? <text></text>
+                :<text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
+              }
+              {
+                this.state.xCoordRemoved
+                ? <text></text>
+                : <text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
+
+              }
                         Sorry, please use a different browser.
             </svg>
             <br />
@@ -1273,6 +1301,16 @@ class NormalCurve extends Component {
                       ref={this.checkBoxRef}
                       onChange={this.checkChange} checked={this.state.edgeLim}/>
                     <label for="vehicle1">Turn edge limiting on/off</label>
+                  </div>
+                  <div>
+                    <input 
+                      type="checkbox" 
+                      id="vehicle2" 
+                      name="vehicle2" 
+                      value="xcoord" 
+                      ref={this.checkBoxRef}
+                      onChange={this.checkChange2} checked={this.state.xCoordRemoved}/>
+                    <label for="vehicle2">Remove the x coordinates from the graph</label>
                   </div>
                 </div>
               </div>
