@@ -75,7 +75,7 @@ class SumQuestionResearch extends Component {
         <div className="boxed">
           <SumQuestion 
             data={this.state.jsonData}                  
-            handleChange={this.handleChange} 
+            handleChange={this.handleChange} count={this.props.count}
             />
           <br/>
         </div>
