@@ -36,6 +36,8 @@ class NormalCurve extends Component {
     this.arg4ref = React.createRef();
     this.arg5ref = React.createRef();
     this.arg6ref = React.createRef();
+    this.arg7ref = React.createRef();
+    this.arg8ref = React.createRef();
 
     this.dotReturn = this.dotReturn.bind(this);
     this.curveArea = this.curveArea.bind(this);
@@ -55,6 +57,9 @@ class NormalCurve extends Component {
     this.updateTicks = this.updateTicks.bind(this);
     this.checkChange = this.checkChange.bind(this);
     this.checkChange2 = this.checkChange2.bind(this);
+    this.checkChange3 = this.checkChange3.bind(this);
+    this.changeX1 = this.changeX1.bind(this);
+    this.changeX2 = this.changeX2.bind(this);
     this.toggleTri1 = this.toggleTri1.bind(this);
     this.toggleTri2 = this.toggleTri2.bind(this);
     this.returnTri1 = this.returnTri1.bind(this);
@@ -90,7 +95,6 @@ class NormalCurve extends Component {
     const len2 = data["len2"];
     const distancing = circRad * 4 - 1;
     const height = (Math.ceil((distancing * unitHeight) / 50) + 1) * 50;
-
     const colNumInit = data["axis-length"];
     const internalLength = colNumInit * distancing;
     const edgeCol = Math.ceil(Math.max(len1, len2) / 2);
@@ -128,6 +132,7 @@ class NormalCurve extends Component {
     else {
       xCoordRemoved = false;
     }
+
 
     const startPos1 = data["startPos1"];
     let distancing1 = startPos1 + variance1 - 1;
@@ -320,7 +325,7 @@ class NormalCurve extends Component {
       colNum: colNumInit,
       variance1: variance1,
       variance2: variance2,
-      lowVal: this.props.data["lowVal"],
+      lowVal: data["lowVal"],
       showCoors: true,
       colNumVal: colNumVal,
       tickNum: tickNum,
@@ -648,6 +653,7 @@ class NormalCurve extends Component {
    */
   lengthSubmit() {
     const newLength = this.lengthRef.current.value;
+    console.log(newLength);
     const internalLength = newLength * this.state.distancing;
     const length = this.state.edgeLength + internalLength;
 
@@ -674,6 +680,8 @@ class NormalCurve extends Component {
     newData["axis-length"] = newLength;
     this.setState(this.establishStateData(newData));
   }
+
+
 
   // toggleXVals() {
   //   this.setState(prevState => {
@@ -806,6 +814,31 @@ class NormalCurve extends Component {
       }
     })
     // console.log(this.state.edgeLim);
+  }
+  checkChange3() {
+    this.setState(prevState => {
+      this.changeJSON("altXCoord", !Boolean(prevState.altXCoord), this.state.jsonData);
+      return {
+        altXCoord: Number(!Boolean(prevState.altXCoord))
+      }
+    })
+  }
+  
+  changeX1(){
+    this.setState(prevState => {
+      this.changeJSON("xLabel1", this.arg7ref.current.value, this.state.jsonData);
+      return {
+        xLabel1: this.arg7ref.current.value
+      }
+    })
+  }
+  changeX2(){
+    this.setState(prevState => {
+      this.changeJSON("xLabel2", this.arg8ref.current.value, this.state.jsonData);
+      return {
+        xLabel2: this.arg8ref.current.value
+      }
+    })
   }
 
   /**
@@ -1049,6 +1082,8 @@ class NormalCurve extends Component {
                   <input type="text" ref={this.arg6ref}
                     defaultValue={defaultArg(6)}/>
                 </div>
+
+
               </div>
               <br/>
               <button onClick={() => this.onUpdateShapes()}>
@@ -1118,12 +1153,19 @@ class NormalCurve extends Component {
               {
                 this.state.xCoordRemoved
                 ? <text></text>
-                :<text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal}</text>
+                : this.state.altXCoord
+                  ?<text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.xLabel1}</text>
+                  :<text textAnchor="middle" x={this.state.axisStart} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
+
               }
+              {console.log(this.state.xCoordRemoved)}
+              {console.log(this.state.altXCoord)}
               {
                 this.state.xCoordRemoved
                 ? <text></text>
-                : <text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
+                : this.state.altXCoord
+                  ?<text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.xLabel2}</text>
+                  :<text textAnchor="middle" x={this.state.axisStart + this.state.axisEnd} y={this.state.ceilDist + 55}>{this.state.lowVal + this.state.colNum * this.state.colNumVal}</text>
 
               }
                         Sorry, please use a different browser.
@@ -1237,6 +1279,7 @@ class NormalCurve extends Component {
                   <button onClick={() => this.updateTicks(this.ticksRef.current.value)}>Change Tick Count</button>
                   <br />
 
+
                   <span>Enter your preferred starting position for curve 1, 
                     if you want to change it </span>
                   <input ref={this.startPos1Ref} type="text" 
@@ -1312,6 +1355,24 @@ class NormalCurve extends Component {
                       onChange={this.checkChange2} checked={this.state.xCoordRemoved}/>
                     <label for="vehicle2">Remove the x coordinates from the graph</label>
                   </div>
+                  <div>
+                    <input 
+                    type = "checkbox"
+                    id = "vehicle3"
+                    name = "vehicle3"
+                    value = "diffxcoord"
+                    ref={this.checkBoxRef}
+                    onChange={this.checkChange3} checked={this.state.altXCoord}/>
+                    <label for="vehicle3">Use alternate x coordinates for the graph</label>
+                    </div>
+                    <span>Enter the alternate x coordinate for the left side of the axis</span>
+                  <input type = "text" ref = {this.arg7ref}></input>
+                  <button onClick = {() => this.changeX1(this.arg7ref.current.value)}>Submit</button>
+                  <br />
+                  <span>Enter the alternate x coordinate for the right side of the axis</span>
+                  <input type = "text" ref = {this.arg8ref}></input>
+                  <button onClick = {() => this.changeX2(this.arg8ref.current.value)}>Submit</button>
+                  <br />
                 </div>
               </div>
             }
