@@ -71,7 +71,7 @@ class SumQuestion extends Component{
     }
     
     onChangeItems(){
-        console.log("hello");
+        console.log(this.props.count);
         this.setState({item11: this.q1Ref.current.value});
         this.changeJSON("item11", this.q1Ref.current.value, this.jsonData);
         this.setState({item22: this.q2Ref.current.value});
@@ -97,7 +97,7 @@ class SumQuestion extends Component{
         console.log(this.state.jsonData);
         this.changeJSON("maxVal", this.num1Ref.current.value, this.jsonData);
         this.changeJSON("number", this.numRef.current.value, this.jsonData);
-        this.handleChange('FileContent', this.state.jsonData, 0);
+        this.handleChange('FileContent', this.state.jsonData, this.props.count);
         alert("Your input has been succesfully saved.")
     }
 
