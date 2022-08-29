@@ -180,12 +180,14 @@ class Tradeoff extends Component {
             sliderLabelLeft:"",
             sliderLabelRight:"",
             jsonData: data,
+            
             label_1_1: data["label_1_1"],
             label_1_2: data["label_1_2"],
             label_1_3: data["label_1_3"],
             label_1_4: data["label_1_4"],
             label_1_5: data["label_1_5"],
             label_1_6: data["label_1_6"],
+
             label_2_1: data["label_2_1"],
             label_2_2: data["label_2_2"],
             label_2_3: data["label_2_3"],
@@ -216,16 +218,18 @@ class Tradeoff extends Component {
           }
         }
     }
-    
+    //method to update the JSON file sent to participant side
     changeJSON(key, value, data) {
       // var data = this.state.jsonData;
       data[key] = value;
       this.handleChange('FileContent', this.jsonData, this.props.count);
 
     }
+    //inherited method, common to all questions
     handleChange(key, value, count) {
       this.props.handleChange(key, value, count);
     }
+
     twographLine(xPos1,xPos2,height){
       var hard = <line x1 = {300 + xPos1} x2 = {300 + xPos2} y1 = {450 + 200*height - 200*0.01} y2 = {450 + 200*height - 200*0.01} stroke = "#000000"></line>;
       return hard;
@@ -234,6 +238,8 @@ class Tradeoff extends Component {
       var hard = <line x1 = {xPos1 + 300} x2 = {300 + xPos2} y1 = {150 + 200*height + 200*0.05} y2 = {150 + 200*height + 200*0.05} stroke = "#000000"></line>;
       return hard;
     }
+
+    //method to update the number of bars on the lower two graphs
     changeGraphColNumber(){
       const newColor = this.graphColRef.current.value;
       if (newColor === "1 and 1"){
@@ -261,28 +267,28 @@ class Tradeoff extends Component {
           this.handleChange("threeGraphOne", "false", this.props.count);
       }
   }
+
+  //method to update the question text
   onChangeQuestion(e){
     console.log(this.questionRef.current.value);
     this.setState({questionText:this.questionRef.current.value});
     this.handleChange('Question',this.questionRef.current.value,this.props.count);
 }
+
+//method to update the text directly above the slider
  onChangeSliderQuestion(e){
    this.setState({sliderQuestionText: this.sliderQuestionRef.current.value});
    this.handleChange('sliderQuestion', this.sliderQuestionRef.current.value, this.props.count);
  }
-  handleChange(key, value, count) {
-    this.props.handleChange(key, value, count);
-  }
-   changeJSON(key, value, data) {
-      // var data = this.state.jsonData;
-      data[key] = value;
-      this.handleChange("FileContent", data, this.props.count);
-    }
+
+ //method to update the "Title" field
     onChangeTitle(e){
       console.log(this.titleRef.current.value);
       this.setState({title:this.titleRef.current.value});
       this.handleChange('Title',this.titleRef.current.value,this.props.count);
   }
+
+  //method to update every label (including legend, graph Labels and slider Labels)
     onUpdateShapes(){
       this.setState({graphOneLabel : this.arg1ref.current.value})
       this.setState({graphTwoLabel : this.arg2ref.current.value})
@@ -310,8 +316,9 @@ class Tradeoff extends Component {
 
 
     }
+
+    //method to update bar heights with slider movement. 
     onChange1(e){
-         console.log(this.state.rect1Arr.length);
         this.setState({ [e.target.name]: e.target.value })
         this.setState({rect1Height :200*this.state.rect1Arr[e.target.value]})
         this.setState({rect2Height :200*this.state.rect2Arr[e.target.value]})
@@ -325,13 +332,15 @@ class Tradeoff extends Component {
         }
     }
 
-
+    //method to update first guide line
     onChange10(e){
       this.setState({line1Height:e})
       this.changeJSON("line1height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
+    
+    //method to update second guide line
     onChange2(e){
       this.setState({line2Height:e})
       this.changeJSON("line2height", e, this.state.jsonData)
@@ -339,6 +348,8 @@ class Tradeoff extends Component {
 
 
     }
+
+    //method to update third guide line
     onChange3(e){
       this.setState({line3Height:e})
       this.changeJSON("line3height", e, this.state.jsonData)
@@ -346,6 +357,8 @@ class Tradeoff extends Component {
 
 
     }
+
+    //method to update fourth guide line
     onChange4(e){
       this.setState({line4Height:e})
       this.changeJSON("line4height", e, this.state.jsonData)
@@ -353,6 +366,8 @@ class Tradeoff extends Component {
 
 
     }
+
+    //method to update fifth guide line
     onChange5(e){
       this.setState({line5Height:e})
       this.changeJSON("line5height", e, this.state.jsonData)
@@ -360,18 +375,24 @@ class Tradeoff extends Component {
 
 
     }
+
+    //method to update sixth guide line
     onChange6(e){
       this.setState({line6Height:e})
       this.changeJSON("line6height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
+
+    //method to update seventh guide line
     onChange7(e){
       this.setState({line7Height:e})
       this.changeJSON("line7height", e, this.state.jsonData)
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
+
+    //method to update eight guide line
     onChange8(e){
       this.setState({line8Height:e})
       this.changeJSON("line8height", e, this.state.jsonData)
@@ -379,56 +400,57 @@ class Tradeoff extends Component {
 
     }
 
+    //method to change the colors of the bars (within pre-set possibilities)
     changeStroke1() {
       const newColor = this.stroke1Ref.current.value;
       if (newColor === "RBY"){
-        this.setState({stroke1:"#FF0000"});
-        this.setState({stroke2:"#0000FF"});
-        this.setState({stroke3:"#ffc40c"});
+        this.setState({stroke1:"#FF0000"}); //Red
+        this.setState({stroke2:"#0000FF"}); //Blue
+        this.setState({stroke3:"#ffc40c"}); //Yellow
         this.changeJSON("stroke1", this.state.stroke1, this.state.jsonData);
         this.changeJSON("stroke2", this.state.stroke2, this.state.jsonData);
         this.changeJSON("stroke3", this.state.stroke3, this.state.jsonData)
 
       }
       if (newColor === "RYB"){      
-        this.setState({stroke1: "#FF0000"});
-        this.setState({stroke2:"#ffc40c"});
-        this.setState({stroke3:"#0000FF"});
+        this.setState({stroke1: "#FF0000"}); //Red
+        this.setState({stroke2:"#ffc40c"}); //Yellow
+        this.setState({stroke3:"#0000FF"}); //Blue
         this.changeJSON("stroke1", this.state.stroke1, this.state.jsonData);
         this.changeJSON("stroke2", this.state.stroke2, this.state.jsonData);
         this.changeJSON("stroke3", this.state.stroke3, this.state.jsonData)
       }
       if (newColor === "BYR"){
-        this.setState({stroke1:"#0000FF"});
-        this.setState({stroke2:"#ffc40c"});
-        this.setState({stroke3:"#FF0000"});
+        this.setState({stroke1:"#0000FF"}); //Blue
+        this.setState({stroke2:"#ffc40c"}); //Yellow
+        this.setState({stroke3:"#FF0000"}); //Red
         this.changeJSON("stroke1", this.state.stroke1, this.state.jsonData);
         this.changeJSON("stroke2", this.state.stroke2, this.state.jsonData);
         this.changeJSON("stroke3", this.state.stroke3, this.state.jsonData)
 
       }      
       if (newColor === "BRY"){
-        this.setState({stroke1:"#0000FF"});
-        this.setState({stroke2:"#FF0000"});
-        this.setState({stroke3:"#ffc40c"});
+        this.setState({stroke1:"#0000FF"}); //Blue
+        this.setState({stroke2:"#FF0000"}); //Red
+        this.setState({stroke3:"#ffc40c"}); //Yellow
         this.changeJSON("stroke1", this.state.stroke1, this.state.jsonData);
         this.changeJSON("stroke2", this.state.stroke2, this.state.jsonData);
         this.changeJSON("stroke3", this.state.stroke3, this.state.jsonData)
 
       }
       if (newColor === "YRB"){
-        this.setState({stroke1:"#ffc40c"});
-        this.setState({stroke2:"#FF0000"});
-        this.setState({stroke3:"0000FF"});
+        this.setState({stroke1:"#ffc40c"}); //Yellow
+        this.setState({stroke2:"#FF0000"}); //Red
+        this.setState({stroke3:"0000FF"}); //Blue
         this.changeJSON("stroke1", this.state.stroke1, this.state.jsonData);
         this.changeJSON("stroke2", this.state.stroke2, this.state.jsonData);
         this.changeJSON("stroke3", this.state.stroke3, this.state.jsonData)
 
       }
       if (newColor === "YBR"){
-        this.setState({stroke1:"#ffc40c"});
-        this.setState({stroke2:"#0000FF"});
-        this.setState({stroke3:"#FF0000"});
+        this.setState({stroke1:"#ffc40c"}); //Yellow
+        this.setState({stroke2:"#0000FF"}); //Blue
+        this.setState({stroke3:"#FF0000"}); //Red
         this.changeJSON("stroke1", this.state.stroke1, this.state.jsonData);
         this.changeJSON("stroke2", this.state.stroke2, this.state.jsonData);
         this.changeJSON("stroke3", this.state.stroke3, this.state.jsonData)
@@ -438,6 +460,8 @@ class Tradeoff extends Component {
       this.handleChange('FileContent', this.state.jsonData, 0)
 
     }
+
+    //method to change the number of graphs (toggles between three and four graphs)
     changeGraphNumber(){
       const newGraph = this.threeGraphRef.current.value;
       console.log(this.threeGraphRef.current.value);
@@ -456,6 +480,12 @@ class Tradeoff extends Component {
       }
   }
 
+
+    //rectReturn 1-10 are methods to draw and update the bars on the graphs. 
+    // 1-4 are for the top two graphs. 
+    // 5 and 6 are used if there are two bars on the bottom left graph. 
+    // 7 and 8 are used if there are two bars on the bottom right graph.
+    // 9 is used if there is one bar on the bottom left graph; 10 if there is one bar on the bottom right. 
     rectReturn1(xPos, yPos){
         var hard = 
         <rect
@@ -516,29 +546,37 @@ class Tradeoff extends Component {
         x = {xPos} y = {yPos} stroke = {"#000000"} fill = {this.state.stroke3} height = {this.state.rect6Height} width = {this.state.rectWidth} fillOpacity = "1" strokeOpacity = "0.7"></rect>;
         return hard;
       }
+
+      //method to draw black lines given x, y coords. 
       line1(xPos1,xPos2,yPos1,yPos2){
         var hard = 
-        <line x1 = {xPos1 + 300} x2 = {300 + xPos2} y1 = {yPos1} y2 = {yPos2} stroke = "#000000"></line>;
+        <line x1 = {xPos1 + 300} x2 = {300 + xPos2} y1 = {yPos1} y2 = {yPos2} stroke = "#000000" ></line>;
         return hard;
       }
+
+      //method to draw grey lines given x, y coords. 
       line2(xPos1,xPos2,yPos1,yPos2){
         var hard = 
         <line x1 = {xPos1 + 300} x2 = {300 + xPos2} y1 = {yPos1} y2 = {yPos2} stroke = "#808080"></line>;
         return hard;
       }
+      //method to place text given x, y coords + string. 
       textReturn1(xPos, yPos, tedxt){
         var hard = <text x = {xPos} y = {yPos}>{tedxt}</text>;
         return hard;
       }
+
     render(){
       const threeGraphs = this.state.threeGraphs;
         return (
             <div>
+              
               <div class = "column">
               < text>{this.state.questionText}</text>
                 <h1 ref={this.titleRef}>{this.state.title}</h1>
               </div>
                 <svg width = {1400} height = {1000} style={{}} class = "b"> 
+                    {/*               */}
                     {this.line1(173,187,648,648)}
                     {this.line1(173,187,488,488)}
                     {this.line1(173,187,528,528)}
@@ -1209,7 +1247,7 @@ class Tradeoff extends Component {
                 <input type="range" min={0} max={(this.state.rect1Arr.length)-1} 
               className="hist-slider" onChange={this.onChange1}
               name="sliderPos" value={this.state.sliderPos} ref={this.sliderRef} list = "tickmarks"
-              style={{ width:300, left:635, top:590}}/>
+              style={{left: -610, top: -1600, width: 200}}/>
                   <br></br>
                 <div className = "f">
                   <select name = "threeGraphs" id = "threeGraphs" ref = {this.threeGraphRef}>
