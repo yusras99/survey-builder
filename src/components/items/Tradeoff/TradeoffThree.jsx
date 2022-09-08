@@ -70,26 +70,26 @@ class Tradeoff extends Component {
             stroke1 : "#FF0000",
             stroke2 : "#0000FF",
             stroke3: "#ffc40c",
-            rect1Height : 100,
-            rect2Height : 100,
-            rect3Height : 100,
-            rect4Height: 100,
-            rect5Height:100,
-            rect6Height:100,
-            rect7Height:100,
-            rect8Height:100,
             rectWidth : 40,
             sliderPos:1,
             sliderPos2:1,
             questionText:"",
             rect1Arr: data["metric1_0"],
+            rect1Height: 200*data["metric1_0"][0],
             rect2Arr: data["metric1_1"],
+            rect2Height: 200*data["metric1_1"][0],
             rect3Arr: data["metric2_0"],
+            rect3Height: 200*data["metric2_0"][0],
             rect4Arr: data["metric2_1"],
+            rect4Height: 200*data["metric2_1"][0],
             rect5Arr: data["metric3_0"],
+            rect5Height: 200*data["metric3_0"][0],
             rect6Arr: data["metric3_1"],
+            rect6Height: 200*data["metric3_1"][0],
             rect7Arr: data["metric4_0"],
+            rect7Height: 200*data["metric4_0"][0],
             rect8Arr: data["metric4_1"],
+            rect8Height: 200*data["metric4_1"][0],
             line1Height:0.4,
             line2Height:0.5,
             line3Height:0.4,
@@ -142,7 +142,6 @@ class Tradeoff extends Component {
             stroke1 : "#FF0000",
             stroke2 : "#0000FF",
             stroke3: "#ffc40c",
-            rect1Height : 100,
             rect2Height : 100,
             rect3Height : 100,
             rect4Height: 100,
@@ -155,6 +154,7 @@ class Tradeoff extends Component {
             sliderPos2:1,
             questionText:"",
             rect1Arr: data["metric1_0"],
+            rect1Height: 200*data["metric1_0"][0],
             rect2Arr: data["metric1_1"],
             rect3Arr: data["metric2_0"],
             rect4Arr: data["metric2_1"],
@@ -1077,7 +1077,7 @@ class Tradeoff extends Component {
 
                     : this.line1(580 ,760,160,160)
                   }
-                                      {this.twographLine(195,245,this.state.line1Height)}
+                    {this.twographLine(195,245,this.state.line1Height)}
                     {this.twographLine(275,325,this.state.line2Height)}
                     {this.twographLine(595,645,this.state.line3Height)}
                     {this.twographLine(675,725,this.state.line4Height)}
