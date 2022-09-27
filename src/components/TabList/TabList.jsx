@@ -145,6 +145,7 @@ class TabList extends Component {
             })
             break;
           case "tradeoff":
+            console.log("Are we even not here?");
               arr.push({
                 id: this.state.count,
                 tab: <TradeoffResearch getCount={this.getCount} data = {[]}
@@ -299,12 +300,12 @@ class TabList extends Component {
                   key={this.state.count.toString()}/>
         })
         break;
-        case "tradeoffthree":
+        case "tradeoff":
           arr.push({
             id: this.state.count,
-            tab: <TradeoffResearch getCount={this.getCount} data = {[]}
-                    delete={this.delete} count={this.state.count}
-                    handleChange={this.handleChange} 
+            tab: <TradeoffResearch getCount={this.getCount} qToDisplay={question}
+                    delete={this.delete} count={this.state.count} imported = {true}
+                    handleChange={this.handleChange} editing = {editing}
                     files={this.state.files} saveFile={this.saveFile}
                     key={this.state.count.toString()}/>
           })
