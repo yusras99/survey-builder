@@ -145,7 +145,6 @@ class TabList extends Component {
             })
             break;
           case "tradeoff":
-            console.log("Are we even not here?");
               arr.push({
                 id: this.state.count,
                 tab: <TradeoffResearch getCount={this.getCount} data = {[]}
