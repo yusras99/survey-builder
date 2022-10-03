@@ -313,7 +313,9 @@ class TabList extends Component {
             arr.push({
               id: this.state.count,
               tab: <SumQuestionResearch getCount={this.getCount} data = {[]}
-                      delete={this.delete} count={this.state.count}
+                      delete={this.delete} count={this.state.count} qToDisplay={question}
+                      imported={true}
+                      editing={editing}
                       handleChange={this.handleChange} 
                       files={this.state.files} saveFile={this.saveFile}
                       key={this.state.count.toString()}/>
