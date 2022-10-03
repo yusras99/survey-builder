@@ -50,6 +50,7 @@ class SumQuestionResearch extends Component {
       if (this.props.imported) {
         // if this normal curve component is imported, we need to append those 
         // associating files to final output with handleChange()
+        console.log(this.props.qToDisplay);
         const jsonData = this.props.qToDisplay["FileContent"];
         this.handleChange("FileContent", jsonData, this.props.count);
         console.log(jsonData);
@@ -146,4 +147,18 @@ class SumQuestionResearch extends Component {
 
 }
 
-export default SumQuestionResearch;
+SumQuestionResearch.propTypes = {
+  auth: PropTypes.object.isRequired,
+  getColData: PropTypes.func.isRequired,
+  dataFlowColData: PropTypes.array.isRequired
+}
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  dataFlowColData: state.dataFlow.colData
+});
+
+export default connect(
+  mapStateToProps,
+  { getColData }
+)(SumQuestionResearch);
