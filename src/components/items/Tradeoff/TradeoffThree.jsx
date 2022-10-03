@@ -386,7 +386,7 @@ class Tradeoff extends Component {
       this.changeJSON("legend4", this.state.legend4, this.state.jsonData)
 
 
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -410,7 +410,7 @@ class Tradeoff extends Component {
     onChange10(e){
       this.setState({line1Height:e})
       this.changeJSON("line1height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
     
@@ -418,7 +418,7 @@ class Tradeoff extends Component {
     onChange2(e){
       this.setState({line2Height:e})
       this.changeJSON("line2height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -427,7 +427,7 @@ class Tradeoff extends Component {
     onChange3(e){
       this.setState({line3Height:e})
       this.changeJSON("line3height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -436,7 +436,7 @@ class Tradeoff extends Component {
     onChange4(e){
       this.setState({line4Height:e})
       this.changeJSON("line4height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -445,7 +445,7 @@ class Tradeoff extends Component {
     onChange5(e){
       this.setState({line5Height:e})
       this.changeJSON("line5height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -454,7 +454,7 @@ class Tradeoff extends Component {
     onChange6(e){
       this.setState({line6Height:e})
       this.changeJSON("line6height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 
@@ -462,7 +462,7 @@ class Tradeoff extends Component {
     onChange7(e){
       this.setState({line7Height:e})
       this.changeJSON("line7height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 
@@ -470,7 +470,7 @@ class Tradeoff extends Component {
     onChange8(e){
       this.setState({line8Height:e})
       this.changeJSON("line8height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 
@@ -531,7 +531,7 @@ class Tradeoff extends Component {
 
       }
 
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 
