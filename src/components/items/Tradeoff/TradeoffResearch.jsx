@@ -49,6 +49,7 @@ class TradeoffResearch extends Component {
       if (this.props.imported) {
         // if this normal curve component is imported, we need to append those 
         // associating files to final output with handleChange()
+        console.log(this.props.qToDisplay);
         const jsonData = this.props.qToDisplay["FileContent"];
         this.handleChange("FileContent", jsonData, this.props.count);
         console.log(jsonData);
@@ -118,7 +119,6 @@ class TradeoffResearch extends Component {
         </div>
       )
     }
-    console.log(this.state.imported);
       return( 
         <div className="boxed">
           Tradeoff Question
