@@ -63,9 +63,82 @@ class Tradeoff extends Component {
         this.onChangeSliderQuestion = this.onChangeSliderQuestion.bind(this);
     }
 
+    
     establishStateData(data){
 
-        if(data["label_1_1"] == ""){
+      if(this.props.imported){
+        return{
+          stroke1 : "#FF0000",
+            stroke2 : "#0000FF",
+            stroke3: "#ffc40c",
+            rectWidth : 40,
+            sliderPos:1,
+            sliderPos2:1,
+            questionText:"",
+            rect1Arr: data["metric1_0"],
+            rect1Height: 200*data["metric1_0"][0],
+            rect2Arr: data["metric1_1"],
+            rect2Height: 200*data["metric1_1"][0],
+            rect3Arr: data["metric2_0"],
+            rect3Height: 200*data["metric2_0"][0],
+            rect4Arr: data["metric2_1"],
+            rect4Height: 200*data["metric2_1"][0],
+            rect5Arr: data["metric3_0"],
+            rect5Height: 200*data["metric3_0"][0],
+            rect6Arr: data["metric3_1"],
+            rect6Height: 200*data["metric3_1"][0],
+            rect7Arr: data["metric4_0"],
+            rect7Height: 200*data["metric4_0"][0],
+            rect8Arr: data["metric4_1"],
+            rect8Height: 200*data["metric4_1"][0],
+            line1Height:0.4,
+            line2Height:0.5,
+            line3Height:0.4,
+            line4Height:0.2,
+            line5Height:0.4,
+            line6Height:0.3,
+            line7Height:0.2,
+            line8Height:0.1,
+            threeGraphs: true,
+            threeGraphOne: true,
+            fourGraphOne: true,
+            graphOneLabel: data["graphOnelabel"],
+            graphTwoLabel:data["graphTwoLabel"],
+            graphThreeLabel:data["graphThreeLabel"],
+            graphFourlabel:data["graphFourLabel"],
+            sliderLabelLeft:data["sliderLabelLeft"],
+            sliderLabelRight:data["sliderLabelRight"],
+            jsonData: data,
+            label_1_1: 0,
+            label_1_2:20,
+            label_1_3: 40,
+            label_1_4:60,
+            label_1_5: 80,
+            label_1_6: 100,
+            label_2_1: 0,
+            label_2_2: 20,
+            label_2_3: 40,
+            label_2_4: 60,
+            label_2_5: 80,
+            label_2_6: 100,
+
+            label_3_1: 0,
+            label_3_2: 20,
+            label_3_3: 40,
+            label_3_4:60,
+            label_3_5:80,
+            label_3_6:100,
+
+            label_4_1: 0,
+            label_4_2: 20,
+            label_4_3: 40,
+            label_4_4:60,
+            label_4_5: 80,
+            label_4_6: 100
+
+        }
+      }  
+      if(data["label_1_1"] == ""){
            return{
             stroke1 : "#FF0000",
             stroke2 : "#0000FF",
@@ -225,6 +298,7 @@ class Tradeoff extends Component {
       this.handleChange('FileContent', this.jsonData, this.props.count);
 
     }
+
     //inherited method, common to all questions
     handleChange(key, value, count) {
       this.props.handleChange(key, value, count);
@@ -312,7 +386,7 @@ class Tradeoff extends Component {
       this.changeJSON("legend4", this.state.legend4, this.state.jsonData)
 
 
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -336,7 +410,7 @@ class Tradeoff extends Component {
     onChange10(e){
       this.setState({line1Height:e})
       this.changeJSON("line1height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
     
@@ -344,7 +418,7 @@ class Tradeoff extends Component {
     onChange2(e){
       this.setState({line2Height:e})
       this.changeJSON("line2height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -353,7 +427,7 @@ class Tradeoff extends Component {
     onChange3(e){
       this.setState({line3Height:e})
       this.changeJSON("line3height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -362,7 +436,7 @@ class Tradeoff extends Component {
     onChange4(e){
       this.setState({line4Height:e})
       this.changeJSON("line4height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -371,7 +445,7 @@ class Tradeoff extends Component {
     onChange5(e){
       this.setState({line5Height:e})
       this.changeJSON("line5height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
 
     }
@@ -380,7 +454,7 @@ class Tradeoff extends Component {
     onChange6(e){
       this.setState({line6Height:e})
       this.changeJSON("line6height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 
@@ -388,7 +462,7 @@ class Tradeoff extends Component {
     onChange7(e){
       this.setState({line7Height:e})
       this.changeJSON("line7height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 
@@ -396,7 +470,7 @@ class Tradeoff extends Component {
     onChange8(e){
       this.setState({line8Height:e})
       this.changeJSON("line8height", e, this.state.jsonData)
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 
@@ -457,7 +531,7 @@ class Tradeoff extends Component {
 
       }
 
-      this.handleChange('FileContent', this.state.jsonData, 0)
+      this.handleChange('FileContent', this.state.jsonData, this.props.count)
 
     }
 

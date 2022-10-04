@@ -15,7 +15,6 @@ class SumQuestion extends Component{
         this.q9Ref = React.createRef();
         this.q10Ref = React.createRef();
         this.svgRef = React.createRef();
-        this.textReturn2 = this.textReturn2.bind(this);
         this.val1Ref = React.createRef();
         this.val2Ref = React.createRef();
         this.val3Ref = React.createRef();
@@ -46,30 +45,55 @@ class SumQuestion extends Component{
         this.state = this.establishStateData(this.props.data);
     }
     establishStateData(data){
-        return{
-            questionText: "",
-            item11: "test",
-            item22: "",
-            item33: "",
-            item44: "",
-            item55: "",
-            item66: "",
-            item77: "",
-            item88: "",
-            item99: "",
-            item1010: "",
-            jsonData: data,
-            num1 : 0,
-            maxVal : 0,
-            question : ""
+        if(this.props.imported){
+            return{
+                questionText: data["questionText"],
+                item11: data["item11"],
+                item22: data["item22"],
+                item33: data["item33"],
+                item44: data["item44"],
+                item55: data["item55"],
+                item66: data["item66"],
+                item77: data["item77"],
+                item88: data["item88"],
+                item99: data["item99"],
+                item1010: data["item1010"],
+                question: data["question"],
+                jsonData: data,
+                maxVal : 0,
+                num1: 0
+            }
+        }
+        else{
+            return{
+                questionText: "",
+                item11: "test",
+                item22: "",
+                item33: "",
+                item44: "",
+                item55: "",
+                item66: "",
+                item77: "",
+                item88: "",
+                item99: "",
+                item1010: "",
+                jsonData: data,
+                num1 : 0,
+                maxVal : 0,
+                question : ""
 
+            }
         }
     }
+    //method to update the "question" field
     onChangeQuestion(){
         this.setState({questionText: this.questionTextRef.current.value});
         this.changeJSON(this.state.questionText, this.questionTextRef.current.value, this.jsonData);
     }
     
+    //method to update other researcher inputs
+    //contains the fields for each of the 10 labels for inputs
+    //contains the maximum value and the number of boxes to be displayed on the participant side
     onChangeItems(){
         console.log(this.props.count);
         this.setState({item11: this.q1Ref.current.value});
@@ -105,10 +129,7 @@ class SumQuestion extends Component{
         // var data = this.state.jsonData;
         data[key] = value;
       }
-      textReturn2(xPos, yPos, tedxt){
-        var hard = <text x = {xPos} y = {yPos} fontSize = "12" color = "grey">{tedxt}</text>;
-        return hard;
-      }
+
     handleChange(key, value, count) {
         this.props.handleChange(key, value, count);
     }
@@ -116,14 +137,9 @@ class SumQuestion extends Component{
     render() {
         return (
             <div height = {1000} width = {1000} ref={this.svgRef}>
-                    {this.textReturn2(300, 100, this.state.questionText)}
-                    {this.textReturn2(300, 150, this.state.item1)}
-                    {this.textReturn2(300, 200, this.state.item2)}
-                    {this.textReturn2(300, 250, this.state.item3)}
-                    {this.textReturn2(300, 300, this.state.total)}
 
-
-
+             {//input fields for the initial question, labels, max value and number of labels
+                            }      
                 <div>
                 Question:                   <br></br>
 

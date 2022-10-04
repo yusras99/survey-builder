@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
 import SumQuestion from './sumQuestion.jsx';
 
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { 
+  getColData
+} from '../../../actions/dataActions'
+
 
 class SumQuestionResearch extends Component {
     constructor(props) {
@@ -34,6 +41,24 @@ class SumQuestionResearch extends Component {
 
     handleChange(key, value, count) {
       this.props.handleChange(key, value, count);
+    }
+
+    componentDidMount() {
+      // importing component
+      // console.log(this.props)
+      console.log(this.props.imported);
+      if (this.props.imported) {
+        // if this normal curve component is imported, we need to append those 
+        // associating files to final output with handleChange()
+        console.log(this.props.qToDisplay);
+        const jsonData = this.props.qToDisplay["FileContent"];
+        this.handleChange("FileContent", jsonData, this.props.count);
+        console.log(jsonData);
+        this.setState({ imported: true });
+        // this.processJSON(jsonData);
+      }
+      const username = this.props.auth.user.username;
+      this.props.getColData(username, "itemData");
     }
 
     handleDrop(acceptedFiles) {
@@ -81,7 +106,24 @@ class SumQuestionResearch extends Component {
         </div>
       )
     // importing component
-    } else{
+    } else if (this.state.imported) {
+      // a tradeoff question is imported in two possible ways:
+      // 1. when researchers import a question from another experiment in expt builder
+      // 2. when researchers use "Edit Experiment" feature from ConfigStudy
+
+      return (
+        <div>
+          <SumQuestion 
+            imported={true}
+            editing={this.props.editing}
+            data={this.props.qToDisplay["FileContent"]} 
+            qToDisplay={this.props.qToDisplay}
+            count={this.props.count}
+            handleChange={this.handleChange} 
+            delete={this.delete} />
+        </div>
+      )
+    }else{
       return( 
         <div className="boxed">
           Sum Question
@@ -105,4 +147,18 @@ class SumQuestionResearch extends Component {
 
 }
 
-export default SumQuestionResearch;
+SumQuestionResearch.propTypes = {
+  auth: PropTypes.object.isRequired,
+  getColData: PropTypes.func.isRequired,
+  dataFlowColData: PropTypes.array.isRequired
+}
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  dataFlowColData: state.dataFlow.colData
+});
+
+export default connect(
+  mapStateToProps,
+  { getColData }
+)(SumQuestionResearch);

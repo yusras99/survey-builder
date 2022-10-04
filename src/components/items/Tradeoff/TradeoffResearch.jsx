@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import Dropzone, { useDropzone } from "react-dropzone";
 import Tradeoff from './TradeoffThree.jsx';
 
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { 
+  getColData
+} from '../../../actions/dataActions'
+
 class TradeoffResearch extends Component {
     constructor(props) {
       super(props);
@@ -35,6 +42,24 @@ class TradeoffResearch extends Component {
       this.props.handleChange(key, value, count);
     }
 
+    componentDidMount() {
+      // importing component
+      // console.log(this.props)
+      console.log(this.props.imported);
+      if (this.props.imported) {
+        // if this normal curve component is imported, we need to append those 
+        // associating files to final output with handleChange()
+        console.log(this.props.qToDisplay);
+        const jsonData = this.props.qToDisplay["FileContent"];
+        this.handleChange("FileContent", jsonData, this.props.count);
+        console.log(jsonData);
+        this.setState({ imported: true });
+        // this.processJSON(jsonData);
+      }
+      const username = this.props.auth.user.username;
+      this.props.getColData(username, "itemData");
+    }
+
     handleDrop(acceptedFiles) {
       console.log(acceptedFiles.map(file => {
         acceptedFiles.forEach((file) => {
@@ -64,12 +89,8 @@ class TradeoffResearch extends Component {
             jsonData:data
         });
   }
-
   render(){
     if (this.state.dataReceived) {
-      // this case is triggered when researchers select one of the three options
-      // previously built for drag n drop file upload. 
-      // Search 'dataReceived' in this file to learn more
       return (
         <div className="boxed">
           <Tradeoff
@@ -80,7 +101,24 @@ class TradeoffResearch extends Component {
         </div>
       )
     // importing component
-    } else{
+    } else if (this.state.imported) {
+      // a tradeoff question is imported in two possible ways:
+      // 1. when researchers import a question from another experiment in expt builder
+      // 2. when researchers use "Edit Experiment" feature from ConfigStudy
+
+      return (
+        <div>
+          <Tradeoff 
+            imported={true}
+            editing={this.props.editing}
+            data={this.props.qToDisplay["FileContent"]} 
+            qToDisplay={this.props.qToDisplay}
+            count={this.props.count}
+            handleChange={this.handleChange} 
+            delete={this.delete} />
+        </div>
+      )
+    }
       return( 
         <div className="boxed">
           Tradeoff Question
@@ -100,8 +138,18 @@ class TradeoffResearch extends Component {
       )
     }
   }
-
-
+TradeoffResearch.propTypes = {
+  auth: PropTypes.object.isRequired,
+  getColData: PropTypes.func.isRequired,
+  dataFlowColData: PropTypes.array.isRequired
 }
 
-export default TradeoffResearch;
+const mapStateToProps = state => ({
+  auth: state.auth,
+  dataFlowColData: state.dataFlow.colData
+});
+
+export default connect(
+  mapStateToProps,
+  { getColData }
+)(TradeoffResearch);
